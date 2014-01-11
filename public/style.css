@@ -68,6 +68,10 @@ body,html{
     padding-right:4px;
 }
 
+.trip_code{
+    font-weight:normal;
+}
+
 .chat_number{
     padding-left:5px;
 }
