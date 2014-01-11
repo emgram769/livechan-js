@@ -20,7 +20,7 @@ function scroll(clear){
     var scr = $('.chats:first')[0].scrollHeight;
     $(".chats:first").animate({
         scrollTop: scr
-    },200,'swing',function(){
+    },100,'swing',function(){
         if(clear)
             clear_fields();
     });

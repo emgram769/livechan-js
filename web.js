@@ -59,6 +59,14 @@ function add_to_chat(data){
     chat.push(data);
 }
 
+function already_exists(body){
+    for(i in chat){
+        if (chat[i].body == body)
+            return true;
+    }
+    return false;
+}
+
 app.get('/', function(req, res) {
     res.sendfile('index.html');
 });
@@ -77,7 +85,7 @@ app.post('/', function(req, res, next) {
     if(req.body.name.length > 25) {
         req.body.name = req.body.name.substring(0,24)+"...";
     }
-    if(chat.length>10 && (chat.slice(-10,0).indexOf(req.body) >-1)){
+    if(already_exists(req.body.body)){
         res.json({success:"SUCCESS"});
         return;
     }
