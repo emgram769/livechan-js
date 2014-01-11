@@ -51,6 +51,7 @@ window.onload = function(){
             console.log(d);
             chat.push(d);
             draw_new_chat(d);
+            scroll();
         });
     });
 }
