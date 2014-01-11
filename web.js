@@ -109,9 +109,10 @@ app.post('/', function(req, res, next) {
     console.log(a,b);
     
     if(req.connection.remoteAddress in ips) {
-        if(ips[req.connection.remoteAddress] >= 12){
+        if(ips[req.connection.remoteAddress] >= 1){
            ips[req.connection.remoteAddress] += 100; 
         }
+        console.log(ips[req.connection.remoteAddress]);
         res.json({success:"SUCCESS"});
         return;
     } else {

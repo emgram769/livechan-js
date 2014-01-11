@@ -13,7 +13,8 @@
 			<input id="name" name="name" placeholder="Anonymous" class="comment" type="text"></input>
 			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" type="text"></textarea>
 			<input id="image" name="image" type="file"></input>
-			<input type="submit" value="Submit" onclick="if(!$('#sum').val())return false;scroll(true);"></input>
+			<input id="submit_button" type="submit" value="Submit" onclick="if(!$('#sum').val())return false;submit_chat();"></input>
+			<span id="cool_down"></span>
 			<input type="checkbox" id="autoscroll" checked="true" value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label>
 			<input id="m1" name="m1" type="hidden"/>
 			<span id="m1_" style="padding-left:40px;"></span>
