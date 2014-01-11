@@ -16,16 +16,14 @@ function draw_new_chat(data){
     $('.chats:first').append(new_chat);
 }
 
-function scroll(clear){
-    if($("#autoscroll").attr('checked') == "checked") {
-        var scr = $('.chats:first')[0].scrollHeight;
-        $(".chats:first").animate({
-            scrollTop: scr
-        },200,'swing',function(){
-            if(clear)
-                clear_fields();
-        });
-    }
+function scroll(clear){    
+    var scr = $('.chats:first')[0].scrollHeight;
+    $(".chats:first").animate({
+        scrollTop: scr
+    },200,'swing',function(){
+        if(clear)
+            clear_fields();
+    });
 }
 
 function clear_fields(){
@@ -53,7 +51,8 @@ window.onload = function(){
             console.log(d);
             chat.push(d);
             draw_new_chat(d);
-            scroll();
+            if($("#autoscroll").attr('checked') == "checked")
+                scroll();
         });
     });
 }
