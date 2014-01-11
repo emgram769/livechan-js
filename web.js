@@ -22,6 +22,18 @@ app.use(logfmt.requestLogger());
 app.use(express.static(__dirname + '/public'));
 
 chat = [];
+ips = {};
+
+function demote_ips(){
+    for(i in ips){
+        if (ips[i] == 0)
+            delete ips[i];
+        else
+            ips[i]--;
+    }
+}
+
+setInterval(demote_ips,1000);
 
 function get_extension(filename) {
     var i = filename.lastIndexOf('.');
@@ -59,7 +71,14 @@ app.post('/', function(req, res, next) {
     // the uploaded file can be found as `req.files.image` and the
     // title field as `req.body.title`
     var data = {};
-    console.log(req.body);
+    if(req.connection.remoteAddress in ips) {
+        if(ips[req.connection.remoteAddress] >= 3){
+           ips[req.connection.remoteAddress] += 1; 
+        }
+        return;
+    } else {
+        ips[req.connection.remoteAddress] = 3;
+    }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
     if(req.files.image.size == 0 ||
