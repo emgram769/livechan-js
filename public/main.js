@@ -3,7 +3,7 @@ var chat = [];
 
 function draw_new_chat(data){
     var name = "<span class='chat_name'>"+data.name+"</span>"+data.date+"<br/>"
-    var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onclick='window.location.href=/"+data.image.slice(7)+"'>" : "";
+    var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.location.href=\"/"+data.image.slice(7)+"\"'>" : "";
     var new_chat = "<div class='chat'>"+name+new_image+data.body+"</div>";
     $('.chats:first').append(new_chat);  
     

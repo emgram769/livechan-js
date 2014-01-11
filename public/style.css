@@ -47,6 +47,9 @@ body,html{
     padding-right:5px;
     vertical-align:text-top;
 }
+.chat_img:hover{
+    cursor:pointer;
+}
 
 .chat_name{
     color:green;
