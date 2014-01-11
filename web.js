@@ -127,30 +127,32 @@ app.post('/', function(req, res, next) {
     
     var data = {};
     
-    /* find should be password to prevent identity fraud */
+    // find should be password to prevent identity fraud 
     var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
     var password = crypto.createHash('sha1').update(info).digest('base64').toString();
     var user_pass = req.cookies['password_livechan'];
-        
+        /*
     if(!user_pass || password != user_pass){
         console.log("NO PASSRROD");
-        res.json({success:"SUCCESS"});
+        res.redirect('/login');
         return;
     }
     
-    /* check if it exists */
+    // check if it exists 
     if(!session_exists(user_pass)){
         console.log(session_list);
         console.log("NO PASSRROD");
-        res.json({success:"SUCCESS"});
+        res.redirect('/login');
         return;
     }
-    
+    */
     /* update hash cool down */
     if(user_pass in hash_list) {
         if(hash_list[user_pass] >= 1){
            hash_list[user_pass] += 100; 
         }
+        console.log("hash", hash_list[user_pass]);
+        
         res.json({success:"SUCCESS"});
         return;
     } else {
