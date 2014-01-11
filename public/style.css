@@ -2,6 +2,7 @@ body,html{
     padding:0;
     margin:0;
     background:rgb(238, 242, 255);
+    font-family: arial,helvetica,sans-serif;
 }
 
 .create{
