@@ -14,7 +14,7 @@ body,html{
     border:1px solid black;
     font-size:20px;
     min-width:300px;
-    //height:150px;
+    height:160px;
     font-size:14px;
 }
 
@@ -38,7 +38,7 @@ body,html{
     position:absolute;
     overflow:auto;
     top:0;
-    bottom:150;
+    bottom:160;
     width:100%;
 }
 
