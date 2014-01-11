@@ -123,12 +123,21 @@ app.post('/', function(req, res, next) {
             return;
     }
     
-    if(req.body.body.length > 200) {
-        req.body.body = req.body.body.substring(0,199)+"...";
+    if(req.body.body.length > 400) {
+        req.body.body = req.body.body.substring(0,399)+"...";
     }
     
-    if(req.body.name.length > 25) {
-        req.body.name = req.body.name.substring(0,24)+"...";
+    if(req.body.name.length > 40) {
+        req.body.name = req.body.name.substring(0,39)+"...";
+    }
+    
+    var trip_index = req.body.name.indexOf("#");
+    
+    if(trip_index > -1) {
+        data.trip = "!"+crypto.createHash('md5').update(req.body.name.substr(trip_index)).digest('base64').slice(0,10);
+        req.body.name = req.body.name.slice(0,trip_index);
+        
+        
     }
     
     if(already_exists(req.body.body)){
