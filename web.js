@@ -33,6 +33,7 @@ app.use(express.static(__dirname + '/public'));
 chat = [];
 hash_list = [];
 ips = {};
+count = 0;
 
 function demote_ips(){
     for(i in ips){
@@ -108,8 +109,8 @@ app.post('/', function(req, res, next) {
     console.log(a,b);
     
     if(req.connection.remoteAddress in ips) {
-        if(ips[req.connection.remoteAddress] >= 4){
-           ips[req.connection.remoteAddress] += 1; 
+        if(ips[req.connection.remoteAddress] >= 12){
+           ips[req.connection.remoteAddress] += 100; 
         }
         res.json({success:"SUCCESS"});
         return;
@@ -151,6 +152,8 @@ app.post('/', function(req, res, next) {
         console.log('image loaded to', req.files.image.path);
         data.image = req.files.image.path;
     }
+    count++;
+    data.count = count;
     data.date = (new Date).toString();
     add_to_chat(data);
     io.sockets.emit('chat', data);
