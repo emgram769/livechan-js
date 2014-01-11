@@ -14,7 +14,7 @@ function draw_new_chat(data){
     var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.location.href=\"/"+data.image.slice(7)+"\"'>" : "";
     var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/\r?\n/g, '<br />')+"</div>";
     $('.chats:first').append(new_chat);
-    $(".chat").html($(".chat").html().replace(/\&gt;(.*)/g, "<span class='greentext'>&gt;$1</span>"));
+    $(".chat").last().html($(".chat").last().html().replace(/\&gt;(.*)/g, "<span class='greentext'>&gt;$1</span>"));
 }
 
 function scroll(clear){
