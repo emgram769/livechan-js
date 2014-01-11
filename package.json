@@ -1,0 +1,19 @@
+{
+  "name": "4chan",
+  "version": "0.0.0",
+  "description": "4chan's captchas suck ass",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fuck",
+    "captchas"
+  ],
+  "author": "anon",
+  "license": "BSD",
+  "dependencies": {
+    "logfmt": "~0.18.1",
+    "express": "~3.4.7"
+  }
+}
