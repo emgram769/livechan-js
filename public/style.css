@@ -14,7 +14,8 @@ body,html{
     border:1px solid black;
     font-size:20px;
     min-width:300px;
-    height:150px;
+    //height:150px;
+    font-size:14px;
 }
 
 .shown{

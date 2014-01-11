@@ -29,6 +29,7 @@ function scroll(clear){
 function clear_fields(){
     $("#image").val('');
     $("#body").val('');
+    gen_math();
 }
 
 function draw_chat(){
@@ -36,6 +37,13 @@ function draw_chat(){
     {
         draw_new_chat(chat[i]);
     }
+}
+
+function gen_math(){
+    $('#m1').val(Math.floor(Math.random()*20))
+    $('#m1_').text($('#m1').val());
+    $('#m2').val(Math.floor(Math.random()*20))
+    $('#m2_').text($('#m2').val());
 }
 
 window.onload = function(){
@@ -55,4 +63,5 @@ window.onload = function(){
                 scroll();
         });
     });
+    gen_math();
 }
