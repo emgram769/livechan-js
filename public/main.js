@@ -36,10 +36,13 @@ function clear_fields(){
 }
 
 function draw_chat(){
+    var counter = 0;
     for(i in chat)
     {
         draw_new_chat(chat[i]);
+        counter++;
     }
+    document.title = "(" + counter + ") Live 4chan";
 }
 
 function gen_math(){
