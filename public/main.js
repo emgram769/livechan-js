@@ -34,7 +34,7 @@ function cool_down(){
 }
 
 function add_number_to_post(number){
-    var text = $("#body").val()+('>>'+number);
+    var text = $("#body").val()+('{'+number+'}');
     $("#body").val(text);
 }
 
@@ -43,7 +43,7 @@ function draw_new_chat(data){
     var name = "<span class='chat_name' id='chat_"+data.count+"'>"+escapeHTML(data.name)+trip+"</span>"+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
 
     var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
-    var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\r?\n/g, '<br />')+"</div>";
+    var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([^}]+)\}/,"<a href='#$1'>$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
 
     $('.chats:first').append(new_chat);
 }
