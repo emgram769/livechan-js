@@ -1,0 +1,21 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="style.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="main.js"></script>
+</head>
+<body>
+	<div class="chats">
+	</div>
+	<div class="create shown">
+		<form action="/" target="miframe" method="post" enctype="multipart/form-data">
+			<input id="name" name="name" placeholder="Anonymous" class="comment" type="text"></input>
+			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" type="text"></textarea>
+			<input id="image" name="image" type="file"></input>
+			<input type="submit" value="Submit" onclick="scroll(true);"></input>
+		</form>
+	</div>
+	<iframe style="visibility:hidden;" id="miframe" name="miframe"></iframe>
+</body>
+</html>

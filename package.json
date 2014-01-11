@@ -14,6 +14,7 @@
   "license": "BSD",
   "dependencies": {
     "logfmt": "~0.18.1",
-    "express": "~3.4.7"
+    "express": "~3.4.7",
+    "connect-form": "~0.2.1"
   }
 }

@@ -1,0 +1,55 @@
+body,html{
+    padding:0;
+    margin:0;
+    background:rgb(238, 242, 255);
+}
+
+.create{
+    position:fixed;
+    bottom:0;
+    width:99%;
+    right:.5%;
+    background:rgb(153, 136, 238);
+    border:1px solid black;
+    font-size:20px;
+    min-width:300px;
+    height:150px;
+}
+
+.shown{
+    display:block;
+}
+
+.hidden{
+    display:none;
+}
+
+.comment{
+    width:100%;
+}
+
+.chats{
+    position:absolute;
+    overflow:auto;
+    top:0;
+    bottom:150;
+    width:100%;
+}
+
+.chat{
+    background:rgb(214, 218, 240);
+    padding:5px;
+    margin:5px;
+}
+
+.chat_img{
+    padding:2px;
+    padding-right:5px;
+    vertical-align:text-top;
+}
+
+.chat_name{
+    color:green;
+    font-weight:bold;
+    padding-right:4px;
+}
