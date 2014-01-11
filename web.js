@@ -105,6 +105,7 @@ app.post('/login', function(req, res){
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
         session_list.push(password);
+        console.log(session_list);
         res.cookie('password_livechan', password, { maxAge: 900000, httpOnly: false});
         res.redirect('/');
     } else {
@@ -139,6 +140,7 @@ app.post('/', function(req, res, next) {
     
     /* check if it exists */
     if(!session_exists(user_pass)){
+        console.log(session_list);
         console.log("NO PASSRROD");
         res.json({success:"SUCCESS"});
         return;
