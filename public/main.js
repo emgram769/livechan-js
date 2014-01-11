@@ -17,13 +17,15 @@ function draw_new_chat(data){
 }
 
 function scroll(clear){
-    var scr = $('.chats:first')[0].scrollHeight;
-    $(".chats:first").animate({
-        scrollTop: scr
-    },200,'swing',function(){
-        if(clear)
-            clear_fields();
-    });
+    if($("#autoscroll").attr('checked') == "checked") {
+        var scr = $('.chats:first')[0].scrollHeight;
+        $(".chats:first").animate({
+            scrollTop: scr
+        },200,'swing',function(){
+            if(clear)
+                clear_fields();
+        });
+    }
 }
 
 function clear_fields(){
