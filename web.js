@@ -106,7 +106,7 @@ app.post('/', function(req, res, next) {
         res.json({success:"SUCCESS"});
         return;
     } else {
-        ips[req.connection.remoteAddress] = 10;
+        ips[req.connection.remoteAddress] = 15;
     }
     
     if(a != b && duplicate_hash(hash)){

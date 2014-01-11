@@ -11,7 +11,7 @@ function escapeHTML( string )
 
 function draw_new_chat(data){
     var name = "<span class='chat_name'>"+escapeHTML(data.name)+"</span>"+data.date+"<br/>"
-    var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.location.href=\"/"+data.image.slice(7)+"\"'>" : "";
+    var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
     var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/\r?\n/g, '<br />').replace(/\&gt;(.*)/g, "<span class='greentext'>&gt;$1</span>")+"</div>";
     $('.chats:first').append(new_chat);
 }
