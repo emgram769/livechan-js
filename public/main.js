@@ -9,10 +9,19 @@ function escapeHTML( string )
     return pre.innerHTML;
 }
 
+function greentext(post) {
+    for (line in post) {
+        if (post[line].substr(0,4)=="&gt;") {
+            post[line] = "<span style='color:#789922'>"+post[line]+"</span>"
+        }
+    }
+    return post.join("< br/>")
+}
+
 function draw_new_chat(data){
     var name = "<span class='chat_name'>"+escapeHTML(data.name)+"</span>"+data.date+"<br/>"
     var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.location.href=\"/"+data.image.slice(7)+"\"'>" : "";
-    var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/\r?\n/g, '<br />')+"</div>";
+    var new_chat = "<div class='chat'>"+name+new_image+greentext(escapeHTML(data.body).split(/\r?\n/g))+"</div>";
     $('.chats:first').append(new_chat);
 }
 
