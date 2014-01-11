@@ -78,15 +78,21 @@ app.post('/', function(req, res, next) {
         req.body.name = req.body.name.substring(0,24)+"...";
     }
     if(chat.length>10 && chat.slice(-10,0).indexOf(req.body) >-1){
+        res.json({success:"SUCCESS"});
         return;
     }
     if(req.connection.remoteAddress in ips) {
         if(ips[req.connection.remoteAddress] >= 4){
            ips[req.connection.remoteAddress] += 1; 
         }
+        res.json({success:"SUCCESS"});
         return;
     } else {
         ips[req.connection.remoteAddress] = 5;
+    }
+    if(req.body.body == ""){
+        res.json({success:"SUCCESS"});
+        return;
     }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
