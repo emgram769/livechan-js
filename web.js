@@ -89,7 +89,7 @@ app.post('/', function(req, res, next) {
         res.json({success:"SUCCESS"});
         return;
     }
-    if(req.connection.remoteAddress in ips) {
+    if(false && req.connection.remoteAddress in ips) {
         if(ips[req.connection.remoteAddress] >= 4){
            ips[req.connection.remoteAddress] += 1; 
         }
@@ -115,6 +115,7 @@ app.post('/', function(req, res, next) {
     data.date = (new Date).toString();
     add_to_chat(data);
     io.sockets.emit('chat', data);
+    console.log(data);
     res.json({success:"SUCCESS"});
 });
 
