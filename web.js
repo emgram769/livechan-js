@@ -2,6 +2,7 @@ var express = require("express");
 var logfmt = require("logfmt");
 var http = require('http');
 var crypto = require('crypto');
+var ipfilter = require('ipfilter');
 
 var format = require('util').format;
 var app = express();
@@ -18,6 +19,13 @@ app.use(express.bodyParser({
       keepExtensions: true
     }));
 app.use(express.limit('5mb'));
+
+fs = require('fs');
+fs.readFile('tor_list.txt', 'utf8', function(err,data){
+    var tor_list = data.split("\n");
+    app.use(ipfilter(tor_list));
+    
+});
 
 app.use(logfmt.requestLogger());
 app.use(express.static(__dirname + '/public'));
