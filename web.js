@@ -77,7 +77,7 @@ app.post('/', function(req, res, next) {
     if(req.body.name.length > 25) {
         req.body.name = req.body.name.substring(0,24)+"...";
     }
-    if(chat.length>10 && chat.slice(-10,0).indexOf(req.body) >-1){
+    if(chat.length>10 && (chat.slice(-10,0).indexOf(req.body) >-1)){
         res.json({success:"SUCCESS"});
         return;
     }
