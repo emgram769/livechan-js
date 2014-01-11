@@ -28,6 +28,10 @@ body,html{
     width:100%;
 }
 
+.greentext {
+    color: #789922;
+}
+
 .chats{
     position:absolute;
     overflow:auto;
