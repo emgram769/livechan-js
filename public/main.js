@@ -29,6 +29,7 @@ function scroll(clear){
 function clear_fields(){
     $("#image").val('');
     $("#body").val('');
+    $("#sum").val('');
     gen_math();
 }
 
