@@ -1,6 +1,7 @@
 var express = require("express");
 var logfmt = require("logfmt");
 var http = require('http');
+var crypto = require('crypto');
 
 var format = require('util').format;
 var app = express();
@@ -22,6 +23,7 @@ app.use(logfmt.requestLogger());
 app.use(express.static(__dirname + '/public'));
 
 chat = [];
+hash_list = [];
 ips = {};
 
 function demote_ips(){
@@ -59,6 +61,15 @@ function add_to_chat(data){
     chat.push(data);
 }
 
+function duplicate_hash(hash){
+    if (hash_list.length>10){
+        hash_list = [];
+    }
+    if (hash_list.indexOf(hash)>-1)
+        return true;
+    return false;
+}
+
 function already_exists(body){
     for(i in chat){
         if (chat[i].body == body)
@@ -78,17 +89,16 @@ app.get('/data', function(req, res) {
 app.post('/', function(req, res, next) {
     // the uploaded file can be found as `req.files.image` and the
     // title field as `req.body.title`
+    
     var data = {};
-    if(req.body.body.length > 200) {
-        req.body.body = req.body.body.substring(0,199)+"...";
-    }
-    if(req.body.name.length > 25) {
-        req.body.name = req.body.name.substring(0,24)+"...";
-    }
-    if(already_exists(req.body.body)){
-        res.json({success:"SUCCESS"});
-        return;
-    }
+    var m1 = parseInt(req.body.m1);
+    var m2 = parseInt(req.body.m2);
+    var sum = parseInt(req.body.sum);
+    console.log(m1,m2,sum);
+    var a = crypto.createHash('sha1').update((m1+m2)+'test').digest('hex');
+    var b = crypto.createHash('sha1').update(sum+'test').digest('hex');
+    console.log(a,b);
+    
     if(req.connection.remoteAddress in ips) {
         if(ips[req.connection.remoteAddress] >= 4){
            ips[req.connection.remoteAddress] += 1; 
@@ -98,12 +108,33 @@ app.post('/', function(req, res, next) {
     } else {
         ips[req.connection.remoteAddress] = 5;
     }
+    
+    if(a != b && duplicate_hash(hash)){
+            res.json({success:"SUCCESS"});
+            return;
+    }
+    
+    if(req.body.body.length > 200) {
+        req.body.body = req.body.body.substring(0,199)+"...";
+    }
+    
+    if(req.body.name.length > 25) {
+        req.body.name = req.body.name.substring(0,24)+"...";
+    }
+    
+    if(already_exists(req.body.body)){
+        res.json({success:"SUCCESS"});
+        return;
+    }
+    
     if(req.body.body == ""){
         res.json({success:"SUCCESS"});
         return;
     }
+    
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
+    
     if(req.files.image.size == 0 ||
     invalid_extension(req.files.image.path)) {
         //fs.unlink(req.files.image.path);
