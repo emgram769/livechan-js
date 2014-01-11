@@ -3,9 +3,18 @@ var chat = [];
 var cool_down_timer;
 var cool_down_interval;
 
+function get_cookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++)
+    {
+        var c = ca[i].trim();
+        if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
 
-function escapeHTML( string )
-{
+function escapeHTML( string ) {
     var pre = document.createElement('pre');
     var text = document.createTextNode( string );
     pre.appendChild(text);
@@ -52,7 +61,11 @@ function draw_new_chat(data){
     var name = "<span class='chat_name' id='chat_"+data.count+"'>"+escapeHTML(data.name)+trip+"</span>"+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
 
     var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
-    var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/>>([0-9]+)\ /g,"<a href='#' onclick='scroll_to_number($1)'>$1</a>").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\r?\n/g, '<br />')+"</div>";
+    /*
+    /^\>([a-z0-9]+)\ /gi
+    /^\>>([0-9]+)\ /g
+    */
+    var new_chat = "<div class='chat'>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
 
     $('.chats:first').append(new_chat);
 }
@@ -106,4 +119,6 @@ window.onload = function(){
         });
     });
     gen_math();
+    if(get_cookie("password_livechan")=="")
+        window.location.href='/login';
 }
