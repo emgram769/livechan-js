@@ -18,15 +18,6 @@ function draw_new_chat(data){
 }
 
 function scroll(clear){
-<<<<<<< HEAD
-    var scr = $('.chats:first')[0].scrollHeight;
-    $(".chats:first").animate({
-        scrollTop: scr
-    },100,'swing',function(){
-        if(clear)
-            clear_fields();
-    });
-=======
     if($("#autoscroll").attr('checked') == "checked") {
         var scr = $('.chats:first')[0].scrollHeight;
         $(".chats:first").animate({
@@ -36,7 +27,6 @@ function scroll(clear){
                 clear_fields();
         });
     }
->>>>>>> 8788340117fa891cb2695df057ca4def83ea03a9
 }
 
 function clear_fields(){
