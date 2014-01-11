@@ -1,5 +1,8 @@
 var socket = io.connect('/');
 var chat = [];
+var cool_down_timer;
+var cool_down_interval;
+
 
 function escapeHTML( string )
 {
@@ -7,6 +10,27 @@ function escapeHTML( string )
     var text = document.createTextNode( string );
     pre.appendChild(text);
     return pre.innerHTML;
+}
+
+function submit_chat(){
+    scroll(true);
+    cool_down_timer = 15;
+    if (cool_down_interval)
+        clearInterval(cool_down_timer);
+    cool_down_interval = setInterval(cool_down,1000);
+}
+
+function cool_down(){
+    console.log(cool_down_timer);
+    if (cool_down_timer <= 0){
+        clearInterval(cool_down_interval);
+        $("#cool_down").text("");
+        $("#submit_button").prop("disabled",false);
+    } else {
+        $("#cool_down").text(cool_down_timer);
+        $("#submit_button").prop("disabled",true);
+        cool_down_timer--;
+    }
 }
 
 function add_number_to_post(number){
