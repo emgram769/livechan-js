@@ -71,13 +71,22 @@ app.post('/', function(req, res, next) {
     // the uploaded file can be found as `req.files.image` and the
     // title field as `req.body.title`
     var data = {};
+    if(req.body.body.length > 200) {
+        req.body.body = req.body.body.substring(0,199)+"...";
+    }
+    if(req.body.name.length > 25) {
+        req.body.name = req.body.name.substring(0,24)+"...";
+    }
+    if(chat.length>10 && chat.slice(-10,0).indexOf(req.body) >-1){
+        return;
+    }
     if(req.connection.remoteAddress in ips) {
-        if(ips[req.connection.remoteAddress] >= 3){
+        if(ips[req.connection.remoteAddress] >= 4){
            ips[req.connection.remoteAddress] += 1; 
         }
         return;
     } else {
-        ips[req.connection.remoteAddress] = 3;
+        ips[req.connection.remoteAddress] = 5;
     }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
