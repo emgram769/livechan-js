@@ -34,6 +34,10 @@ body,html{
     color: #789922;
 }
 
+.redtext {
+    color:rgb(221, 0, 0);
+}
+
 .chats{
     position:absolute;
     overflow:auto;
@@ -62,4 +66,13 @@ body,html{
     color:green;
     font-weight:bold;
     padding-right:4px;
+}
+
+.chat_number{
+    padding-left:5px;
+}
+
+.chat_number:hover{
+    color:rgb(221, 0, 0);
+    cursor:pointer;
 }
