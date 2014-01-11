@@ -51,7 +51,7 @@ window.onload = function(){
             console.log(d);
             chat.push(d);
             draw_new_chat(d);
-            if($("#autoscroll").attr('checked') == "checked")
+            if($("#autoscroll").attr('checked') != "unchecked")
                 scroll();
         });
     });
