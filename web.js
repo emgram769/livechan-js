@@ -89,7 +89,7 @@ app.post('/', function(req, res, next) {
         res.json({success:"SUCCESS"});
         return;
     }
-    if(false && req.connection.remoteAddress in ips) {
+    if(req.connection.remoteAddress in ips) {
         if(ips[req.connection.remoteAddress] >= 4){
            ips[req.connection.remoteAddress] += 1; 
         }
