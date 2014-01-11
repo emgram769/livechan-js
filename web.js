@@ -3,6 +3,7 @@ var logfmt = require("logfmt");
 var http = require('http');
 var crypto = require('crypto');
 var ipfilter = require('ipfilter');
+var captcha = require('captcha');
 
 var format = require('util').format;
 var app = express();
@@ -29,9 +30,13 @@ fs.readFile('tor_list.txt', 'utf8', function(err,data){
 
 app.use(logfmt.requestLogger());
 app.use(express.static(__dirname + '/public'));
+app.use(express.cookieParser());
+app.use(express.cookieSession({ secret: 'keyboard-cat' }));
+app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,200)' }));
 
 chat = [];
 hash_list = [];
+session_list = [];
 ips = {};
 count = 0;
 
@@ -41,6 +46,12 @@ function demote_ips(){
             delete ips[i];
         else
             ips[i]--;
+    }
+    for(i in hash_list){
+        if (hash_list[i] == 0)
+            delete hash_list[i];
+        else
+            hash_list[i]--;
     }
 }
 
@@ -70,11 +81,8 @@ function add_to_chat(data){
     chat.push(data);
 }
 
-function duplicate_hash(hash){
-    if (hash_list.length>10){
-        hash_list = [];
-    }
-    if (hash_list.indexOf(hash)>-1)
+function session_exists(session){
+    if (session_list.indexOf(session)>-1)
         return true;
     return false;
 }
@@ -86,6 +94,23 @@ function already_exists(body){
     }
     return false;
 }
+
+app.get('/login', function(req, res){
+    res.sendfile('login.html');
+});
+
+app.post('/login', function(req, res){
+    if(req.body.digits == req.session.captcha) {
+        var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
+        var password = crypto.createHash('sha1').update(info).digest('base64').toString();
+        console.log("password", password);
+        session_list.push(password);
+        res.cookie('password_livechan', password, { maxAge: 900000, httpOnly: false});
+        res.redirect('/');
+    } else {
+        res.json({failure:"fail"});
+    }
+});
 
 app.get('/', function(req, res) {
     res.sendfile('index.html');
@@ -100,28 +125,46 @@ app.post('/', function(req, res, next) {
     // title field as `req.body.title`
     
     var data = {};
-    var m1 = parseInt(req.body.m1);
-    var m2 = parseInt(req.body.m2);
-    var sum = parseInt(req.body.sum);
-    console.log(m1,m2,sum);
-    var a = crypto.createHash('sha1').update((m1+m2)+'test').digest('hex');
-    var b = crypto.createHash('sha1').update(sum+'test').digest('hex');
-    console.log(a,b);
     
+    /* find should be password to prevent identity fraud */
+    var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
+    var password = crypto.createHash('sha1').update(info).digest('base64').toString();
+    var user_pass = req.cookies['password_livechan'];
+        
+    if(!user_pass || password != user_pass){
+        console.log("NO PASSRROD");
+        res.json({success:"SUCCESS"});
+        return;
+    }
+    
+    /* check if it exists */
+    if(!session_exists(user_pass)){
+        console.log("NO PASSRROD");
+        res.json({success:"SUCCESS"});
+        return;
+    }
+    
+    /* update hash cool down */
+    if(user_pass in hash_list) {
+        if(hash_list[user_pass] >= 1){
+           hash_list[user_pass] += 100; 
+        }
+        res.json({success:"SUCCESS"});
+        return;
+    } else {
+        hash_list[user_pass] = 15;
+    }
+    
+    /* update ip cool down */
     if(req.connection.remoteAddress in ips) {
         if(ips[req.connection.remoteAddress] >= 1){
            ips[req.connection.remoteAddress] += 100; 
         }
-        console.log(ips[req.connection.remoteAddress]);
+        console.log("IP", ips[req.connection.remoteAddress]);
         res.json({success:"SUCCESS"});
         return;
     } else {
         ips[req.connection.remoteAddress] = 15;
-    }
-    
-    if(a != b && duplicate_hash(hash)){
-            res.json({success:"SUCCESS"});
-            return;
     }
     
     if(req.body.body.length > 400) {
@@ -137,8 +180,6 @@ app.post('/', function(req, res, next) {
     if(trip_index > -1) {
         data.trip = "!"+crypto.createHash('md5').update(req.body.name.substr(trip_index)).digest('base64').slice(0,10);
         req.body.name = req.body.name.slice(0,trip_index);
-        
-        
     }
     
     if(already_exists(req.body.body)){

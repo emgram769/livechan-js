@@ -85,3 +85,12 @@ a{
     color:rgb(221, 0, 0);
     
 }
+
+.center{
+    width:100%;
+    text-align:center;
+}
+
+.container{
+    padding:20px;
+}
