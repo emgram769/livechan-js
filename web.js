@@ -91,8 +91,10 @@ function session_exists(session){
 
 function already_exists(body, id){
     for(i in chat[id]){
-        if (chat[id][i].body == body)
+        if (chat[id][i].body == body){
+            ips[chat[id][i].ip]+=600;
             return true;
+        }
     }
     return false;
 }
@@ -112,7 +114,7 @@ app.post('/login', function(req, res){
         console.log(req);
         res.redirect(req.body.page);
     } else {
-        res.json({failure:"fail"});
+        res.send("You mistyped the captcha!");
     }
 });
 
@@ -140,7 +142,11 @@ app.get('/data/:id([a-z]+)', function(req, res) {
 
 app.post('/ban/:id([a-z]+)', function(req, res, next){
     var board = req.params.id;
-    
+    var ip = req.query.ip;
+    var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0,10);
+    if (hash == "CnB7SkWsyx"){
+        console.log(ip);
+    }
 });
 
 app.post('/chat/:id([a-z]+)', function(req, res, next) {

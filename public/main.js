@@ -136,13 +136,11 @@ window.onload = function(){
         socket.emit('subscribe', chat_id);
     });
     
-    $(document).ready(function() {
-      $(window).keydown(function(event){
+    $("#name").keydown(function(event){
         if(event.keyCode == 13) {
-          event.preventDefault();
-          return false;
+            event.preventDefault();
+            return false;
         }
-      });
     });
     
     $("#body").keyup(function (e) {
