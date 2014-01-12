@@ -1,0 +1,24 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="/style.css">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/main.js"></script>
+<script>
+var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x'];
+window.onload = function(){
+	for (i in boards){
+		var html = "<span class='link' onclick='window.location.href=\"/chat/"+boards[i]+"\"'>/"+boards[i]+"/</span>"
+		$(".container:first").append(html);
+	}
+}
+</script>
+</head>
+<body>
+	<div class="center" style="padding-top:40px;font-size:40px;">Pick your channel</div><br/>
+	<div class="container" style="text-align:center;">
+	</div>
+	<div class="container" style="text-align:center;">
+		Please note that there is a strict 15 second cool down time throughout all channels.  There is no warning and violation of the cool down will block your IP.
+	</div>
+</body>
+</html>

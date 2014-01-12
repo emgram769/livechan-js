@@ -94,3 +94,31 @@ a{
 .container{
     padding:20px;
 }
+
+.link{
+    color:black;
+    padding:5px;
+    display:inline-block;
+}
+
+.link:hover{
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+
+textarea{
+    resize: none;
+    font-family: arial,helvetica,sans-serif;
+    font-size:14px;
+    
+}
+
+input{
+    font-family: arial,helvetica,sans-serif;
+    font-size:14px;
+
+}
+
+.admin{
+    color:rgb(221, 0, 0);
+}
