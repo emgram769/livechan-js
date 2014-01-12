@@ -23,6 +23,7 @@ function escapeHTML( string ) {
 }
 
 function submit_chat(){
+    $("#comment-form").submit();
     if(!admin_mode){
         $("#submit_button").prop("disabled",true);
         clear_fields();
@@ -34,6 +35,7 @@ function submit_chat(){
     } else {
         clear_fields();
     }
+    return false;
 }
 
 function cool_down(){
@@ -146,7 +148,6 @@ window.onload = function(){
     $("#body").keyup(function (e) {
         if (e.keyCode == 13 && $("#autosubmit").prop('checked')
         && cool_down_timer<=0) {
-            $("#comment-form").submit();
             submit_chat();
         }
     });

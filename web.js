@@ -123,14 +123,14 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/chat/:id([a-z]+)', function(req, res) {
+app.get('/chat/:id([a-z0-9]+)', function(req, res) {
     if (boards.indexOf(req.params.id) < 0){
         res.send("Does not exist :(");
     }
     res.sendfile('index.html');
 });
 
-app.get('/data/:id([a-z]+)', function(req, res) {
+app.get('/data/:id([a-z0-9]+)', function(req, res) {
     if (boards.indexOf(req.params.id) < 0){
         res.send("Does not exist :(");
     }
@@ -140,7 +140,7 @@ app.get('/data/:id([a-z]+)', function(req, res) {
     res.json(chat[req.params.id]);
 });
 
-app.post('/ban/:id([a-z]+)', function(req, res, next){
+app.post('/ban/:id([a-z0-9]+)', function(req, res, next){
     var board = req.params.id;
     var ip = req.query.ip;
     var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0,10);
@@ -149,7 +149,7 @@ app.post('/ban/:id([a-z]+)', function(req, res, next){
     }
 });
 
-app.post('/chat/:id([a-z]+)', function(req, res, next) {
+app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     if (boards.indexOf(req.params.id) < 0){
         res.send("Does not exist :(");
         return;
