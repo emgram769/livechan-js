@@ -46,6 +46,14 @@ body,html{
     width:100%;
 }
 
+.chats-home{
+    position:absolute;
+    overflow:auto;
+    top:300px;
+    width:100%;
+    bottom:0;
+}
+
 .chat{
     background:rgb(214, 218, 240);
     padding:5px;
@@ -81,6 +89,16 @@ body,html{
     cursor:pointer;
 }
 
+.chat_label{
+    color:grey;
+    font-size:20px;
+    padding:5px;
+}
+
+.chat_label:hover{
+    cursor:pointer;
+}
+
 a{
     color:rgb(221, 0, 0);
     
@@ -99,6 +117,7 @@ a{
     color:black;
     padding:5px;
     display:inline-block;
+    text-decoration:none;
 }
 
 .link:hover{

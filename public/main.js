@@ -2,6 +2,7 @@ var socket = io.connect('/');
 var chat = [];
 var cool_down_timer = 0;
 var cool_down_interval;
+var admin_mode = false;
 
 function get_cookie(cname) {
     var name = cname + "=";
@@ -22,13 +23,17 @@ function escapeHTML( string ) {
 }
 
 function submit_chat(){
-    $("#submit_button").prop("disabled",true);
-    clear_fields();
-    cool_down_timer = 15;
-    if (cool_down_interval)
-        clearInterval(cool_down_timer);
-    cool_down_interval = setInterval(cool_down,1000);
-    scroll();
+    if(!admin_mode){
+        $("#submit_button").prop("disabled",true);
+        clear_fields();
+        cool_down_timer = 15;
+        if (cool_down_interval)
+            clearInterval(cool_down_timer);
+        cool_down_interval = setInterval(cool_down,1000);
+        scroll();
+    } else {
+        clear_fields();
+    }
 }
 
 function cool_down(){
@@ -130,6 +135,15 @@ window.onload = function(){
     var chat_id = path.slice(path.lastIndexOf('/')+1);
     socket.on('request_location',function(data){
         socket.emit('subscribe', chat_id);
+    });
+    
+    $(document).ready(function() {
+      $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
     });
     
     $("#body").keyup(function (e) {
