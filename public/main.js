@@ -87,7 +87,6 @@ function show_text(number, el){
         zIndex:    1000
     });
     $('body').append(display);
-    console.log(display);
 }
 
 function kill_excess(){
@@ -170,4 +169,13 @@ window.onload = function(){
     });
     if(get_cookie("password_livechan")=="")
         window.location.href='/login?page='+path;
+        
+
+    $('iframe#miframe').load(function() {
+        var resp = JSON.parse($("#miframe"
+                ).contents()[0].body.childNodes[0].innerHTML);
+        if(resp.failure)
+            alert(resp.failure);
+
+    });
 }
