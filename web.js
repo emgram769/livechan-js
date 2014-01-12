@@ -248,6 +248,11 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
         console.log('image loaded to', req.files.image.path);
         data.image = req.files.image.path;
     }
+    if (req.body.convo)
+        data.convo = req.body.convo;
+    else
+        data.convo = 'General';
+    
     count++;
     data.count = count;
     data.date = (new Date).toString();
