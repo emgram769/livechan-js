@@ -10,23 +10,23 @@ var app = express();
 var port = process.env.PORT || 5000;
 var server = http.createServer(app).listen(port, function(){
     console.log('Express server listening on port %d in %s mode',
-            server.address().port, app.settings.env);
+    server.address().port, app.settings.env);
 });
 var io = require('socket.io').listen(server);
 var fs = require('fs');
 
 app.use(express.bodyParser({
-      uploadDir: 'public/tmp/uploads',
-      keepExtensions: true
+    uploadDir: 'public/tmp/uploads',
+    keepExtensions: true
     }));
-app.use(express.limit('5mb'));
+    app.use(express.limit('5mb'));
 
-fs = require('fs');
-fs.readFile('tor_list.txt', 'utf8', function(err,data){
-    var tor_list = data.split("\n");
-    app.use(ipfilter(tor_list));
-    
-});
+    fs = require('fs');
+    fs.readFile('tor_list.txt', 'utf8', function(err,data){
+        var tor_list = data.split("\n");
+        app.use(ipfilter(tor_list));
+
+    });
 
 app.use(logfmt.requestLogger());
 app.use(express.static(__dirname + '/public'));
@@ -35,6 +35,7 @@ app.use(express.cookieSession({ secret: 'keyboard-cat' }));
 app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,200)' }));
 
 chat = {};
+curr_chat =[];
 hash_list = [];
 session_list = [];
 ips = {};
@@ -44,15 +45,15 @@ var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o'
 function demote_ips(){
     for(i in ips){
         if (ips[i] == 0)
-            delete ips[i];
+        delete ips[i];
         else
-            ips[i]--;
+        ips[i]--;
     }
     for(i in hash_list){
         if (hash_list[i] == 0)
-            delete hash_list[i];
+        delete hash_list[i];
         else
-            hash_list[i]--;
+        hash_list[i]--;
     }
 }
 
@@ -67,25 +68,30 @@ function invalid_extension(filename){
     var test=['jpg','jpeg','png','gif','svg'].indexOf(get_extension(filename));
     console.log("INDEX IS",get_extension(filename), test);
     if (test > -1)
-        return false;
+    return false;
     return true;
 }
 
 function add_to_chat(data,id){
     if (!chat[id])
-        chat[id] = [];
+    chat[id] = [];
     if (chat[id].length>100){
         if(chat[id][0].image)
-            fs.unlink(chat[id][0].image);
+        fs.unlink(chat[id][0].image);
         delete chat[id][0];
-        chat[id] = chat[id].slice(-100,0);
+        chat[id] = chat[id].slice(-99);
+    }
+    if (curr_chat.length>20){
+        delete curr_chat[0];
+        curr_chat = curr_chat.slice(-19);
     }
     chat[id].push(data);
+    curr_chat.push(data);
 }
 
 function session_exists(session){
     if (session_list.indexOf(session)>-1)
-        return true;
+    return true;
     return false;
 }
 
@@ -131,8 +137,13 @@ app.get('/chat/:id([a-z0-9]+)', function(req, res) {
 });
 
 app.get('/data/:id([a-z0-9]+)', function(req, res) {
-    if (boards.indexOf(req.params.id) < 0){
+    if (req.params.id == "all") {
+        res.json(curr_chat);
+        return;
+    }
+    if (boards.indexOf(req.params.id) < 0) {
         res.send("Does not exist :(");
+        return;
     }
     if (!chat[req.params.id]) {
         chat[req.params.id] = [];
@@ -155,19 +166,25 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
         return;
     }
     
-    console.log("TEXT SENT",req.body.body);
-    
+    if(req.files.image.size == 0 || invalid_extension(req.files.image.path)) {
+         fs.unlink(req.files.image.path);
+         console.log("DELETED");
+     } else {
+         console.log('image loaded to', req.files.image.path);
+         data.image = req.files.image.path;
+     }
+
     // find should be password to prevent identity fraud 
     var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
     var password = crypto.createHash('sha1').update(info).digest('base64').toString();
     var user_pass = req.cookies['password_livechan'];
-        /*
+    /*
     if(!user_pass || password != user_pass){
         console.log("NO PASSRROD");
         res.redirect('/login');
         return;
     }
-    
+
     // check if it exists 
     if(!session_exists(user_pass)){
         console.log(session_list);
@@ -176,96 +193,88 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
         return;
     }
     */
-    
+
     if(req.body.body.length > 400) {
         req.body.body = req.body.body.substring(0,399)+"...";
     }
-    
+
     if(req.body.body.split("\n").length > 7){
         req.body.body = req.body.body.split("\n",7).join("\n");
     }
-    
+
     if(req.body.name.length > 40) {
         req.body.name = req.body.name.substring(0,39)+"...";
     }
-    
+
     /* passed most tests, make data object */
     var data = {};
     var trip_index = req.body.name.indexOf("#");
-    
+
     if(trip_index > -1) {
         data.trip = "!"+crypto.createHash('md5').update(req.body.name.substr(trip_index)).digest('base64').slice(0,10);
         req.body.name = req.body.name.slice(0,trip_index);
     }
-    
+
     if(data.trip != "!CnB7SkWsyx") {
-    /* update hash cool down */
-    if(user_pass in hash_list) {
-        if(hash_list[user_pass] >= 1){
-           hash_list[user_pass] += 100; 
+        /* update hash cool down */
+        if(user_pass in hash_list) {
+            if(hash_list[user_pass] >= 1){
+                hash_list[user_pass] *= 2; 
+            }
+            console.log("hash", hash_list[user_pass]);
+            res.json({failure:"cool down violation. now "+hash_list[user_pass]+" seconds"});
+            return;
+        } else {
+            hash_list[user_pass] = 5;
         }
-        console.log("hash", hash_list[user_pass]);
-        res.json({failure:"cool down violation. now "+hash_list[user_pass]+" seconds"});
-        return;
-    } else {
-        hash_list[user_pass] = 15;
-    }
-    
-    /* update ip cool down */
-    if(req.connection.remoteAddress in ips) {
-        if(ips[req.connection.remoteAddress] >= 1){
-           ips[req.connection.remoteAddress] += 100; 
+
+        /* update ip cool down */
+        if(req.connection.remoteAddress in ips) {
+            if(ips[req.connection.remoteAddress] >= 1){
+                ips[req.connection.remoteAddress] *= 2; 
+            }
+            console.log("IP", ips[req.connection.remoteAddress]);
+            res.json({failure:"cool down violation. now "+ips[req.connection.remoteAddress]+" seconds"});
+            return;
+        } else {
+            ips[req.connection.remoteAddress] = 5;
         }
-        console.log("IP", ips[req.connection.remoteAddress]);
-        res.json({failure:"cool down violation. now "+ips[req.connection.remoteAddress]+" seconds"});
-        return;
-    } else {
-        ips[req.connection.remoteAddress] = 15;
-    }
-    
-    
-    
-    if(already_exists(req.body.body, req.params.id)){
-        console.log("exists");
-        res.json({failure:"post exists"});
-        return;
-    }
-    
-    if(req.body.body == ""){
-        console.log("nothing");
-        res.json({failure:"nothing submitted"});
-        return;
-    }
+
+
+
+        if(already_exists(req.body.body, req.params.id)){
+            console.log("exists");
+            res.json({failure:"post exists"});
+            return;
+        }
+
+        if(req.body.body == ""){
+            console.log("nothing");
+            res.json({failure:"nothing submitted"});
+            return;
+        }
     }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
-    
-    if(req.files.image.size == 0 ||
-    invalid_extension(req.files.image.path)) {
-        fs.unlink(req.files.image.path);
-        console.log("DELETED");
-    } else {
-        console.log('image loaded to', req.files.image.path);
-        data.image = req.files.image.path;
-    }
+
     if (req.body.convo)
         data.convo = req.body.convo;
     else
         data.convo = 'General';
-    
+
     count++;
     data.count = count;
     data.date = (new Date).toString();
     data.ip = req.connection.remoteAddress;
     add_to_chat(data, req.params.id);
     data.ip = 'hidden';
-    
+
     data.chat = req.params.id;
     //console.log(chat);
-    
+
     io.sockets.in(req.params.id).emit('chat', data);
     io.sockets.in('all').emit('chat', data);
-    
+
     res.json({success:"SUCCESS"});
 });
 

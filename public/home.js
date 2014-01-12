@@ -10,7 +10,7 @@ function escapeHTML( string ) {
 
 function draw_new_chat(data){
     if (!data)
-        return false;
+    return false;
     var extra_class = (data.trip && data.trip == "!CnB7SkWsyx") ? "admin" : "";
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var name = "<span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
@@ -26,8 +26,8 @@ function draw_new_chat(data){
 }
 
 function draw_chat(){
-	$('.chats-home:first').html('');
-	var i = chat.length;
+    $('.chats-home:first').html('');
+    var i = chat.length;
     while(i>=0)
     {
         i--;
@@ -36,27 +36,34 @@ function draw_chat(){
 }
 
 function add_chat(data){
-		if (chat.length > 5){
-			delete chat[0];
-			chat = chat.slice(-4,0);
-		}
-		chat.push(data);
-		draw_chat();
+    if (chat.length > 5){
+        delete chat[0];
+        chat = chat.slice(-4,0);
+    }
+    chat.push(data);
+    draw_chat();
 }
 
 
 window.onload = function(){
-    
 
-  socket.on('request_location',function(data){
-      socket.emit('subscribe', 'all');
-  });
+    $.ajax({
+        type: "GET",
+        url: "/data/all"
+    }).done(function(data) {
+        chat = data;
+        draw_chat();
+    });
 
-	socket.on('chat', function (d) {
-	  chat.push(d);
-	  draw_chat();
-	  if($("#autoscroll").prop('checked'))
-	      scroll();
-  });
-	
+    socket.on('request_location',function(data){
+        socket.emit('subscribe', 'all');
+    });
+
+    socket.on('chat', function (d) {
+        chat.push(d);
+        draw_chat();
+        if($("#autoscroll").prop('checked'))
+        scroll();
+    });
+
 }

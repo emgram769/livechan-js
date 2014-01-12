@@ -1,6 +1,7 @@
 <html>
 <head>
 	<link type="text/css" rel="stylesheet" href="/style.css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/main.js"></script>
@@ -13,15 +14,15 @@
 			<input id="name" name="name" placeholder="Anonymous" class="name" type="text"/>
 			<input id="convo" name="convo" placeholder="General" class="convo" type="text"/>
 			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" type="text"></textarea>
-			<input id="image" name="image" type="file"></input>
+			<input id="image" name="image" type="file" style="max-width:50%;"></input>
 			<input id="submit_button" type="submit" value="Submit" onclick="submit_chat();"></input>
 			<span id="cool_down"></span>
 			<input type="checkbox" id="autoscroll" checked="true" value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label>
 			<input type="checkbox" id="autosubmit" checked="true" value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on Enter</label>
 			<select id="convo_filter">
-			  <option value="no-filter">No Filter</option>
-			  <option value="highlight">Highlight</option>
-			  <option value="filter">Full Filter</option>
+				<option value="no-filter">No Filter</option>
+				<option value="highlight">Highlight</option>
+				<option value="filter">Full Filter</option>
 			</select>
 		</form>
 	</div>
