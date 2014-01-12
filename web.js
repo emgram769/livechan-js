@@ -170,6 +170,10 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
         req.body.body = req.body.body.substring(0,399)+"...";
     }
     
+    if(req.body.body.split("\n").length > 7){
+        req.body.body = req.body.body.split("\n",7).join("\n");
+    }
+    
     if(req.body.name.length > 40) {
         req.body.name = req.body.name.substring(0,39)+"...";
     }
