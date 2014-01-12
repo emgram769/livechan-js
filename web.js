@@ -74,11 +74,11 @@ function invalid_extension(filename){
 function add_to_chat(data,id){
     if (!chat[id])
         chat[id] = [];
-    if (chat[id].length>50){
+    if (chat[id].length>100){
         if(chat[id][0].image)
             fs.unlink(chat[id][0].image);
         delete chat[id][0];
-        chat[id] = chat[id].slice(-50,0);
+        chat[id] = chat[id].slice(-100,0);
     }
     chat[id].push(data);
 }
@@ -89,9 +89,9 @@ function session_exists(session){
     return false;
 }
 
-function already_exists(body){
-    for(i in chat){
-        if (chat[i].body == body)
+function already_exists(body, id){
+    for(i in chat[id]){
+        if (chat[id][i].body == body)
             return true;
     }
     return false;
@@ -136,6 +136,11 @@ app.get('/data/:id([a-z]+)', function(req, res) {
         chat[req.params.id] = [];
     }
     res.json(chat[req.params.id]);
+});
+
+app.post('/ban/:id([a-z]+)', function(req, res, next){
+    var board = req.params.id;
+    
 });
 
 app.post('/chat/:id([a-z]+)', function(req, res, next) {
@@ -194,7 +199,7 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
            hash_list[user_pass] += 100; 
         }
         console.log("hash", hash_list[user_pass]);
-        res.json({success:"SUCCESS"});
+        res.json({failure:"cool down violation. now "+hash_list[user_pass]+" seconds"});
         return;
     } else {
         hash_list[user_pass] = 15;
@@ -206,7 +211,7 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
            ips[req.connection.remoteAddress] += 100; 
         }
         console.log("IP", ips[req.connection.remoteAddress]);
-        res.json({success:"SUCCESS"});
+        res.json({failure:"cool down violation. now "+ips[req.connection.remoteAddress]+" seconds"});
         return;
     } else {
         ips[req.connection.remoteAddress] = 15;
@@ -214,15 +219,15 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
     
     
     
-    if(already_exists(req.body.body)){
+    if(already_exists(req.body.body, req.params.id)){
         console.log("exists");
-        res.json({success:"SUCCESS"});
+        res.json({failure:"post exists"});
         return;
     }
     
     if(req.body.body == ""){
         console.log("nothing");
-        res.json({success:"SUCCESS"});
+        res.json({failure:"nothing submitted"});
         return;
     }
     }
@@ -240,10 +245,11 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
     count++;
     data.count = count;
     data.date = (new Date).toString();
+    data.ip = req.connection.remoteAddress;
     add_to_chat(data, req.params.id);
+    data.ip = 'hidden';
     
     data.chat = req.params.id;
-    
     //console.log(chat);
     
     io.sockets.in(req.params.id).emit('chat', data);
