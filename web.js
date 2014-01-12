@@ -34,11 +34,12 @@ app.use(express.cookieParser());
 app.use(express.cookieSession({ secret: 'keyboard-cat' }));
 app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,200)' }));
 
-chat = [];
+chat = {};
 hash_list = [];
 session_list = [];
 ips = {};
 count = 0;
+var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x'];
 
 function demote_ips(){
     for(i in ips){
@@ -70,15 +71,14 @@ function invalid_extension(filename){
     return true;
 }
 
-function add_to_chat(data){
-    if (chat.length>100){
-        console.log(chat);
-        //if(chat[0].image)
-          //  fs.unlink(chat[0].image);
-        delete chat[0];
-        chat = chat.slice(-100,0);
+function add_to_chat(data,id){
+    if (!chat[id])
+        chat[id] = [];
+    if (chat[id].length>50){
+        delete chat[id][0];
+        chat[id] = chat[id].slice(-50,0);
     }
-    chat.push(data);
+    chat[id].push(data);
 }
 
 function session_exists(session){
@@ -96,7 +96,7 @@ function already_exists(body){
 }
 
 app.get('/login', function(req, res){
-    res.sendfile('login.html');
+    res.send('<html><head><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="center container"><div>Please prove you aren\'t a robot</div><br/><img src="/captcha.jpg"/><form action="/login" method="post"><br/><input type="text" name="digits"/><input type="hidden" name="page" value="'+req.query.page+'"/></form></div></body></html>');
 });
 
 app.post('/login', function(req, res){
@@ -107,25 +107,42 @@ app.post('/login', function(req, res){
         session_list.push(password);
         console.log(session_list);
         res.cookie('password_livechan', password, { maxAge: 900000, httpOnly: false});
-        res.redirect('/');
+        console.log(req);
+        res.redirect(req.body.page);
     } else {
         res.json({failure:"fail"});
     }
 });
 
 app.get('/', function(req, res) {
+    res.sendfile('home.html');
+});
+
+
+app.get('/chat/:id([a-z]+)', function(req, res) {
+    if (boards.indexOf(req.params.id) < 0){
+        res.send("Does not exist :(");
+    }
     res.sendfile('index.html');
 });
 
-app.get('/data', function(req, res) {
-    res.json(chat);
+app.get('/data/:id([a-z]+)', function(req, res) {
+    if (boards.indexOf(req.params.id) < 0){
+        res.send("Does not exist :(");
+    }
+    if (!chat[req.params.id]) {
+        chat[req.params.id] = [];
+    }
+    res.json(chat[req.params.id]);
 });
 
-app.post('/', function(req, res, next) {
-    // the uploaded file can be found as `req.files.image` and the
-    // title field as `req.body.title`
+app.post('/chat/:id([a-z]+)', function(req, res, next) {
+    if (boards.indexOf(req.params.id) < 0){
+        res.send("Does not exist :(");
+        return;
+    }
     
-    var data = {};
+    console.log("TEXT SENT",req.body.body);
     
     // find should be password to prevent identity fraud 
     var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
@@ -152,7 +169,6 @@ app.post('/', function(req, res, next) {
            hash_list[user_pass] += 100; 
         }
         console.log("hash", hash_list[user_pass]);
-        
         res.json({success:"SUCCESS"});
         return;
     } else {
@@ -179,6 +195,8 @@ app.post('/', function(req, res, next) {
         req.body.name = req.body.name.substring(0,39)+"...";
     }
     
+    /* passed most tests, make data object */
+    var data = {};
     var trip_index = req.body.name.indexOf("#");
     
     if(trip_index > -1) {
@@ -187,11 +205,13 @@ app.post('/', function(req, res, next) {
     }
     
     if(already_exists(req.body.body)){
+        console.log("exists");
         res.json({success:"SUCCESS"});
         return;
     }
     
     if(req.body.body == ""){
+        console.log("nothing");
         res.json({success:"SUCCESS"});
         return;
     }
@@ -201,7 +221,7 @@ app.post('/', function(req, res, next) {
     
     if(req.files.image.size == 0 ||
     invalid_extension(req.files.image.path)) {
-        //fs.unlink(req.files.image.path);
+        fs.unlink(req.files.image.path);
         console.log("DELETED");
     } else {
         console.log('image loaded to', req.files.image.path);
@@ -210,9 +230,11 @@ app.post('/', function(req, res, next) {
     count++;
     data.count = count;
     data.date = (new Date).toString();
-    add_to_chat(data);
-    io.sockets.emit('chat', data);
-    console.log(data);
+    add_to_chat(data, req.params.id);
+    
+    //console.log(chat);
+    
+    io.sockets.in(req.params.id).emit('chat', data);
     res.json({success:"SUCCESS"});
 });
 
@@ -223,9 +245,12 @@ io.configure(function () {
     io.set("polling duration", 100);
     //io.set('log level', 1);
 });
-/*
+
 io.sockets.on('connection', function (socket) {
-    return;
+    socket.emit('request_location', "pls");
+    socket.on('subscribe', function (data) {
+        socket.join(data);
+        //console.log("UPDATE", data);
+    });
 });
 
-*/
