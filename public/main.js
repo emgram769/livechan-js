@@ -124,10 +124,12 @@ function clear_fields(){
 }
 
 function draw_chat(){
-    for(i in chat)
+    var i = 0;
+    for(; i < chat.length)
     {
         draw_new_chat(chat[i]);
     }
+    document.title = "(" + i  + ") 4chan Live";
 }
 
 window.onload = function(){
