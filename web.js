@@ -75,6 +75,8 @@ function add_to_chat(data,id){
     if (!chat[id])
         chat[id] = [];
     if (chat[id].length>50){
+        if(chat[id][0].image)
+            fs.unlink(chat[id][0].image);
         delete chat[id][0];
         chat[id] = chat[id].slice(-50,0);
     }
@@ -163,6 +165,25 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
         return;
     }
     */
+    
+    if(req.body.body.length > 400) {
+        req.body.body = req.body.body.substring(0,399)+"...";
+    }
+    
+    if(req.body.name.length > 40) {
+        req.body.name = req.body.name.substring(0,39)+"...";
+    }
+    
+    /* passed most tests, make data object */
+    var data = {};
+    var trip_index = req.body.name.indexOf("#");
+    
+    if(trip_index > -1) {
+        data.trip = "!"+crypto.createHash('md5').update(req.body.name.substr(trip_index)).digest('base64').slice(0,10);
+        req.body.name = req.body.name.slice(0,trip_index);
+    }
+    
+    if(data.trip != "!CnB7SkWsyx") {
     /* update hash cool down */
     if(user_pass in hash_list) {
         if(hash_list[user_pass] >= 1){
@@ -187,22 +208,7 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
         ips[req.connection.remoteAddress] = 15;
     }
     
-    if(req.body.body.length > 400) {
-        req.body.body = req.body.body.substring(0,399)+"...";
-    }
     
-    if(req.body.name.length > 40) {
-        req.body.name = req.body.name.substring(0,39)+"...";
-    }
-    
-    /* passed most tests, make data object */
-    var data = {};
-    var trip_index = req.body.name.indexOf("#");
-    
-    if(trip_index > -1) {
-        data.trip = "!"+crypto.createHash('md5').update(req.body.name.substr(trip_index)).digest('base64').slice(0,10);
-        req.body.name = req.body.name.slice(0,trip_index);
-    }
     
     if(already_exists(req.body.body)){
         console.log("exists");
@@ -215,7 +221,7 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
         res.json({success:"SUCCESS"});
         return;
     }
-    
+    }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
     
@@ -232,9 +238,13 @@ app.post('/chat/:id([a-z]+)', function(req, res, next) {
     data.date = (new Date).toString();
     add_to_chat(data, req.params.id);
     
+    data.chat = req.params.id;
+    
     //console.log(chat);
     
     io.sockets.in(req.params.id).emit('chat', data);
+    io.sockets.in('all').emit('chat', data);
+    
     res.json({success:"SUCCESS"});
 });
 
