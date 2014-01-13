@@ -1,3 +1,4 @@
+/* required modules */
 var express = require("express");
 var logfmt = require("logfmt");
 var http = require('http');
@@ -5,9 +6,11 @@ var crypto = require('crypto');
 var ipfilter = require('ipfilter');
 var captcha = require('captcha');
 
+/* globals */
 var format = require('util').format;
 var app = express();
 var port = process.env.PORT || 5000;
+/* listen now */
 var server = http.createServer(app).listen(port, function(){
     console.log('Express server listening on port %d in %s mode',
     server.address().port, app.settings.env);
@@ -15,29 +18,46 @@ var server = http.createServer(app).listen(port, function(){
 var io = require('socket.io').listen(server);
 var fs = require('fs');
 
+/* for saving images */
 app.use(express.bodyParser({
     uploadDir: 'public/tmp/uploads',
     keepExtensions: true
     }));
-    app.use(express.limit('5mb'));
 
-    fs = require('fs');
-    fs.readFile('tor_list.txt', 'utf8', function(err,data){
-        var tor_list = data.split("\n");
-        app.use(ipfilter(tor_list));
+/* 5mb limit */
+app.use(express.limit('5mb'));
 
-    });
+/* blocked end nodes. this file can include more */
+fs = require('fs');
+fs.readFile('tor_list.txt', 'utf8', function(err,data){
+    var tor_list = data.split("\n");
+    app.use(ipfilter(tor_list));
 
+});
+
+/* logging */
 app.use(logfmt.requestLogger());
+
+/* serve public stuff and get cookies */
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser());
 app.use(express.cookieSession({ secret: 'keyboard-cat' }));
+
+/* captcha security */
 app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,200)' }));
 
+/* stored data in memory */
 chat = {};
 data_chat = {};
 count = 0;
+curr_chat =[];
+hash_list = [];
+session_list = [];
+ips = {};
+boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x', 'dev'];
 
+/* snapshot location. for download when pushing updates */
+// TO DO: Set up database to make this legitimate
 fs.readFile('public/chats.json', 'utf8', function (err, data) {
   if (err) {
     console.log('Error: ' + err);
@@ -48,12 +68,6 @@ fs.readFile('public/chats.json', 'utf8', function (err, data) {
   data_chat = data.chat;
   count = data.count;
 });
-
-curr_chat =[];
-hash_list = [];
-session_list = [];
-ips = {};
-var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x', 'dev'];
 
 function demote_ips(){
     for(i in ips){
@@ -151,8 +165,10 @@ app.post('/login', function(req, res){
         session_list.push(password);
         res.cookie('password_livechan', password+key, { maxAge: 900000, httpOnly: false});
         res.redirect(req.body.page);
+        return;
     } else {
         res.send("You mistyped the captcha!");
+        return;
     }
 });
 
@@ -167,6 +183,7 @@ app.get('/chat/:id([a-z0-9]+)', function(req, res) {
         return;
     }
     res.sendfile('index.html');
+    return;
 });
 
 app.get('/data/:id([a-z0-9]+)', function(req, res) {
@@ -249,6 +266,16 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     if(req.body.name.length > 40) {
         req.body.name = req.body.name.substring(0,39)+"...";
     }
+    
+
+    if (req.body.convo) {
+        if(req.body.convo.length > 40) {
+            req.body.convo = req.body.convo.substring(0,39)+"...";
+        }
+        data.convo = req.body.convo;
+    }
+    else
+        data.convo = 'General';
 
     /* passed most tests, make data object */
     var trip_index = req.body.name.indexOf("#");
@@ -297,10 +324,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
 
-    if (req.body.convo)
-        data.convo = req.body.convo;
-    else
-        data.convo = 'General';
+
 
     count++;
     data.count = count;
