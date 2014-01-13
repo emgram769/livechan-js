@@ -185,11 +185,11 @@ function draw_new_chat(data, fast){
         apply_filter($('#convo_filter').val()); 
         return;
     }
+    apply_filter($('#convo_filter').val()); 
     
     $("#chat_"+data.count).animate({
         opacity:1
     },300, 'swing', function(){
-        apply_filter($('#convo_filter').val()); 
     });
     
     // apply hover zoom to image
