@@ -234,7 +234,7 @@ window.onload = function(){
     });
 
     $("#body").keyup(function (e) {
-        if (e.keyCode == 13 && $("#autosubmit").prop('checked')
+        if (!e.shiftKey && e.keyCode == 13 && $("#autosubmit").prop('checked')
         && cool_down_timer<=0) {
             submit_chat();
         }
