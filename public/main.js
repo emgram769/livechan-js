@@ -7,7 +7,7 @@ var focused = true;
 var convo_filter_state = "no-filter";
 var unread_chats = 0;
 
-var contribs = ['!jdLjCbNGsu', '!MfqCRnWteb', '!1WlyUQtlIQ'];
+var contribs = ['!7cNl93Dbb6', '!MfqCRnWteb', '!1WlyUQtlIQ'];
 
 function get_cookie(cname) {
     var name = cname + "=";
