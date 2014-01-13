@@ -134,7 +134,7 @@ function draw_new_chat(data, fast){
     var name = "<span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
 
     var new_image;
-    if(true|| $("#autoimages").prop('checked')){
+    if($("#autoimages").prop('checked')){
          new_image = data.image ? "<img id='chat_img_"+data.count+"' height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
     } else {
         new_image = data.image ? "<a height='100px'  onClick='make_image(this,\"/"+data.image.slice(7)+"\")'>Image </a>" : "";
