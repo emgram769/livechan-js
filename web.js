@@ -273,7 +273,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
 
         /* update ip cool down */
         if(req.connection.remoteAddress in ips) {
-            if(ips[req.connection.remoteAddress] >= 1){
+            if(ips[req.connection.remoteAddress] >= 1 && hash_list[user_pass] <= 100000){
                 ips[req.connection.remoteAddress] *= 2; 
             }
             console.log("IP", ips[req.connection.remoteAddress]);
