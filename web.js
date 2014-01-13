@@ -189,6 +189,9 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
         return;
     }
     
+    var data = {};
+    
+    
     if(req.files.image.size == 0 || invalid_extension(req.files.image.path)) {
          fs.unlink(req.files.image.path);
          console.log("DELETED");
@@ -230,7 +233,6 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     }
 
     /* passed most tests, make data object */
-    var data = {};
     var trip_index = req.body.name.indexOf("#");
 
     if(trip_index > -1) {
