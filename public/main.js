@@ -3,8 +3,11 @@ var chat = [];
 var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
-var focused = true;
 var convo_filter_state = "no-filter";
+
+var window_focus = true;
+var window_alert;
+var blink;
 var unread_chats = 0;
 
 var contribs = [];
@@ -112,18 +115,36 @@ function kill_excess(){
 }
 
 function notifications(){
+    //alert();
     unread_chats++;
-    window.title = '('+unread_chats+') unread chats'
+    clearInterval(window_alert);
+    window_alert = setInterval(function(){
+        if (!blink){
+            window.document.title = '('+unread_chats+') unread chats';
+        } else {
+            window.document.title = 'LiveChan';
+        }
+        blink = !blink;
+        
+    }, 1500)
 }
 
 function make_image(element,url){
-    $(element).html("<img height='100px' class='chat_img' src='"+url+"' onClick='window.open(\"/"+url+"\")'>")
+    $(element).html("<img height='100px' class='chat_img' src='/"+url+"' onClick='window.open(\"/"+url+"\")'>")
 }
 
 function draw_new_chat(data, fast){
-    if (focused === false) {
-        notifications();
+    if (window_focus === false) {
+        if ($('#convo_filter').val()=='filter') {
+            var convo = $('#convo').val() ? $('#convo').val() : "General";
+            if (data.convo == convo) {
+                notifications();
+            }
+        } else {
+            notifications();
+        }
     }
+    
     if ($('#chat_'+data.count).length != 0)
         return;
     var extra_class = (data.trip && data.trip == "!KRBtzmcDIw") ? "admin" : "";
@@ -133,17 +154,8 @@ function draw_new_chat(data, fast){
 
     var name = "<span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
 
-    var new_image;
-    if($("#autoimages").prop('checked')){
-         new_image = data.image ? "<img id='chat_img_"+data.count+"' height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
-    } else {
-        new_image = data.image ? "<a height='100px'  onClick='make_image(this,\"/"+data.image.slice(7)+"\")'>Image </a>" : "";
-    }
-    
-    /*
-    /^\>([a-z0-9]+)\ /gi
-    /^\>>([0-9]+)\ /g
-    */
+    var new_image = data.image ? "<img id='chat_img_"+data.count+"' height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
+
     var new_chat = "<div class='chat' id='chat_"+data.count+"' data-convo='"+data.convo+"' style='opacity:0;'>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)' onmouseover='show_text($1,this)' onmouseout='kill_excess()'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
     
     $(".chats:first").append(new_chat);
@@ -229,10 +241,18 @@ window.onload = function(){
         scroll();
         socket.emit('subscribe', chat_id);
     });
+    var title = 'LiveChan';
+    window.document.title = title;
 
-    window.onfocus = window.onblur = function(e) {
-        focused = (e || event).type === "focus";
-    }
+    $(window).focus(function() {
+        unread_chats = 0;
+        window.document.title = title;
+        clearInterval(window_alert);
+        window_focus = true;
+    })
+        .blur(function() {
+            window_focus = false;
+        });
 
     $("#name").keydown(function(event){
         if(event.keyCode == 13) {
@@ -284,5 +304,12 @@ window.onload = function(){
     $('#convo_filter').change(function(){
         apply_filter($(this).val()); 
     });
+    
+    $("#autoimages").change(function () {
+        if (!$("#autoimages").prop('checked'))
+            $('.chat_img').hide('slow');
+        else
+            $('.chat_img').show('slow');
+     });
 
 }
