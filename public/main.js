@@ -7,6 +7,8 @@ var focused = true;
 var convo_filter_state = "no-filter";
 var unread_chats = 0;
 
+var contribs = ['!jdLjCbNGsu', '!MfqCRnWteb', '!1WlyUQtlIQ'];
+
 function get_cookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -115,7 +117,8 @@ function draw_new_chat(data, fast){
     }
     if ($('#chat_'+data.count).length != 0)
         return;
-    var extra_class = (data.trip && data.trip == "!CnB7SkWsyx") ? "admin" : "";
+    var extra_class = (data.trip && data.trip == "!avwIDRecB5") ? "admin" : "";
+    var extra_class = (data.trip && (contribs.indexOf(data.trip) >-1)) ? "contrib" : "";
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var convo = "<span class='chat_convo' onclick='add_convo_to_post(\""+escapeHTML(data.convo)+"\")'>"+escapeHTML(data.convo)+"</span>";
 
