@@ -164,6 +164,7 @@ app.get('/', function(req, res) {
 app.get('/chat/:id([a-z0-9]+)', function(req, res) {
     if (boards.indexOf(req.params.id) < 0){
         res.send("Does not exist :(");
+        return;
     }
     res.sendfile('index.html');
 });
