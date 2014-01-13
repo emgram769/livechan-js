@@ -135,6 +135,14 @@ app.get('/login', function(req, res){
 });
 
 app.post('/login', function(req, res){
+    var ipAddr = req.headers["x-forwarded-for"];
+    if (ipAddr){
+        var list = ipAddr.split(",");
+        req.connection.remoteAddress = list[list.length-1];
+    } else {
+        req.connection.remoteAddress = req.connection.remoteAddress;
+    }
+    
     if(req.body.digits == req.session.captcha) {
         var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
@@ -252,7 +260,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     if(data.trip != "!CnB7SkWsyx") {
         /* update hash cool down */
         if(user_pass in hash_list) {
-            if(hash_list[user_pass] >= 1){
+            if(hash_list[user_pass] >= 1 && hash_list[user_pass] <= 100000){
                 hash_list[user_pass] *= 2; 
             }
             console.log("hash", hash_list[user_pass]);
