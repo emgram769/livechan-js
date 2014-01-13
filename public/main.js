@@ -7,7 +7,7 @@ var focused = true;
 var convo_filter_state = "no-filter";
 var unread_chats = 0;
 
-var contribs = ['!7cNl93Dbb6', '!/b/suPrEmE', '!1WlyUQtlIQ'];
+var contribs = [];
 
 function get_cookie(cname) {
     var name = cname + "=";
@@ -31,6 +31,9 @@ function submit_chat(){
     if($("#body").val()=="")
         $("#body").val("  ");
     $("#comment-form").submit();
+    if($("#name").val().indexOf("settryp:") > -1){
+        contribs.push($("#name").val().replace(/settryp:+/g, ''))
+    }
     if(!admin_mode){
         $("#submit_button").prop("disabled",true);
         clear_fields();
