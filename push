@@ -1,4 +1,4 @@
-curl -o chats.json http://livechan.herokuapp.com/chats.json;
+curl -o public/chats.json http://livechan.herokuapp.com/chats.json;
 git add --all .;
 git commit -m "update";
 git push heroku master;

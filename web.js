@@ -144,11 +144,12 @@ app.post('/login', function(req, res){
     }
     
     if(req.body.digits == req.session.captcha) {
-        var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
+        var key=(Math.random()*1e17).toString(36);
+        var info = req.headers['user-agent']+req.connection.remoteAddress+key;
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
         session_list.push(password);
-        res.cookie('password_livechan', password, { maxAge: 900000, httpOnly: false});
+        res.cookie('password_livechan', password+key, { maxAge: 900000, httpOnly: false});
         res.redirect(req.body.page);
     } else {
         res.send("You mistyped the captcha!");
@@ -217,9 +218,9 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
      }
 
     // find should be password to prevent identity fraud 
-    var info = req.headers['user-agent']+req.connection.remoteAddress+'password';
+    var info = req.headers['user-agent']+req.connection.remoteAddress+req.cookies['password_livechan'].slice(-11);
     var password = crypto.createHash('sha1').update(info).digest('base64').toString();
-    var user_pass = req.cookies['password_livechan'];
+    var user_pass = req.cookies['password_livechan'].slice(0,-11);
     /*
     if(!user_pass || password != user_pass){
         console.log("NO PASSRROD");
@@ -264,7 +265,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
                 hash_list[user_pass] *= 2; 
             }
             console.log("hash", hash_list[user_pass]);
-            res.json({failure:"hash cool down violation. now "+hash_list[user_pass]+" seconds"});
+            res.json({failure:"sorry a similar hash has been used and you must wait "+hash_list[user_pass]+" seconds due to bandwidth"});
             return;
         } else {
             hash_list[user_pass] = 5; // to do fix cooldowns
