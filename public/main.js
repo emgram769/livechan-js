@@ -1,5 +1,7 @@
 var socket = io.connect('/');
 var chat = [];
+var my_ids = [];
+
 var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
@@ -172,6 +174,10 @@ function draw_new_chat(data, fast){
 
     var new_chat = "<div class='chat' id='chat_"+data.count+"' data-convo='"+data.convo+"' style='opacity:0;'>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)' onmouseover='show_text($1,this)' onmouseout='kill_excess()'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
     
+    my_ids.forEach(function(id) {
+        new_chat = new_chat.replace("onmouseout='kill_excess()'>&gt;&gt;" + id + "</a>", "onmouseout='kill_excess()'>&gt;&gt;" + id + " (You)</a>");
+    }
+    
     $(".chats:first").append(new_chat);
     
     if(fast){
@@ -313,6 +319,8 @@ window.onload = function(){
         ).contents()[0].body.childNodes[0].innerHTML);
         if(resp.failure)
             alert(resp.failure);
+        else if(resp.id)
+            my_ids.push(resp.id);
     });
 
     $('#convo_filter').change(function(){

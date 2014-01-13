@@ -311,10 +311,10 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     data.ip = 'hidden';
     data.chat = req.params.id;
 
+    res.json({success:"SUCCESS", id:data.count});
+    
     io.sockets.in(req.params.id).emit('chat', data);
     io.sockets.in('all').emit('chat', data);
-
-    res.json({success:"SUCCESS"});
 });
 
 /* socket.io content */
