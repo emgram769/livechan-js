@@ -23,6 +23,20 @@ function get_cookie(cname) {
     return "";
 }
 
+function get_css(file) {
+    if($('#css_new')) {
+       $('#css_new').remove(); 
+    }
+    var head  = document.getElementsByTagName('head')[0];
+    var link  = document.createElement('link');
+    link.id   = 'css_new';
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = file;
+    link.media = 'all';
+    head.appendChild(link);
+}
+
 function escapeHTML( string ) {
     var pre = document.createElement('pre');
     var text = document.createTextNode( string );
@@ -152,7 +166,7 @@ function draw_new_chat(data, fast){
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var convo = "<span class='chat_convo' onclick='add_convo_to_post(\""+escapeHTML(data.convo)+"\")'>"+escapeHTML(data.convo)+"</span>";
 
-    var name = "<span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
+    var name = "<div class='chat_header'><span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span></div>";
 
     var new_image = data.image ? "<img id='chat_img_"+data.count+"' height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
 
@@ -303,6 +317,10 @@ window.onload = function(){
 
     $('#convo_filter').change(function(){
         apply_filter($(this).val()); 
+    });
+    
+    $('#theme_select').change(function(){
+        get_css($(this).val());
     });
     
     $("#autoimages").change(function () {

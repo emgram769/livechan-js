@@ -1,0 +1,49 @@
+body,html {
+    background:#FFE;
+}
+
+.create {
+    //the input box
+    background:#D9BFB7;
+}
+
+textarea{
+
+}
+
+input{
+
+}
+
+.input_button::-webkit-file-upload-button {
+  //visibility: hidden;
+}
+
+.input_button {
+    
+}
+
+.input_select {
+
+}
+
+.input_checkbox {
+    
+}
+
+.chat {
+    background:#f0e0d6;
+    border:1px solid #D9BFB7;
+}
+
+.chat_name {
+}
+
+.chat_header {
+    background:#EAD6CA;
+    width:100%;
+}
+
+.chat_name {
+
+}

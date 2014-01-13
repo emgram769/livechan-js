@@ -17,6 +17,7 @@ body,html{
     height:160px;
     font-size:14px;
     text-align:center;
+    overflow:auto;
 }
 
 .shown{
