@@ -248,10 +248,10 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
                 hash_list[user_pass] *= 2; 
             }
             console.log("hash", hash_list[user_pass]);
-            res.json({failure:"cool down violation. now "+hash_list[user_pass]+" seconds"});
+            res.json({failure:"hash cool down violation. now "+hash_list[user_pass]+" seconds"});
             return;
         } else {
-            hash_list[user_pass] = 5;
+            hash_list[user_pass] = 0;
         }
 
         /* update ip cool down */
@@ -260,25 +260,21 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
                 ips[req.connection.remoteAddress] *= 2; 
             }
             console.log("IP", ips[req.connection.remoteAddress]);
-            res.json({failure:"cool down violation. now "+ips[req.connection.remoteAddress]+" seconds"});
+            res.json({failure:"ip cool down violation. now "+ips[req.connection.remoteAddress]+" seconds"});
             return;
         } else {
-            ips[req.connection.remoteAddress] = 5;
+            ips[req.connection.remoteAddress] = 0;
         }
 
 
-
-        if(already_exists(req.body.body, req.params.id)){
-            console.log("exists");
-            res.json({failure:"post exists"});
-            return;
+        if(req.body.body != ""){
+            if(already_exists(req.body.body, req.params.id)){
+                console.log("exists");
+                res.json({failure:"post exists"});
+                return;
+            }
         }
 
-        if(req.body.body == ""){
-            console.log("nothing");
-            res.json({failure:"nothing submitted"});
-            return;
-        }
     }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
