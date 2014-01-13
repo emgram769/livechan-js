@@ -28,6 +28,8 @@ function escapeHTML( string ) {
 }
 
 function submit_chat(){
+    if(get_cookie("password_livechan")=="")
+        window.location.href='/login?page='+path;
     if($("#body").val()=="")
         $("#body").val("  ");
     $("#comment-form").submit();
@@ -75,7 +77,7 @@ function insert_text_at_cursor(el, text) {
 }
 
 function add_number_to_post(number){
-    insert_text_at_cursor(document.getElementById("body"),'>>'+number);
+    insert_text_at_cursor(document.getElementById("body"),'>>'+number+'\n');
 }
 
 function add_convo_to_post(text){
@@ -114,6 +116,10 @@ function notifications(){
     window.title = '('+unread_chats+') unread chats'
 }
 
+function make_image(element,url){
+    $(element).html("<img height='100px' class='chat_img' src='"+url+"' onClick='window.open(\"/"+url+"\")'>")
+}
+
 function draw_new_chat(data, fast){
     if (focused === false) {
         notifications();
@@ -127,7 +133,13 @@ function draw_new_chat(data, fast){
 
     var name = "<span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span><br/>";
 
-    var new_image = data.image ? "<img height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
+    var new_image;
+    if(true|| $("#autoimages").prop('checked')){
+         new_image = data.image ? "<img id='chat_img_"+data.count+"' height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
+    } else {
+        new_image = data.image ? "<a height='100px'  onClick='make_image(this,\"/"+data.image.slice(7)+"\")'>Image </a>" : "";
+    }
+    
     /*
     /^\>([a-z0-9]+)\ /gi
     /^\>>([0-9]+)\ /g
@@ -152,7 +164,7 @@ function draw_new_chat(data, fast){
     if(data.image)
     {
         $(function(){
-            $("img").thumbPopup({
+            $("#chat_img_"+data.count).thumbPopup({
                 imgSmallFlag: "",
                 imgLargeFlag: "",
                popupCSS: {'max-height': '97%', 'max-width': '75%'}
@@ -259,7 +271,7 @@ window.onload = function(){
     });
 
     if(get_cookie("password_livechan")=="")
-    window.location.href='/login?page='+path;
+        window.location.href='/login?page='+path;
 
 
     $('iframe#miframe').load(function() {
