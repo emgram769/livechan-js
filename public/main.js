@@ -29,7 +29,7 @@ function escapeHTML( string ) {
 
 function submit_chat(){
     if($("#body").val()=="")
-    return false;
+        $("#body").val("  ");
     $("#comment-form").submit();
     if(!admin_mode){
         $("#submit_button").prop("disabled",true);
@@ -117,8 +117,8 @@ function draw_new_chat(data, fast){
     }
     if ($('#chat_'+data.count).length != 0)
         return;
-    var extra_class = (data.trip && data.trip == "!avwIDRecB5") ? "admin" : "";
-    var extra_class = (data.trip && (contribs.indexOf(data.trip) >-1)) ? "contrib" : "";
+    var extra_class = (data.trip && data.trip == "!KRBtzmcDIw") ? "admin" : "";
+    extra_class = (data.trip && (contribs.indexOf(data.trip) >-1)) ? "contrib" : extra_class;
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var convo = "<span class='chat_convo' onclick='add_convo_to_post(\""+escapeHTML(data.convo)+"\")'>"+escapeHTML(data.convo)+"</span>";
 
