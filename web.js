@@ -251,7 +251,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
             res.json({failure:"hash cool down violation. now "+hash_list[user_pass]+" seconds"});
             return;
         } else {
-            hash_list[user_pass] = 0;
+            hash_list[user_pass] = 5; // to do fix cooldowns
         }
 
         /* update ip cool down */
@@ -268,7 +268,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
 
 
         if(req.body.body != ""){
-            if(already_exists(req.body.body, req.params.id)){
+            if(already_exists(req.body.body, req.params.id) || /^\s+$/.test(req.body.body)){
                 console.log("exists");
                 res.json({failure:"post exists"});
                 return;
