@@ -236,7 +236,8 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     var trip_index = req.body.name.indexOf("#");
 
     if(trip_index > -1) {
-        data.trip = "!"+crypto.createHash('md5').update(req.body.name.substr(trip_index)).digest('base64').slice(0,10);
+        var tripcode = require('tripcode');
+        data.trip = "!"+tripcode(req.body.name.substr(trip_index+1));
         req.body.name = req.body.name.slice(0,trip_index);
     }
 
