@@ -176,7 +176,7 @@ function draw_new_chat(data, fast){
     
     my_ids.forEach(function(id) {
         new_chat = new_chat.replace("onmouseout='kill_excess()'>&gt;&gt;" + id + "</a>", "onmouseout='kill_excess()'>&gt;&gt;" + id + " (You)</a>");
-    }
+    });
     
     $(".chats:first").append(new_chat);
     
