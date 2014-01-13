@@ -191,6 +191,14 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     
     var data = {};
     
+    var ipAddr = req.headers["x-forwarded-for"];
+    if (ipAddr){
+        var list = ipAddr.split(",");
+        req.connection.remoteAddress = list[list.length-1];
+    } else {
+        req.connection.remoteAddress = req.connection.remoteAddress;
+    }
+    
     
     if(req.files.image.size == 0 || invalid_extension(req.files.image.path)) {
          fs.unlink(req.files.image.path);
