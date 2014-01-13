@@ -35,11 +35,24 @@ app.use(express.cookieSession({ secret: 'keyboard-cat' }));
 app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,200)' }));
 
 chat = {};
+data_chat = {};
+count = 0;
+
+fs.readFile('public/chats.json', 'utf8', function (err, data) {
+  if (err) {
+    console.log('Error: ' + err);
+    return;
+  }
+  data = JSON.parse(data);
+  chat = data.chat;
+  data_chat = data.chat;
+  count = data.count;
+});
+
 curr_chat =[];
 hash_list = [];
 session_list = [];
 ips = {};
-count = 0;
 var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x'];
 
 function demote_ips(){
@@ -55,6 +68,9 @@ function demote_ips(){
         else
         hash_list[i]--;
     }
+    fs.writeFile('public/chats.json', JSON.stringify({chat:data_chat, count:count}) , function(){
+        //console.log('written');
+    });
 }
 
 setInterval(demote_ips,1000);
@@ -74,18 +90,27 @@ function invalid_extension(filename){
 
 function add_to_chat(data,id){
     if (!chat[id])
-    chat[id] = [];
+        chat[id] = [];
     if (chat[id].length>100){
         if(chat[id][0].image)
-        fs.unlink(chat[id][0].image);
+            fs.unlink(chat[id][0].image);
         delete chat[id][0];
         chat[id] = chat[id].slice(-99);
+    }
+    if (!data_chat[id])
+        data_chat[id] = [];
+    if (data_chat[id].length>100){
+        delete data_chat[id][0];
+        data_chat[id] = data_chat[id].slice(-99);
     }
     if (curr_chat.length>20){
         delete curr_chat[0];
         curr_chat = curr_chat.slice(-19);
     }
     chat[id].push(data);
+    if(data.ip)
+        data.ip = 'hidden';
+    data_chat[id].push(data);
     curr_chat.push(data);
 }
 
@@ -97,7 +122,7 @@ function session_exists(session){
 
 function already_exists(body, id){
     for(i in chat[id]){
-        if (chat[id][i].body == body){
+        if (chat[id][i].body == body && chat[id][i].ip){
             ips[chat[id][i].ip]+=600;
             return true;
         }
@@ -115,9 +140,7 @@ app.post('/login', function(req, res){
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
         session_list.push(password);
-        console.log(session_list);
         res.cookie('password_livechan', password, { maxAge: 900000, httpOnly: false});
-        console.log(req);
         res.redirect(req.body.page);
     } else {
         res.send("You mistyped the captcha!");
@@ -145,10 +168,10 @@ app.get('/data/:id([a-z0-9]+)', function(req, res) {
         res.send("Does not exist :(");
         return;
     }
-    if (!chat[req.params.id]) {
-        chat[req.params.id] = [];
+    if (!data_chat[req.params.id]) {
+        data_chat[req.params.id] = [];
     }
-    res.json(chat[req.params.id]);
+    res.json(data_chat[req.params.id]);
 });
 
 app.post('/ban/:id([a-z0-9]+)', function(req, res, next){
@@ -266,11 +289,11 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     data.count = count;
     data.date = (new Date).toString();
     data.ip = req.connection.remoteAddress;
-    add_to_chat(data, req.params.id);
-    data.ip = 'hidden';
 
+    add_to_chat(data, req.params.id);
+
+    data.ip = 'hidden';
     data.chat = req.params.id;
-    //console.log(chat);
 
     io.sockets.in(req.params.id).emit('chat', data);
     io.sockets.in('all').emit('chat', data);

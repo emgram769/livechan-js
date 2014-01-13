@@ -27,6 +27,11 @@ body,html{
     display:none;
 }
 
+.half-height{
+    max-height:50%;
+    overflow:auto;
+}
+
 .comment{
     width:100%;
 }
@@ -58,7 +63,7 @@ body,html{
 .chats-home{
     position:absolute;
     overflow:auto;
-    top:300px;
+    height:50%;
     width:100%;
     bottom:0;
 }
