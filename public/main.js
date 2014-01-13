@@ -144,6 +144,18 @@ function draw_new_chat(data, fast){
     },300, 'swing', function(){
         apply_filter($('#convo_filter').val()); 
     });
+    
+    // apply hover zoom to image
+    if(data.image)
+    {
+        $(function(){
+            $("img").thumbPopup({
+                imgSmallFlag: "",
+                imgLargeFlag: "",
+               popupCSS: {'max-height': '97%', 'max-width': '75%'}
+            });
+        });
+    }
     return;
     
 }
