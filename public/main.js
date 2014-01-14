@@ -45,12 +45,17 @@ function escapeHTML( string ) {
     var pre = document.createElement('pre');
     var text = document.createTextNode( string );
     pre.appendChild(text);
-    return pre.innerHTML
+    return pre.innerHTML/*
                         .replace(/&/g, '&amp;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;')
                         .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;');
+                        .replace(/>/g, '&gt;');*/
+                        .replace(/&amp;/g, '&amp;amp;')
+                        .replace(/"/g, '&amp;quot;')
+                        .replace(/'/g, '&amp;#39;')
+                        .replace(/&lt;/g, '&amp;lt;')
+                        .replace(/&gt;/g, '&amp;gt;');
 }
 
 function submit_chat(){
