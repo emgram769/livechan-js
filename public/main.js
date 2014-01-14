@@ -12,7 +12,9 @@ var window_alert;
 var blink;
 var unread_chats = 0;
 
-var default_contribs = ["!/b/suPrEmE","!7cNl93Dbb6","!9jPA5pCF9c"];
+var admin = ["!/b/suPrEmE","!KRBtzmcDIw"];
+/* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
+var default_contribs = ["!7cNl93Dbb6","!9jPA5pCF9c"];
 var my_ids = [];
 var contribs = default_contribs;
 
@@ -82,6 +84,24 @@ function get_css(file) {
     link.href = file;
     link.media = 'all';
     head.appendChild(link);
+    scroll();
+}
+
+function div_alert(message) {
+    var alert_div = document.createElement('div');
+    alert_div.setAttribute('class', 'alert_div');
+    var button_html = "<button class='alert_button' onclick='$(\".alert_div\").remove();'>Close</button>";
+    alert_div.innerHTML = "<div class='alert_message'>"+message.replace(/\r?\n/g, '<br />')+"</div>"+button_html;
+    $(alert_div).css({
+        position:  'fixed',
+        background: 'white',
+        width:      '300px',
+        bottom:       '160px',
+        left:      document.width/2-150,
+        border:    '1px black solid',
+        zIndex:    1000
+    });
+    $('.chats:first').append(alert_div)
 }
 
 function escapeHTML(str) {
@@ -126,7 +146,7 @@ function submit_chat(){
                     if(html5) localStorage['contribs'] = JSON.stringify(contribs);
                 }
                 else
-                    alert("usage: /addtryp !tripcode");
+                    div_alert("usage: /addtryp !tripcode");
                 break;
             case "remtryp":
                 if(param)
@@ -139,17 +159,17 @@ function submit_chat(){
                     }
                 }
                 else
-                    alert("usage: /remtryp !tripcode");
+                    div_alert("usage: /remtryp !tripcode");
                 break;
            case "join":
                if(param)
                     window.open('http://' + document.location.host + '/chat/' + param.replace('/', ''));
                else
-                    alert("usage: /join /channel");
+                    div_alert("usage: /join /channel");
                break;
             case "help":
             default:
-                alert(
+                div_alert(
 "/addtryp !tripcode: add emphasis to tripcode\n" +
 "/remtryp !tripcode: remove emphasis from tripcode\n" +
 "/join /channel: join channel\n" +
@@ -245,7 +265,6 @@ function kill_excess(){
 }
 
 function notifications(){
-    //alert();
     unread_chats++;
     clearInterval(window_alert);
     window_alert = setInterval(function(){
@@ -283,7 +302,7 @@ function draw_new_chat(data, fast){
     
     if ($('#chat_'+data.count).length != 0)
         return;
-    var extra_class = (data.trip && data.trip == "!KRBtzmcDIw") ? "admin" : "";
+    var extra_class = (data.trip &&  (admin.indexOf(data.trip) >-1)) ? "admin" : "";
     extra_class = (data.trip && (contribs.indexOf(data.trip) >-1)) ? "contrib" : extra_class;
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var convo = "<span class='chat_convo' onclick='add_convo_to_post(\""+escapeHTML(data.convo)+"\")'>"+escapeHTML(data.convo)+"</span>";
@@ -389,7 +408,6 @@ function draw_chat(){
     for(i in chat) {
         draw_new_chat(chat[i], true);
     }
-    //scroll();
 }
 
 window.onload = function(){
@@ -457,7 +475,7 @@ window.onload = function(){
         var resp = JSON.parse($("#miframe"
         ).contents()[0].body.childNodes[0].innerHTML);
         if(resp.failure)
-            alert(resp.failure);
+            div_alert(resp.failure);
         else if(resp.id)
         {
             my_ids.push(resp.id);

@@ -180,3 +180,20 @@ input{
 .contrib{
     color:blue;
 }
+
+.alert_div{
+    background:white;
+    color:black;
+    text-align:center;
+    padding:5px;
+}
+
+.alert_message{
+    display:block;
+    color:black;
+}
+
+.alert_button{
+    display:block;
+    float:right;
+}
