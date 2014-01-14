@@ -1,0 +1,95 @@
+body,html {
+    background: none repeat scroll 0% 0% #1D1F21 !important;
+    color: #C5C8C6;
+}
+
+.create {
+    /* the input box */
+    background: #282A2E !important;
+    border-color: #282A2E !important;
+}
+
+textarea{
+
+}
+
+input{
+
+}
+
+
+.input_button::-webkit-file-upload-button {
+    /* visibility: hidden; */
+}
+
+.input_button {
+
+}
+
+.input_select {
+
+}
+
+.input_checkbox {
+
+}
+
+.chat {
+    background: #282A2E !important;
+    border: 1px solid #282A2E;
+}
+
+.chat a, .chat .chat_header .chat_number {
+    color: #5F89AC !important;
+}
+
+.chat a:hover, .chat .chat_header .chat_number:hover {
+    color: #81A2BE !important;
+}
+
+.chat_name {
+    color: inherit !important;
+}
+
+.chat_name .trip_code {
+    color: #B5B8B6 !important;         
+}
+
+.chat_name.contrib {
+    color: #6F9FC7 !important;
+}
+
+.chat_name.contrib .trip_code {
+    color: #8CA8BF !important;
+}
+
+.chat_header {
+    background: transparent !important;
+    width:100%;
+}
+
+.greentext {
+    color: #B5BD68 !important;
+}
+
+/* raw positioning stuff */
+
+.chats {
+    bottom: 176px !important;
+}
+
+.chat {
+    margin: 8px 8px 0 8px !important;
+    padding: 6px 8px 8px 8px !important;
+}
+
+.create {
+    width: auto !important;
+    padding: 8px 8px 0 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+}
+
+.chat_name .trip_code {
+    padding-left: 3px;
+}

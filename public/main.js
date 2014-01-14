@@ -51,8 +51,10 @@ function escapeHTML(str) {
 }
 
 function submit_chat(){
-    if(get_cookie("password_livechan")=="")
+    if(get_cookie("password_livechan")=="") {
+        var path = window.location.pathname;
         window.location.href='/login?page='+path;
+    }
     posting = true;
     if($("#body").val()=="")
         $("#body").val("  ");
