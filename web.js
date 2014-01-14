@@ -8,7 +8,7 @@ var captcha = require('captcha');
 var tripcode = require('tripcode');
 
 /* globals */
-var securetrip_salt = "This is used to make tripcodes secure by making part of them a server secret, which hinders people from cracking them with tools";
+var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
 var format = require('util').format;
 var app = express();
 var port = process.env.PORT || 5000;
