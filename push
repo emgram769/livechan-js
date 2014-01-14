@@ -1,5 +1,9 @@
+echo "thisisasecret" >> salt.txt;
 curl -o public/chats.json http://livechan.herokuapp.com/chats.json;
 git add --all .;
 git commit -m "$@";
 git push heroku master;
+rm -f salt.txt;
+git add --all .;
+git commit -m "$@";
 git push origin master;
