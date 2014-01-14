@@ -1,6 +1,4 @@
-var socket = io.connect('/');
 var chat = [];
-var my_ids = [];
 var future_ids = [];
 
 var posting = false;
@@ -14,7 +12,52 @@ var window_alert;
 var blink;
 var unread_chats = 0;
 
-var contribs = [];
+var default_contribs = ["!/b/suPrEmE","!7cNl93Dbb6","!9jPA5pCF9c"];
+var my_ids = [];
+var contribs = default_contribs;
+
+var html5 = supports_html5_storage();
+
+var socket = io.connect('/');
+
+if(html5)
+{
+    if(false) // set to true to reset local storage to defaults
+    {
+        localStorage['my_ids'] = "[0]";
+        localStorage['contribs'] = "[\"0\"]";
+        localStorage['convo'] = "";
+        localStorage['name'] = "";
+        localStorage['theme'] = "Main";
+    }
+    my_ids = localStorage['my_ids'];
+    if(my_ids)
+        my_ids = JSON.parse(my_ids);
+    else
+        my_ids = [];
+        
+    contribs = localStorage['contribs'];
+    if(contribs)
+        contribs = JSON.parse(contribs);
+    else
+        contribs = default_contribs;
+        
+    $(document).ready(function() {
+        $("#name").val(localStorage['name']);
+        $("#convo").val(localStorage['convo']);
+        $("#theme_select").val(localStorage['theme']);
+        if(!$("#theme_select").val()) $("#theme_select").val("Main");
+        get_css($("#theme_select").val());
+    });
+}
+
+function supports_html5_storage() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
+    }
+}
 
 function get_cookie(cname) {
     var name = cname + "=";
@@ -56,6 +99,13 @@ function submit_chat(){
         window.location.href='/login?page='+path;
     }
     posting = true;
+    if(html5)
+    {
+        localStorage['name'] = $("#name").val();
+        localStorage['convo'] = $("#convo").val().replace("General", "");
+        localStorage['theme'] = $("#theme_select").val();
+    }
+    
     if($("#body").val()=="")
         $("#body").val("  ");
     var msg = $("#body").val();
@@ -71,15 +121,23 @@ function submit_chat(){
         {
             case "addtryp":
                 if(param)
+                {
                     contribs.push(param);
+                    if(html5) localStorage['contribs'] = JSON.stringify(contribs);
+                }
                 else
                     alert("usage: /addtryp !tripcode");
                 break;
             case "remtryp":
                 if(param)
+                {
                     var idx = contribs.indexOf(param);
                     if(idx > -1)
+                    {
                         contribs.splice(idx, 1);
+                        if(html5) localStorage['contribs'] = JSON.stringify(contribs);
+                    }
+                }
                 else
                     alert("usage: /remtryp !tripcode");
                 break;
@@ -401,7 +459,10 @@ window.onload = function(){
         if(resp.failure)
             alert(resp.failure);
         else if(resp.id)
+        {
             my_ids.push(resp.id);
+            if(html5) localStorage['my_ids'] = JSON.stringify(my_ids);
+        }
     });
 
     $('#convo_filter').change(function(){
