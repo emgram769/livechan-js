@@ -49,7 +49,7 @@ app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,2
 /* stored data in memory */
 chat = {};
 data_chat = {};
-count = 0;
+count = 2232;
 curr_chat =[];
 hash_list = [];
 session_list = [];
@@ -82,9 +82,9 @@ function demote_ips(){
         else
         hash_list[i]--;
     }
-    fs.writeFile('public/chats.json', JSON.stringify({chat:data_chat, count:count}) , function(){
+    /*fs.writeFile('public/chats.json', JSON.stringify({chat:data_chat, count:count}) , function(){
         //console.log('written');
-    });
+    });*/
 }
 
 setInterval(demote_ips,1000);
@@ -126,6 +126,9 @@ function add_to_chat(data,id){
         data.ip = 'hidden';
     data_chat[id].push(data);
     curr_chat.push(data);
+    
+    fs.writeFile('public/chats.json', JSON.stringify({chat:data_chat, count:count}) , function(){
+    });
 }
 
 function session_exists(session){
@@ -207,10 +210,12 @@ app.post('/ban/:id([a-z0-9]+)', function(req, res, next){
     var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0,10);
 });
 
-app.post('/delete/:id([a-z0-9]+)', function(req, res, next){
+app.get('/delete/:id([a-z0-9]+)', function(req, res, next){
     var board = req.params.id;
     var ip = req.query.ip;
-    var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0,10);
+    var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64');
+    if (hash == '8lnTmt7BmowWekVPb9wLog==')
+        console.log('works');
 });
 
 app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
@@ -236,6 +241,11 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
      } else {
          console.log('image loaded to', req.files.image.path);
          data.image = req.files.image.path;
+     }
+
+     if (!req.cookies['password_livechan']) {
+         res.json({failure:"session expiry"});
+         return;
      }
 
     // find should be password to prevent identity fraud 
