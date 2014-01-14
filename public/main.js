@@ -445,10 +445,11 @@ window.onload = function(){
         }
     });
 
-    $("#body").keyup(function (e) {
+    $("#body").keydown(function (e) {
         if (!e.shiftKey && e.keyCode == 13 && $("#autosubmit").prop('checked')
         && cool_down_timer<=0) {
             submit_chat();
+            return false;
         }
     });
 
