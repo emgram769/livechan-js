@@ -1,0 +1,1006 @@
+2014-01-14T02:46:35.962303+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.962341+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.962427+00:00 app[web.1]: debug: fired close timeout for client mXfD5xVgasXt877VfC0F
+2014-01-14T02:46:35.962427+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.962486+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.962583+00:00 app[web.1]: debug: fired close timeout for client M2wl8WWEp0FIIps3fC0H
+2014-01-14T02:46:35.962583+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.962670+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.964884+00:00 app[web.1]: debug: fired close timeout for client EidKkC4R3AKtHjBxfCzg
+2014-01-14T02:46:35.964884+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.964884+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.965020+00:00 app[web.1]: debug: fired close timeout for client Z6sDosR5gNx1c_dafCzj
+2014-01-14T02:46:35.965020+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.965155+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.965245+00:00 app[web.1]: debug: fired close timeout for client ZLoQYh2qP23BxzKpfCzq
+2014-01-14T02:46:35.965435+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.965542+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.965587+00:00 app[web.1]: debug: fired close timeout for client WVon-JCJVzKFN5mYfCzp
+2014-01-14T02:46:35.965587+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.965671+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.965788+00:00 app[web.1]: debug: fired close timeout for client e4oAoQ0fAWC9XpMHfCz5
+2014-01-14T02:46:35.965788+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.965788+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.965988+00:00 app[web.1]: debug: fired close timeout for client A1zgjl35IfFFlyqYfCz8
+2014-01-14T02:46:35.965988+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.966088+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.966310+00:00 app[web.1]: debug: fired close timeout for client PRrEaENi8b51KepyfCz7
+2014-01-14T02:46:35.966310+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.966310+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.966497+00:00 app[web.1]: debug: fired close timeout for client 3Cq1epAk-ylJ8R4jfCz-
+2014-01-14T02:46:35.966835+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.966835+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.968168+00:00 app[web.1]: debug: fired close timeout for client TKIyVtih9EqezlfdfC0C
+2014-01-14T02:46:35.968168+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.968398+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:35.968560+00:00 app[web.1]: debug: fired close timeout for client yZHtvEAlLla0ZXJ3fC0E
+2014-01-14T02:46:35.968697+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:35.968854+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:45:58.314394+00:00 heroku[router]: at=info method=GET path=/socket.io/socket.io.js host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=1ms service=5ms status=200 bytes=60602
+2014-01-14T02:46:36.333565+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.333784+00:00 app[web.1]: debug: fired close timeout for client WHWvCLqvRD7gZbixfCzc
+2014-01-14T02:46:36.333784+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:36.333565+00:00 app[web.1]: debug: fired close timeout for client oTuOtZgm4PN0FcLLfCzb
+2014-01-14T02:46:36.333565+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:36.333784+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.335042+00:00 app[web.1]: debug: fired close timeout for client VIQCg2M728fLMDHhfCzt
+2014-01-14T02:46:36.335042+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:36.335042+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.335218+00:00 app[web.1]: debug: fired close timeout for client eazAy5pKSaoAFFjtfCz3
+2014-01-14T02:46:36.335218+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:36.335218+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.336417+00:00 app[web.1]: debug: fired close timeout for client c5Faoz0jHSUVMaAifCz4
+2014-01-14T02:46:36.336498+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:36.336629+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.336729+00:00 app[web.1]: debug: fired close timeout for client 6DYdcyyr04cktZwHfC0G
+2014-01-14T02:46:36.336729+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:46:36.336820+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.504262+00:00 heroku[router]: at=info method=POST path=/chat/g host=livechan.herokuapp.com fwd="65.33.249.173" dyno=web.1 connect=2ms service=6ms status=200 bytes=40
+2014-01-14T02:46:36.503195+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/J0IixGRPUkEdQgibfC0T?t=1389667590962 host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=2ms service=4980ms status=200 bytes=198
+2014-01-14T02:46:36.499947+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/C06kWthlkddQgnQrfC0M?t=1389667588702 host=livechan.herokuapp.com fwd="123.243.239.97" dyno=web.1 connect=11ms service=4757ms status=200 bytes=198
+2014-01-14T02:46:36.506389+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/hnP3UTzs77wZpRlRfC0m?t=1389667591590 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=4859ms status=200 bytes=198
+2014-01-14T02:46:36.499692+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/pEAKPOd7NPquhGNQfC0O?t=1389667573174 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=6ms service=4757ms status=200 bytes=198
+2014-01-14T02:46:36.509239+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/-rJzSnZZ-tIcZL9bfC0o?t=1389667581845 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=0ms service=4877ms status=200 bytes=198
+2014-01-14T02:46:36.512789+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/ra7WXTrhY3hLCngvfC0a?t=1389667591894 host=livechan.herokuapp.com fwd="65.33.249.173" dyno=web.1 connect=1ms service=4984ms status=200 bytes=198
+2014-01-14T02:46:36.508173+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/abgoh-Os2cQnhDvTfC0l?t=1389667588051 host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=1ms service=4859ms status=200 bytes=198
+2014-01-14T02:46:36.519021+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/j6mNBYbz2UF0hOCVfC0I?t=1389703575551 host=livechan.herokuapp.com fwd="212.142.68.111" dyno=web.1 connect=3ms service=4911ms status=200 bytes=198
+2014-01-14T02:46:36.514252+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/bIB5xOEhhnpuZ1jJfC0X?t=1389667591472 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=5ms service=4944ms status=200 bytes=198
+2014-01-14T02:46:36.522474+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/1hWQQbl1TsqnzI1SfC0K?t=1389667591513 host=livechan.herokuapp.com fwd="79.40.153.101" dyno=web.1 connect=4ms service=4891ms status=200 bytes=198
+2014-01-14T02:46:36.518551+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/pxEvdSSgOvi5Z1nefC0Y?t=1389667572660 host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=16ms service=4906ms status=200 bytes=198
+2014-01-14T02:46:36.536304+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/pWijXfx-kRggmG8gfC0L?t=1389667590888 host=livechan.herokuapp.com fwd="96.252.125.110" dyno=web.1 connect=60ms service=4906ms status=200 bytes=198
+2014-01-14T02:46:36.506610+00:00 app[web.1]: debug: set close timeout for client j6mNBYbz2UF0hOCVfC0I
+2014-01-14T02:46:36.505781+00:00 app[web.1]: DELETED
+2014-01-14T02:46:36.506330+00:00 app[web.1]: ip=10.92.238.154 time=2014-01-14T02:46:36.505Z method=POST path=/chat/g status=200 content_length=40 content_type="application/json; charset=utf-8" elapsed=1ms
+2014-01-14T02:46:36.506411+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.506610+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.506707+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.506919+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.506919+00:00 app[web.1]: debug: set close timeout for client x2gvG2rvmENA59gwfC0J
+2014-01-14T02:46:36.507036+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.507156+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.507156+00:00 app[web.1]: debug: set close timeout for client 1hWQQbl1TsqnzI1SfC0K
+2014-01-14T02:46:36.507245+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.507400+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.507494+00:00 app[web.1]: debug: set close timeout for client pWijXfx-kRggmG8gfC0L
+2014-01-14T02:46:36.507646+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.507845+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.507928+00:00 app[web.1]: debug: set close timeout for client C06kWthlkddQgnQrfC0M
+2014-01-14T02:46:36.508028+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.508353+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.508563+00:00 app[web.1]: debug: set close timeout for client pEAKPOd7NPquhGNQfC0O
+2014-01-14T02:46:36.509097+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.509370+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.509601+00:00 app[web.1]: debug: set close timeout for client VAH40U-2ImCbDJJUfC0N
+2014-01-14T02:46:22.594631+00:00 heroku[router]: at=info method=GET path=/chats.json host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=11ms status=200 bytes=133194
+2014-01-14T02:46:36.509792+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.510116+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.510227+00:00 app[web.1]: debug: set close timeout for client J0IixGRPUkEdQgibfC0T
+2014-01-14T02:46:36.510434+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.510707+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.510897+00:00 app[web.1]: debug: set close timeout for client bIB5xOEhhnpuZ1jJfC0X
+2014-01-14T02:46:36.510996+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.511248+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.511338+00:00 app[web.1]: debug: set close timeout for client pxEvdSSgOvi5Z1nefC0Y
+2014-01-14T02:46:36.511455+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.511632+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.511722+00:00 app[web.1]: debug: set close timeout for client ra7WXTrhY3hLCngvfC0a
+2014-01-14T02:46:36.511806+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.511986+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.512026+00:00 app[web.1]: debug: set close timeout for client ppwF-7Ljj7Jwrbh8fC0b
+2014-01-14T02:46:36.512115+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.512307+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.512307+00:00 app[web.1]: debug: set close timeout for client abgoh-Os2cQnhDvTfC0l
+2014-01-14T02:46:36.512414+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.512545+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.512545+00:00 app[web.1]: debug: set close timeout for client -rJzSnZZ-tIcZL9bfC0o
+2014-01-14T02:46:36.512689+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.512814+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.512864+00:00 app[web.1]: debug: set close timeout for client k2sJFATPPKjmQJcXfC0S
+2014-01-14T02:46:36.513058+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.513058+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.513154+00:00 app[web.1]: debug: set close timeout for client AD-3PH1e-4XC7x-qfC0U
+2014-01-14T02:46:36.513200+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:36.513339+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:36.513375+00:00 app[web.1]: debug: set close timeout for client hnP3UTzs77wZpRlRfC0m
+2014-01-14T02:46:36.605461+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/J0IixGRPUkEdQgibfC0T?t=1389667596032
+2014-01-14T02:46:36.605461+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.605461+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.605461+00:00 app[web.1]: debug: cleared close timeout for client J0IixGRPUkEdQgibfC0T
+2014-01-14T02:46:36.610264+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/VAH40U-2ImCbDJJUfC0N?t=1389667595909
+2014-01-14T02:46:36.610432+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.610432+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.610432+00:00 app[web.1]: debug: cleared close timeout for client VAH40U-2ImCbDJJUfC0N
+2014-01-14T02:46:36.612069+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ra7WXTrhY3hLCngvfC0a?t=1389667596964
+2014-01-14T02:46:36.612069+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.612181+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.612181+00:00 app[web.1]: debug: cleared close timeout for client ra7WXTrhY3hLCngvfC0a
+2014-01-14T02:46:36.628815+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ppwF-7Ljj7Jwrbh8fC0b?t=1389667599386
+2014-01-14T02:46:36.628995+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.629074+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.629170+00:00 app[web.1]: debug: cleared close timeout for client ppwF-7Ljj7Jwrbh8fC0b
+2014-01-14T02:46:36.629444+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/bIB5xOEhhnpuZ1jJfC0X?t=1389667596593
+2014-01-14T02:46:36.629512+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.629611+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.629702+00:00 app[web.1]: debug: cleared close timeout for client bIB5xOEhhnpuZ1jJfC0X
+2014-01-14T02:46:36.657457+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/j6mNBYbz2UF0hOCVfC0I?t=1389703580605
+2014-01-14T02:46:36.657457+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.657457+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.657457+00:00 app[web.1]: debug: cleared close timeout for client j6mNBYbz2UF0hOCVfC0I
+2014-01-14T02:46:36.664175+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/pWijXfx-kRggmG8gfC0L?t=1389667595974
+2014-01-14T02:46:36.664175+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.664340+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.664340+00:00 app[web.1]: debug: cleared close timeout for client pWijXfx-kRggmG8gfC0L
+2014-01-14T02:46:36.676559+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/1hWQQbl1TsqnzI1SfC0K?t=1389667596605
+2014-01-14T02:46:36.676844+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.676844+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.676844+00:00 app[web.1]: debug: cleared close timeout for client 1hWQQbl1TsqnzI1SfC0K
+2014-01-14T02:46:36.677135+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/-rJzSnZZ-tIcZL9bfC0o?t=1389667586904
+2014-01-14T02:46:36.677202+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.677261+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.677261+00:00 app[web.1]: debug: cleared close timeout for client -rJzSnZZ-tIcZL9bfC0o
+2014-01-14T02:46:36.681357+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/pxEvdSSgOvi5Z1nefC0Y?t=1389667577733
+2014-01-14T02:46:36.681452+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.681651+00:00 app[web.1]: debug: cleared close timeout for client pxEvdSSgOvi5Z1nefC0Y
+2014-01-14T02:46:36.681544+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.712398+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.712496+00:00 app[web.1]: debug: cleared close timeout for client abgoh-Os2cQnhDvTfC0l
+2014-01-14T02:46:36.719858+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/hnP3UTzs77wZpRlRfC0m?t=1389667596569
+2014-01-14T02:46:36.712279+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/abgoh-Os2cQnhDvTfC0l?t=1389667593116
+2014-01-14T02:46:36.712398+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.719991+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.720036+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.720125+00:00 app[web.1]: debug: cleared close timeout for client hnP3UTzs77wZpRlRfC0m
+2014-01-14T02:46:17.460656+00:00 heroku[router]: at=info method=GET path=/chats.json host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=25ms service=15ms status=200 bytes=133194
+2014-01-14T02:46:36.811778+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/C06kWthlkddQgnQrfC0M?t=1389667593772
+2014-01-14T02:46:36.811946+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.812100+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.812150+00:00 app[web.1]: debug: cleared close timeout for client C06kWthlkddQgnQrfC0M
+2014-01-14T02:46:36.960103+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/pEAKPOd7NPquhGNQfC0O?t=1389667578243
+2014-01-14T02:46:36.960103+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:36.960295+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:36.960295+00:00 app[web.1]: debug: cleared close timeout for client pEAKPOd7NPquhGNQfC0O
+2014-01-14T02:46:37.203693+00:00 app[web.1]: ip=10.6.130.86 time=2014-01-14T02:46:37.203Z method=GET path=/chats.json status=200 content_length=133210 content_type=application/json elapsed=8ms
+2014-01-14T02:46:37.813949+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/AD-3PH1e-4XC7x-qfC0U?t=1389667527137
+2014-01-14T02:46:37.813949+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:37.814171+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:37.814239+00:00 app[web.1]: debug: cleared close timeout for client AD-3PH1e-4XC7x-qfC0U
+2014-01-14T02:46:28.641332+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667594066 host=livechan.herokuapp.com fwd="149.164.164.180" dyno=web.1 connect=5ms service=8ms status=200 bytes=49
+2014-01-14T02:45:15.673568+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-d7fugh.jpg host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=4ms service=8ms status=304 bytes=0
+2014-01-14T02:46:38.239556+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:46:38.239884+00:00 app[web.1]: info: handshake authorized JN1sczeiS4ynepb3fC0r
+2014-01-14T02:46:38.232421+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667598547 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=33ms service=4ms status=200 bytes=49
+2014-01-14T02:46:38.480946+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/JN1sczeiS4ynepb3fC0r?t=1389667598865 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=1ms service=7ms status=200 bytes=46
+2014-01-14T02:46:38.365325+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/JN1sczeiS4ynepb3fC0r?t=1389667598736
+2014-01-14T02:46:38.365562+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:38.365854+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:46:38.366076+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:38.366583+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:46:38.366810+00:00 app[web.1]: debug: set close timeout for client JN1sczeiS4ynepb3fC0r
+2014-01-14T02:46:38.482130+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/JN1sczeiS4ynepb3fC0r?t=1389667598865
+2014-01-14T02:46:38.482654+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:38.482718+00:00 app[web.1]: debug: cleared close timeout for client JN1sczeiS4ynepb3fC0r
+2014-01-14T02:46:38.482130+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:38.482228+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:38.482508+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:46:38.482508+00:00 app[web.1]: debug: set close timeout for client JN1sczeiS4ynepb3fC0r
+2014-01-14T02:46:38.643684+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["n"]}
+2014-01-14T02:46:38.670359+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/JN1sczeiS4ynepb3fC0r?t=1389667598990
+2014-01-14T02:46:38.670552+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:38.670599+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:38.670662+00:00 app[web.1]: debug: cleared close timeout for client JN1sczeiS4ynepb3fC0r
+2014-01-14T02:46:39.004770+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/COHeKPOxE6leQATxfC0q?t=1389667594800 host=livechan.herokuapp.com fwd="71.89.130.205" dyno=web.1 connect=6ms service=13ms status=200 bytes=198
+2014-01-14T02:46:39.003548+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/COHeKPOxE6leQATxfC0q?t=1389667594800
+2014-01-14T02:46:39.003668+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.003709+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.003978+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"there always chiz pizza videos\r\n","name":"Anonymous","count":2315,"date":"Tue Jan 14 2014 02:46:36 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.004090+00:00 app[web.1]: debug: set close timeout for client COHeKPOxE6leQATxfC0q
+2014-01-14T02:46:39.004179+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.004243+00:00 app[web.1]: debug: cleared close timeout for client COHeKPOxE6leQATxfC0q
+2014-01-14T02:46:39.456121+00:00 heroku[router]: at=info method=POST path=/chat/g host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=51ms service=4ms status=200 bytes=40
+2014-01-14T02:46:39.462764+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/C06kWthlkddQgnQrfC0M?t=1389667593772 host=livechan.herokuapp.com fwd="123.243.239.97" dyno=web.1 connect=0ms service=2657ms status=200 bytes=200
+2014-01-14T02:46:39.461655+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/VAH40U-2ImCbDJJUfC0N?t=1389667595909 host=livechan.herokuapp.com fwd="165.123.192.109" dyno=web.1 connect=1ms service=2859ms status=200 bytes=200
+2014-01-14T02:46:39.475658+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/bIB5xOEhhnpuZ1jJfC0X?t=1389667596593 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=1ms service=2841ms status=200 bytes=200
+2014-01-14T02:46:39.466054+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/pWijXfx-kRggmG8gfC0L?t=1389667595974 host=livechan.herokuapp.com fwd="96.252.125.110" dyno=web.1 connect=3ms service=2807ms status=200 bytes=200
+2014-01-14T02:46:39.465743+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667599435 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=7ms status=200 bytes=49
+2014-01-14T02:46:39.455325+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/j6mNBYbz2UF0hOCVfC0I?t=1389703580605 host=livechan.herokuapp.com fwd="212.142.68.111" dyno=web.1 connect=1ms service=2810ms status=200 bytes=200
+2014-01-14T02:46:39.461992+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/ppwF-7Ljj7Jwrbh8fC0b?t=1389667599386 host=livechan.herokuapp.com fwd="68.5.22.223" dyno=web.1 connect=2ms service=2844ms status=200 bytes=200
+2014-01-14T02:46:39.460282+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/ra7WXTrhY3hLCngvfC0a?t=1389667596964 host=livechan.herokuapp.com fwd="65.33.249.173" dyno=web.1 connect=3ms service=2860ms status=200 bytes=200
+2014-01-14T02:46:39.464639+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/J0IixGRPUkEdQgibfC0T?t=1389667596032 host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=2ms service=2875ms status=200 bytes=200
+2014-01-14T02:46:39.463614+00:00 app[web.1]: DELETED
+2014-01-14T02:46:39.464144+00:00 app[web.1]: ip=10.62.95.9 time=2014-01-14T02:46:39.463Z method=POST path=/chat/g status=200 content_length=40 content_type="application/json; charset=utf-8" elapsed=1ms
+2014-01-14T02:46:39.464220+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.464395+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.464395+00:00 app[web.1]: debug: set close timeout for client j6mNBYbz2UF0hOCVfC0I
+2014-01-14T02:46:39.464504+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.464671+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.464715+00:00 app[web.1]: debug: set close timeout for client 1hWQQbl1TsqnzI1SfC0K
+2014-01-14T02:46:39.465329+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/-rJzSnZZ-tIcZL9bfC0o?t=1389667586904 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=0ms service=2799ms status=200 bytes=200
+2014-01-14T02:46:39.464813+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.465010+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.465010+00:00 app[web.1]: debug: set close timeout for client pWijXfx-kRggmG8gfC0L
+2014-01-14T02:46:39.465143+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.465349+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.465391+00:00 app[web.1]: debug: set close timeout for client C06kWthlkddQgnQrfC0M
+2014-01-14T02:46:39.465478+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.465667+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.467417+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/abgoh-Os2cQnhDvTfC0l?t=1389667593116 host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=1ms service=2765ms status=200 bytes=200
+2014-01-14T02:46:39.465707+00:00 app[web.1]: debug: set close timeout for client pEAKPOd7NPquhGNQfC0O
+2014-01-14T02:46:39.465796+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.465939+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.465980+00:00 app[web.1]: debug: set close timeout for client VAH40U-2ImCbDJJUfC0N
+2014-01-14T02:46:39.466068+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.466154+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.466264+00:00 app[web.1]: debug: set close timeout for client J0IixGRPUkEdQgibfC0T
+2014-01-14T02:46:39.466303+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.466485+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.466485+00:00 app[web.1]: debug: set close timeout for client bIB5xOEhhnpuZ1jJfC0X
+2014-01-14T02:46:39.466581+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.466736+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.466736+00:00 app[web.1]: debug: set close timeout for client pxEvdSSgOvi5Z1nefC0Y
+2014-01-14T02:46:39.466736+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.466927+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.466927+00:00 app[web.1]: debug: set close timeout for client ra7WXTrhY3hLCngvfC0a
+2014-01-14T02:46:39.467031+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.467152+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.467204+00:00 app[web.1]: debug: set close timeout for client ppwF-7Ljj7Jwrbh8fC0b
+2014-01-14T02:46:39.467204+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.467375+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.467418+00:00 app[web.1]: debug: set close timeout for client abgoh-Os2cQnhDvTfC0l
+2014-01-14T02:46:39.467492+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.467620+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.467660+00:00 app[web.1]: debug: set close timeout for client -rJzSnZZ-tIcZL9bfC0o
+2014-01-14T02:46:39.467739+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.467883+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.467952+00:00 app[web.1]: debug: set close timeout for client AD-3PH1e-4XC7x-qfC0U
+2014-01-14T02:46:39.468030+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.468158+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.468202+00:00 app[web.1]: debug: set close timeout for client hnP3UTzs77wZpRlRfC0m
+2014-01-14T02:46:39.472519+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:46:39.472974+00:00 app[web.1]: info: handshake authorized B7yOZrpZpw6Tvl-ofC0s
+2014-01-14T02:46:39.495759+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/bIB5xOEhhnpuZ1jJfC0X?t=1389667599464
+2014-01-14T02:46:39.495759+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:21.446707+00:00 heroku[router]: at=info method=GET path=/ host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=1ms service=4ms status=200 bytes=6274
+2014-01-14T02:46:39.495759+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.495759+00:00 app[web.1]: debug: cleared close timeout for client bIB5xOEhhnpuZ1jJfC0X
+2014-01-14T02:46:39.547836+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ra7WXTrhY3hLCngvfC0a?t=1389667599922
+2014-01-14T02:46:39.547836+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.547836+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.547836+00:00 app[web.1]: debug: cleared close timeout for client ra7WXTrhY3hLCngvfC0a
+2014-01-14T02:46:39.575187+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/VAH40U-2ImCbDJJUfC0N?t=1389667598880
+2014-01-14T02:46:39.575187+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.575187+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.575187+00:00 app[web.1]: debug: cleared close timeout for client VAH40U-2ImCbDJJUfC0N
+2014-01-14T02:46:39.578460+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/J0IixGRPUkEdQgibfC0T?t=1389667598996
+2014-01-14T02:46:39.578502+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.578582+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.578582+00:00 app[web.1]: debug: cleared close timeout for client J0IixGRPUkEdQgibfC0T
+2014-01-14T02:46:39.581643+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ppwF-7Ljj7Jwrbh8fC0b?t=1389667602350
+2014-01-14T02:46:39.581749+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.581749+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.581749+00:00 app[web.1]: debug: cleared close timeout for client ppwF-7Ljj7Jwrbh8fC0b
+2014-01-14T02:46:39.583487+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/hnP3UTzs77wZpRlRfC0m?t=1389667599514
+2014-01-14T02:46:39.583575+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.583629+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.588571+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.583686+00:00 app[web.1]: debug: cleared close timeout for client hnP3UTzs77wZpRlRfC0m
+2014-01-14T02:46:39.588454+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/pWijXfx-kRggmG8gfC0L?t=1389667598894
+2014-01-14T02:46:39.588496+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.588571+00:00 app[web.1]: debug: cleared close timeout for client pWijXfx-kRggmG8gfC0L
+2014-01-14T02:46:39.603227+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/pxEvdSSgOvi5Z1nefC0Y?t=1389667580661
+2014-01-14T02:46:39.603227+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.603316+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.603418+00:00 app[web.1]: debug: cleared close timeout for client pxEvdSSgOvi5Z1nefC0Y
+2014-01-14T02:46:39.603633+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/j6mNBYbz2UF0hOCVfC0I?t=1389703583554
+2014-01-14T02:46:39.603724+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.603767+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.603847+00:00 app[web.1]: debug: cleared close timeout for client j6mNBYbz2UF0hOCVfC0I
+2014-01-14T02:46:39.606990+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/1hWQQbl1TsqnzI1SfC0K?t=1389667599538
+2014-01-14T02:46:39.607084+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.607148+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.607205+00:00 app[web.1]: debug: cleared close timeout for client 1hWQQbl1TsqnzI1SfC0K
+2014-01-14T02:46:39.644131+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/-rJzSnZZ-tIcZL9bfC0o?t=1389667589864
+2014-01-14T02:46:39.644131+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.644131+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.644131+00:00 app[web.1]: debug: cleared close timeout for client -rJzSnZZ-tIcZL9bfC0o
+2014-01-14T02:46:39.697466+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/abgoh-Os2cQnhDvTfC0l?t=1389667596065
+2014-01-14T02:46:39.697551+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.697650+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.697755+00:00 app[web.1]: debug: cleared close timeout for client abgoh-Os2cQnhDvTfC0l
+2014-01-14T02:46:39.773484+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/C06kWthlkddQgnQrfC0M?t=1389667596734
+2014-01-14T02:46:39.773552+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.774378+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.774458+00:00 app[web.1]: debug: cleared close timeout for client C06kWthlkddQgnQrfC0M
+2014-01-14T02:46:39.782761+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/pEAKPOd7NPquhGNQfC0O?t=1389667581213
+2014-01-14T02:46:39.782869+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.782869+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.782996+00:00 app[web.1]: debug: cleared close timeout for client pEAKPOd7NPquhGNQfC0O
+2014-01-14T02:46:39.905324+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/k2sJFATPPKjmQJcXfC0S?t=1389667598352
+2014-01-14T02:46:39.905507+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:39.905507+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:39.905861+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:39.905861+00:00 app[web.1]: debug: set close timeout for client k2sJFATPPKjmQJcXfC0S
+2014-01-14T02:46:39.905985+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:39.906049+00:00 app[web.1]: debug: cleared close timeout for client k2sJFATPPKjmQJcXfC0S
+2014-01-14T02:46:40.487042+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600435 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=8ms service=16ms status=200 bytes=3
+2014-01-14T02:46:40.501296+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/AD-3PH1e-4XC7x-qfC0U?t=1389667530083
+2014-01-14T02:46:40.501296+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:40.485447+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600435
+2014-01-14T02:46:40.485447+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:25.531384+00:00 heroku[router]: at=info method=GET path=/socket.io/socket.io.js host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=0ms service=8ms status=200 bytes=60602
+2014-01-14T02:46:40.485647+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:46:40.485748+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:40.485984+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:46:40.486085+00:00 app[web.1]: debug: set close timeout for client B7yOZrpZpw6Tvl-ofC0s
+2014-01-14T02:46:40.501452+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:40.501452+00:00 app[web.1]: debug: cleared close timeout for client AD-3PH1e-4XC7x-qfC0U
+2014-01-14T02:46:40.657276+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600610 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=5ms service=5ms status=200 bytes=1
+2014-01-14T02:46:40.610674+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:40.610945+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:46:40.611032+00:00 app[web.1]: debug: set close timeout for client B7yOZrpZpw6Tvl-ofC0s
+2014-01-14T02:46:40.610275+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600487
+2014-01-14T02:46:40.610463+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:40.611201+00:00 app[web.1]: debug: cleared close timeout for client B7yOZrpZpw6Tvl-ofC0s
+2014-01-14T02:46:40.611135+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:40.643102+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600611
+2014-01-14T02:46:40.643102+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:40.643102+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:40.643102+00:00 app[web.1]: debug: cleared close timeout for client B7yOZrpZpw6Tvl-ofC0s
+2014-01-14T02:46:40.650053+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["n"]}
+2014-01-14T02:46:39.473728+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/hnP3UTzs77wZpRlRfC0m?t=1389667596569 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=1ms service=2753ms status=200 bytes=200
+2014-01-14T02:46:36.520785+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/k2sJFATPPKjmQJcXfC0S?t=1389667593669 host=livechan.herokuapp.com fwd="118.210.207.220" dyno=web.1 connect=1ms service=1294ms status=200 bytes=198
+2014-01-14T02:46:37.207479+00:00 heroku[router]: at=info method=GET path=/chats.json host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=12ms status=200 bytes=133210
+2014-01-14T02:46:43.585559+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/k2sJFATPPKjmQJcXfC0S?t=1389667602023
+2014-01-14T02:46:43.585559+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:43.585708+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:43.585708+00:00 app[web.1]: debug: cleared close timeout for client k2sJFATPPKjmQJcXfC0S
+2014-01-14T02:46:25.515554+00:00 heroku[router]: at=info method=GET path=/style.css host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=0ms service=4ms status=304 bytes=0
+2014-01-14T02:44:03.933396+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667425373 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=2ms service=4ms status=200 bytes=49
+2014-01-14T02:45:47.991343+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-4axnbj.png host=livechan.herokuapp.com fwd="68.5.22.223" dyno=web.1 connect=0ms service=2ms status=304 bytes=0
+2014-01-14T02:46:38.649932+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/JN1sczeiS4ynepb3fC0r?t=1389667598988 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=1ms service=3ms status=200 bytes=1
+2014-01-14T02:45:42.123861+00:00 heroku[router]: at=info method=GET path=/jquery.thumbhover.js host=livechan.herokuapp.com fwd="71.89.130.205" dyno=web.1 connect=2ms service=5ms status=200 bytes=3179
+2014-01-14T02:46:06.156388+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/x2gvG2rvmENA59gwfC0J?t=1389667533258 host=livechan.herokuapp.com fwd="201.141.99.16" dyno=web.1 connect=1ms service=25053ms status=200 bytes=175
+2014-01-14T02:46:06.163172+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/HVIkly8Zl4Yvl6WDfC0e?t=1389667558560 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=0ms service=7576ms status=200 bytes=175
+2014-01-14T02:45:01.035356+00:00 heroku[router]: at=info method=GET path=/chat/g host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=3ms service=6ms status=200 bytes=2116
+2014-01-14T02:45:01.431503+00:00 heroku[router]: at=info method=GET path=/data/g host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=2ms service=9ms status=200 bytes=23303
+2014-01-14T02:46:31.506878+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/k2sJFATPPKjmQJcXfC0S?t=1389667568199 host=livechan.herokuapp.com fwd="118.210.207.220" dyno=web.1 connect=21ms service=21739ms status=200 bytes=212
+2014-01-14T02:45:01.795171+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/mXfD5xVgasXt877VfC0F?t=1389667483024 host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=2ms service=5ms status=200 bytes=1
+2014-01-14T02:46:48.671029+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-10wguvj.png host=livechan.herokuapp.com fwd="71.89.130.205" dyno=web.1 connect=64ms service=7ms status=200 bytes=26102
+2014-01-14T02:46:48.663328+00:00 app[web.1]: ip=10.191.95.193 time=2014-01-14T02:46:48.663Z method=GET path=/tmp/uploads/2-10wguvj.png status=200 content_length=26102 content_type=image/png elapsed=2ms
+2014-01-14T02:45:02.203941+00:00 heroku[router]: at=info method=GET path=/socket.io/socket.io.js host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=4ms service=8ms status=200 bytes=60602
+2014-01-14T02:45:02.219553+00:00 heroku[router]: at=info method=GET path=/jquery.thumbhover.js host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=5ms service=5ms status=304 bytes=0
+2014-01-14T02:45:02.478602+00:00 heroku[router]: at=info method=GET path=/data/n host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=12ms status=200 bytes=62956
+2014-01-14T02:46:49.014559+00:00 app[web.1]: Access granted to IP address: 60.228.198.78
+2014-01-14T02:46:49.015140+00:00 app[web.1]: ip=10.42.122.176 time=2014-01-14T02:46:49.014Z method=GET path=/tmp/uploads/ status=404 content_length= content_type=text/html elapsed=2ms
+2014-01-14T02:46:39.496048+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/pEAKPOd7NPquhGNQfC0O?t=1389667578243 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=26ms service=2655ms status=200 bytes=200
+2014-01-14T02:46:39.497901+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/AD-3PH1e-4XC7x-qfC0U?t=1389667527137 host=livechan.herokuapp.com fwd="193.48.226.65" dyno=web.1 connect=21ms service=1723ms status=200 bytes=200
+2014-01-14T02:46:50.036345+00:00 heroku[router]: at=info method=GET path=/favicon.ico host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=1ms service=4ms status=404 bytes=35
+2014-01-14T02:46:50.030477+00:00 app[web.1]: Access granted to IP address: 60.228.198.78
+2014-01-14T02:46:50.030968+00:00 app[web.1]: ip=10.87.78.208 time=2014-01-14T02:46:50.030Z method=GET path=/favicon.ico status=404 content_length= content_type=text/html elapsed=1ms
+2014-01-14T02:46:50.523339+00:00 app[web.1]: Access granted to IP address: 60.228.198.78
+2014-01-14T02:46:50.523763+00:00 app[web.1]: ip=10.87.82.55 time=2014-01-14T02:46:50.523Z method=GET path=/favicon.ico status=404 content_length= content_type=text/html elapsed=2ms
+2014-01-14T02:46:50.803164+00:00 app[web.1]: ip=10.228.27.161 time=2014-01-14T02:46:50.802Z method=GET path=/tmp/uploads/2-10wguvj.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:46:36.502821+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/x2gvG2rvmENA59gwfC0J?t=1389667583951 host=livechan.herokuapp.com fwd="201.141.99.16" dyno=web.1 connect=1ms service=4511ms status=200 bytes=198
+2014-01-14T02:45:05.944911+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/eg5MI9UNqP09tRwYfCzy?t=1389667475241 host=livechan.herokuapp.com fwd="96.252.125.110" dyno=web.1 connect=1ms service=30002ms status=503 bytes=0
+2014-01-14T02:46:40.604497+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600487 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=6ms service=78ms status=200 bytes=46
+2014-01-14T02:46:51.385926+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/COHeKPOxE6leQATxfC0q?t=1389667609434 host=livechan.herokuapp.com fwd="71.89.130.205" dyno=web.1 connect=9ms service=21ms status=200 bytes=200
+2014-01-14T02:46:51.364905+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/COHeKPOxE6leQATxfC0q?t=1389667609434
+2014-01-14T02:46:51.364905+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:45:55.594952+00:00 heroku[router]: at=info method=GET path=/style.css host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=0ms service=2ms status=200 bytes=2144
+2014-01-14T02:46:51.364905+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:51.365288+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"chat","args":[{"convo":"General","body":"everytime i go on /n/ it crashes\r\n","name":"Anonymous","count":2316,"date":"Tue Jan 14 2014 02:46:39 GMT+0000 (UTC)","ip":"hidden","chat":"g"}]}
+2014-01-14T02:46:51.365379+00:00 app[web.1]: debug: set close timeout for client COHeKPOxE6leQATxfC0q
+2014-01-14T02:46:51.365463+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:51.365505+00:00 app[web.1]: debug: cleared close timeout for client COHeKPOxE6leQATxfC0q
+2014-01-14T02:45:06.521868+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/x2gvG2rvmENA59gwfC0J?t=1389667498684 host=livechan.herokuapp.com fwd="201.141.99.16" dyno=web.1 connect=1ms service=4ms status=200 bytes=1
+2014-01-14T02:46:52.338096+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/COHeKPOxE6leQATxfC0q?t=1389667613164
+2014-01-14T02:46:52.338096+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:52.338096+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:52.338096+00:00 app[web.1]: debug: cleared close timeout for client COHeKPOxE6leQATxfC0q
+2014-01-14T02:46:54.673132+00:00 heroku[router]: at=info method=GET path=/ host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect
+=1ms service=4ms status=200 bytes=6274
+2014-01-14T02:46:54.680082+00:00 app[web.1]: ip=10.122.69.110 time=2014-01-14T02:46:54.679Z method=GET path=/ status=200 content_length=6274 content_type="text/html; charset=UTF-8" elapsed=1ms
+2014-01-14T02:46:55.103268+00:00 heroku[router]: at=info method=GET path=/style.css host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=3ms service=9ms status=200 bytes=2144
+2014-01-14T02:46:55.110265+00:00 app[web.1]: ip=10.120.246.3 time=2014-01-14T02:46:55.109Z method=GET path=/style.css status=200 content_length=2144 content_type="text/css; charset=UTF-8" elapsed=2ms
+2014-01-14T02:46:55.407119+00:00 app[web.1]: ip=10.92.239.244 time=2014-01-14T02:46:55.406Z method=GET path=/home.js status=200 content_length=2179 content_type=application/javascript elapsed=5ms
+2014-01-14T02:46:55.395524+00:00 app[web.1]: debug: served static content /socket.io.js
+2014-01-14T02:46:12.581205+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/hnP3UTzs77wZpRlRfC0m?t=1389667572507 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=4ms service=6ms status=200 bytes=3
+2014-01-14T02:46:57.240308+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667617118 host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=3ms service=4ms status=200 bytes=49
+2014-01-14T02:46:57.245879+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:46:57.246474+00:00 app[web.1]: info: handshake authorized Ke_ApNPb3Nn_BZUtfC0t
+2014-01-14T02:46:57.743211+00:00 app[web.1]: ip=10.92.239.244 time=2014-01-14T02:46:57.742Z method=GET path=/data/all status=200 content_length=4745 content_type="application/json; charset=utf-8" elapsed=2ms
+2014-01-14T02:46:57.870151+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Ke_ApNPb3Nn_BZUtfC0t?t=1389667617697
+2014-01-14T02:46:57.870151+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:57.870394+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:46:57.870515+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:57.870781+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:46:57.870940+00:00 app[web.1]: debug: set close timeout for client Ke_ApNPb3Nn_BZUtfC0t
+2014-01-14T02:46:03.726444+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667553824 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=54ms service=7ms status=200 bytes=49
+2014-01-14T02:46:58.307558+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/Ke_ApNPb3Nn_BZUtfC0t?t=1389667618192 host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=2ms service=6ms status=200 bytes=46
+2014-01-14T02:46:58.310868+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Ke_ApNPb3Nn_BZUtfC0t?t=1389667618192
+2014-01-14T02:46:58.310935+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:58.311063+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:46:58.311395+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:46:58.311470+00:00 app[web.1]: debug: set close timeout for client Ke_ApNPb3Nn_BZUtfC0t
+2014-01-14T02:46:58.311573+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:58.311665+00:00 app[web.1]: debug: cleared close timeout for client Ke_ApNPb3Nn_BZUtfC0t
+2014-01-14T02:46:58.750324+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["all"]}
+2014-01-14T02:46:58.761896+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Ke_ApNPb3Nn_BZUtfC0t?t=1389667618633
+2014-01-14T02:46:58.762088+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:46:58.762207+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:46:58.762348+00:00 app[web.1]: debug: cleared close timeout for client Ke_ApNPb3Nn_BZUtfC0t
+2014-01-14T02:46:39.470918+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/1hWQQbl1TsqnzI1SfC0K?t=1389667596605 host=livechan.herokuapp.com fwd="79.40.153.101" dyno=web.1 connect=1ms service=2792ms status=200 bytes=200
+2014-01-14T02:47:00.102464+00:00 app[web.1]: debug: fired close timeout for client je7JLRJQkgO5q-8tfC0f
+2014-01-14T02:47:00.102554+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:47:00.102701+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:00.629251+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667626067 host=livechan.herokuapp.com fwd="149.164.164.180" dyno=web.1 connect=4ms service=8ms status=200 bytes=49
+2014-01-14T02:47:00.619871+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:00.620846+00:00 app[web.1]: info: handshake authorized F5JHyfBB3HMEWEttfC0u
+2014-01-14T02:47:01.610127+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/F5JHyfBB3HMEWEttfC0u?t=1389667627066
+2014-01-14T02:46:58.756957+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/Ke_ApNPb3Nn_BZUtfC0t?t=1389667618629 host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=1ms service=3ms status=200 bytes=1
+2014-01-14T02:47:01.610289+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:01.610606+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:01.610751+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:01.611204+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:01.611504+00:00 app[web.1]: debug: set close timeout for client F5JHyfBB3HMEWEttfC0u
+2014-01-14T02:47:01.703899+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/F5JHyfBB3HMEWEttfC0u?t=1389667627118
+2014-01-14T02:47:01.766661+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:01.704009+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:01.704405+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:01.704095+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:01.704491+00:00 app[web.1]: debug: set close timeout for client F5JHyfBB3HMEWEttfC0u
+2014-01-14T02:47:01.704565+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:01.704626+00:00 app[web.1]: debug: cleared close timeout for client F5JHyfBB3HMEWEttfC0u
+2014-01-14T02:47:01.766579+00:00 app[web.1]: debug: fired close timeout for client b1FoMCXo3rAQgxWlfCzs
+2014-01-14T02:47:01.766579+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:47:01.778882+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["mlp"]}
+2014-01-14T02:47:01.786054+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/F5JHyfBB3HMEWEttfC0u?t=1389667627228
+2014-01-14T02:47:01.786111+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:01.786192+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:01.786280+00:00 app[web.1]: debug: cleared close timeout for client F5JHyfBB3HMEWEttfC0u
+2014-01-14T02:47:01.735643+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/F5JHyfBB3HMEWEttfC0u?t=1389667627118 host=livechan.herokuapp.com fwd="149.164.164.180" dyno=web.1 connect=10ms service=30ms status=200 bytes=46
+2014-01-14T02:45:59.995523+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-4axnbj.png host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=1ms service=7ms status=304 bytes=0
+2014-01-14T02:47:03.814027+00:00 app[web.1]: ip=10.92.242.199 time=2014-01-14T02:47:03.813Z method=GET path=/tmp/uploads/2-4axnbj.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:03.929960+00:00 app[web.1]: ip=10.10.155.37 time=2014-01-14T02:47:03.929Z method=GET path=/chat/n/ status=200 content_length=2116 content_type="text/html; charset=UTF-8" elapsed=2ms
+2014-01-14T02:47:04.128324+00:00 heroku[router]: at=info method=GET path=/main.js host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=1ms service=2ms status=304 bytes=0
+2014-01-14T02:46:22.280187+00:00 heroku[router]: at=info method=GET path=/socket.io/socket.io.js host=livechan.herokuapp.com fwd="71.89.130.205" dyno=web.1 connect=2ms service=9ms status=200 bytes=60602
+2014-01-14T02:47:04.127176+00:00 heroku[router]: at=info method=GET path=/jquery.thumbhover.js host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=3ms service=9ms status=304 bytes=0
+2014-01-14T02:47:04.110210+00:00 heroku[router]: at=info method=GET path=/style.css host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=1ms service=2ms status=304 bytes=0
+2014-01-14T02:47:04.126188+00:00 heroku[router]: at=info method=GET path=/socket.io/socket.io.js host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=1ms service=3ms status=200 bytes=60602
+2014-01-14T02:47:04.116892+00:00 app[web.1]: ip=10.40.58.38 time=2014-01-14T02:47:04.116Z method=GET path=/style.css status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:04.117382+00:00 app[web.1]: ip=10.228.29.29 time=2014-01-14T02:47:04.117Z method=GET path=/tmp/uploads/2-4axnbj.png status=304 content_length= content_type= elapsed=2ms
+2014-01-14T02:47:04.131426+00:00 app[web.1]: debug: served static content /socket.io.js
+2014-01-14T02:47:04.267553+00:00 app[web.1]: ip=10.87.82.55 time=2014-01-14T02:47:04.267Z method=GET path=/tmp/uploads/2-1d11pfe.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:04.133888+00:00 app[web.1]: ip=10.38.159.214 time=2014-01-14T02:47:04.133Z method=GET path=/jquery.thumbhover.js status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:04.139084+00:00 app[web.1]: ip=10.164.59.99 time=2014-01-14T02:47:04.138Z method=GET path=/main.js status=304 content_length= content_type= elapsed=0ms
+2014-01-14T02:46:36.511642+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/AD-3PH1e-4XC7x-qfC0U?t=1389667522297 host=livechan.herokuapp.com fwd="193.48.226.65" dyno=web.1 connect=2ms service=3949ms status=200 bytes=198
+2014-01-14T02:46:07.466855+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667567436 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=5ms status=200 bytes=49
+2014-01-14T02:47:05.420852+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667615551 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=2ms service=5ms status=200 bytes=49
+2014-01-14T02:47:05.427839+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:05.428246+00:00 app[web.1]: info: handshake authorized PH0CU3DuOy95BAFbfC0v
+2014-01-14T02:47:05.441965+00:00 app[web.1]: Access granted to IP address: 94.11.14.30
+2014-01-14T02:47:05.442656+00:00 app[web.1]: ip=10.145.203.39 time=2014-01-14T02:47:05.442Z method=GET path=/data/ status=404 content_length= content_type=text/html elapsed=2ms
+2014-01-14T02:44:03.971291+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/Z6sDosR5gNx1c_dafCzj?t=1389667434203 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=0ms service=2ms status=200 bytes=3
+2014-01-14T02:47:05.584413+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/PH0CU3DuOy95BAFbfC0v?t=1389667615819
+2014-01-14T02:47:05.584413+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:05.584413+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:05.584645+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:05.584946+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:05.585115+00:00 app[web.1]: debug: set close timeout for client PH0CU3DuOy95BAFbfC0v
+2014-01-14T02:46:49.018627+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/ host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=2ms service=3ms status=404 bytes=36
+2014-01-14T02:47:05.718955+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:05.719073+00:00 app[web.1]: debug: xhr-polling writing 8::
+2014-01-14T02:47:05.719173+00:00 app[web.1]: debug: set close timeout for client spYKr5Krm7yvzOMYfC0V
+2014-01-14T02:47:05.719216+00:00 app[web.1]: debug: xhr-polling closed due to exceeded duration
+2014-01-14T02:47:05.740586+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/PH0CU3DuOy95BAFbfC0v?t=1389667615975
+2014-01-14T02:47:05.740643+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:05.740726+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:05.740943+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:05.740943+00:00 app[web.1]: debug: set close timeout for client PH0CU3DuOy95BAFbfC0v
+2014-01-14T02:47:05.741053+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:05.741094+00:00 app[web.1]: debug: cleared close timeout for client PH0CU3DuOy95BAFbfC0v
+2014-01-14T02:47:05.584841+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/PH0CU3DuOy95BAFbfC0v?t=1389667615819 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=1ms service=2ms status=200 bytes=3
+2014-01-14T02:44:36.917691+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/qa8T6FhDfGV2M5NtfCz0?t=1389667463209 host=livechan.herokuapp.com fwd="124.169.107.55" dyno=web.1 connect=2ms service=3ms status=200 bytes=1
+2014-01-14T02:47:05.919574+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":[""]}
+2014-01-14T02:47:05.924160+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/PH0CU3DuOy95BAFbfC0v?t=1389667616127
+2014-01-14T02:47:05.924300+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:05.924369+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:05.924429+00:00 app[web.1]: debug: cleared close timeout for client PH0CU3DuOy95BAFbfC0v
+2014-01-14T02:47:06.162304+00:00 app[web.1]: debug: fired close timeout for client HVIkly8Zl4Yvl6WDfC0e
+2014-01-14T02:47:06.162304+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:47:06.162393+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:06.162084+00:00 app[web.1]: debug: fired close timeout for client OyOr2IHF9tg9ASt-fC0W
+2014-01-14T02:47:06.162084+00:00 app[web.1]: info: transport end (close timeout)
+2014-01-14T02:47:06.162217+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:06.354850+00:00 app[web.1]: ip=10.120.211.149 time=2014-01-14T02:47:06.354Z method=GET path=/tmp/uploads/2-1d11pfe.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:06.584655+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-4axnbj.png host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=1ms service=5ms status=304 bytes=0
+2014-01-14T02:47:06.590792+00:00 app[web.1]: ip=10.123.51.167 time=2014-01-14T02:47:06.590Z method=GET path=/tmp/uploads/2-4axnbj.png status=304 content_length= content_type= elapsed=3ms
+2014-01-14T02:47:07.702346+00:00 app[web.1]: ip=10.87.82.55 time=2014-01-14T02:47:07.701Z method=GET path=/tmp/uploads/2-4axnbj.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:07.791300+00:00 app[web.1]: ip=10.42.122.176 time=2014-01-14T02:47:07.790Z method=GET path=/tmp/uploads/2-1d11pfe.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:03.813920+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-4axnbj.png host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=27ms service=11ms status=304 bytes=0
+2014-01-14T02:47:06.361041+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-1d11pfe.png host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=3ms service=3ms status=304 bytes=0
+2014-01-14T02:47:08.439906+00:00 app[web.1]: ip=10.123.90.86 time=2014-01-14T02:47:08.439Z method=GET path=/tmp/uploads/2-1d11pfe.png status=304 content_length= content_type= elapsed=0ms
+2014-01-14T02:47:09.297334+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667629672 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=2ms service=5ms status=200 bytes=49
+2014-01-14T02:47:09.501030+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/bIB5xOEhhnpuZ1jJfC0X?t=1389667599464 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=1ms service=30000ms status=503 bytes=0
+2014-01-14T02:47:09.529504+00:00 heroku
+[router]: at=info method=GET path=/tmp/uploads/2-1d11pfe.png host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=1ms service=2ms status=304 bytes=0
+2014-01-14T02:47:09.567454+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/VAH40U-2ImCbDJJUfC0N?t=1389667598880 host=livechan.herokuapp.com fwd="165.123.192.109" dyno=web.1 connect=4ms service=30005ms status=503 bytes=0
+2014-01-14T02:44:41.473920+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/eazAy5pKSaoAFFjtfCz3?t=1389667481820 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=2ms service=5ms status=200 bytes=46
+2014-01-14T02:47:09.702491+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/Wk3ZxT7zryvNEPOlfC0w?t=1389667630077 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=1ms service=2ms status=200 bytes=1
+2014-01-14T02:47:09.777056+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/pEAKPOd7NPquhGNQfC0O?t=1389667581213 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=2ms service=30000ms status=503 bytes=0
+2014-01-14T02:47:09.596025+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/j6mNBYbz2UF0hOCVfC0I?t=1389703583554 host=livechan.herokuapp.com fwd="212.142.68.111" dyno=web.1 connect=0ms service=30001ms status=503 bytes=0
+2014-01-14T02:47:09.689432+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/abgoh-Os2cQnhDvTfC0l?t=1389667596065 host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=12ms service=30000ms status=503 bytes=0
+2014-01-14T02:47:10.153962+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667630496 host=livechan.herokuapp.com fwd="65.33.249.173" dyno=web.1 connect=6ms service=33ms status=200 bytes=49
+2014-01-14T02:47:10.194172+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667629619 host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=2ms service=4ms status=200 bytes=49
+2014-01-14T02:47:10.239076+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389703614193 host=livechan.herokuapp.com fwd="212.142.68.111" dyno=web.1 connect=1ms service=2ms status=200 bytes=49
+2014-01-14T02:47:10.275274+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667630181 host=livechan.herokuapp.com fwd="79.40.153.101" dyno=web.1 connect=3ms service=3ms status=200 bytes=49
+2014-01-14T02:47:10.328559+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667620564 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=3ms service=3ms status=200 bytes=49
+2014-01-14T02:47:09.294184+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:09.294688+00:00 app[web.1]: info: handshake authorized Wk3ZxT7zryvNEPOlfC0w
+2014-01-14T02:47:09.448768+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Wk3ZxT7zryvNEPOlfC0w?t=1389667629791
+2014-01-14T02:47:09.448768+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:09.448976+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:09.449042+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:09.449329+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:09.449415+00:00 app[web.1]: debug: set close timeout for client Wk3ZxT7zryvNEPOlfC0w
+2014-01-14T02:47:09.535648+00:00 app[web.1]: ip=10.123.51.167 time=2014-01-14T02:47:09.535Z method=GET path=/tmp/uploads/2-1d11pfe.png status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:09.571667+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Wk3ZxT7zryvNEPOlfC0w?t=1389667629946
+2014-01-14T02:47:09.571667+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.378999+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667626795 host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=2ms service=2ms status=200 bytes=49
+2014-01-14T02:47:09.571813+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:09.571991+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:09.572052+00:00 app[web.1]: debug: set close timeout for client Wk3ZxT7zryvNEPOlfC0w
+2014-01-14T02:47:09.572130+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:09.572206+00:00 app[web.1]: debug: cleared close timeout for client Wk3ZxT7zryvNEPOlfC0w
+2014-01-14T02:47:10.393505+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/iJmKkRHXTqDMD8jsfC0x?t=1389667630747 host=livechan.herokuapp.com fwd="65.33.249.173" dyno=web.1 connect=1ms service=2ms status=200 bytes=1
+2014-01-14T02:47:10.450300+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/m3SPTwlzdtaf00pXfC03?t=1389667611486 host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=4ms service=16ms status=200 bytes=3
+2014-01-14T02:47:09.710720+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["n"]}
+2014-01-14T02:47:10.498079+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/AD-3PH1e-4XC7x-qfC0U?t=1389667530083 host=livechan.herokuapp.com fwd="193.48.226.65" dyno=web.1 connect=7ms service=30008ms status=503 bytes=0
+2014-01-14T02:47:10.553085+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/ibiTZPW6smr2pT6FfC00?t=1389667633310 host=livechan.herokuapp.com fwd="68.5.22.223" dyno=web.1 connect=1ms service=4ms status=200 bytes=3
+2014-01-14T02:47:09.734896+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Wk3ZxT7zryvNEPOlfC0w?t=1389667630078
+2014-01-14T02:47:09.734896+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:09.735049+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:09.735049+00:00 app[web.1]: debug: cleared close timeout for client Wk3ZxT7zryvNEPOlfC0w
+2014-01-14T02:47:10.571343+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667612035 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=2ms service=4ms status=200 bytes=49
+2014-01-14T02:47:10.575346+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/BLMiZ13-793d6GhAfC04?t=1389667630477 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=3ms service=7ms status=200 bytes=46
+2014-01-14T02:47:10.590099+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/O21s84w4zT-ZKYGEfC0z?t=1389667630024 host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=2ms service=4ms status=200 bytes=1
+2014-01-14T02:47:10.563563+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667627531 host=livechan.herokuapp.com fwd="123.243.239.97" dyno=web.1 connect=0ms service=1ms status=200 bytes=49
+2014-01-14T02:47:10.640853+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/Tjj93vc_Hhdm4KB3fC05?t=1389667620870 host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=0ms service=5ms status=200 bytes=46
+2014-01-14T02:47:10.635364+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/B7yOZrpZpw6Tvl-ofC0s?t=1389667600611 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=30000ms status=503 bytes=0
+2014-01-14T02:47:10.695356+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/ibiTZPW6smr2pT6FfC00?t=1389667633466 host=livechan.herokuapp.com fwd="68.5.22.223" dyno=web.1 connect=0ms service=4ms status=200 bytes=46
+2014-01-14T02:47:10.157497+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.720400+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/m3SPTwlzdtaf00pXfC03?t=1389667611762 host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=6ms service=9ms status=200 bytes=1
+2014-01-14T02:47:10.760195+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/k7MJZLtcubWkLKYHfC06?t=1389667627177 host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=0ms service=3ms status=200 bytes=46
+2014-01-14T02:47:10.714467+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/1BA9GZz2zJf22A1ofC02?t=1389667630619 host=livechan.herokuapp.com fwd="79.40.153.101" dyno=web.1 connect=4ms service=4ms status=200 bytes=1
+2014-01-14T02:47:10.821137+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/ibiTZPW6smr2pT6FfC00?t=1389667633575 host=livechan.herokuapp.com fwd="68.5.22.223" dyno=web.1 connect=1ms service=1ms status=200 bytes=1
+2014-01-14T02:47:10.196100+00:00 app[web.1]: info: handshake authorized O21s84w4zT-ZKYGEfC0z
+2014-01-14T02:47:10.193590+00:00 app[web.1]: info: handshake authorized 6zCDM5KlCquU7NoVfC0y
+2014-01-14T02:47:10.195729+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.157856+00:00 app[web.1]: info: handshake authorized iJmKkRHXTqDMD8jsfC0x
+2014-01-14T02:47:10.193242+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:46:10.229342+00:00 heroku[router]: at=info method=GET path=/chat/g host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=0ms service=3ms status=200 bytes=2116
+2014-01-14T02:47:10.954234+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/k7MJZLtcubWkLKYHfC06?t=1389667627359 host=livechan.herokuapp.com fwd="190.16.95.89" dyno=web.1 connect=0ms service=1ms status=200 bytes=1
+2014-01-14T02:47:10.230501+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/iJmKkRHXTqDMD8jsfC0x?t=1389667630607
+2014-01-14T02:47:10.230619+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.230720+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.230816+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.231011+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.231100+00:00 app[web.1]: debug: set close timeout for client iJmKkRHXTqDMD8jsfC0x
+2014-01-14T02:47:10.231559+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.231994+00:00 app[web.1]: info: handshake authorized ibiTZPW6smr2pT6FfC00
+2014-01-14T02:47:10.273149+00:00 app[web.1]: info: handshake authorized 1BA9GZz2zJf22A1ofC02
+2014-01-14T02:47:10.244163+00:00 app[web.1]: info: handshake authorized JJDVWdoJminm982GfC01
+2014-01-14T02:47:10.272731+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.243836+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.295780+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.296189+00:00 app[web.1]: info: handshake authorized m3SPTwlzdtaf00pXfC03
+2014-01-14T02:47:10.296724+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.317197+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.317317+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.297159+00:00 app[web.1]: info: handshake authorized BLMiZ13-793d6GhAfC04
+2014-01-14T02:47:10.299096+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/iJmKkRHXTqDMD8jsfC0x?t=1389667630677
+2014-01-14T02:47:10.299183+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.317094+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/6zCDM5KlCquU7NoVfC0y?t=1389667629630
+2014-01-14T02:47:10.317574+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.317695+00:00 app[web.1]: debug: set close timeout for client 6zCDM5KlCquU7NoVfC0y
+2014-01-14T02:47:10.317394+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.335953+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.299246+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.299426+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.299494+00:00 app[web.1]: debug: set close timeout for client iJmKkRHXTqDMD8jsfC0x
+2014-01-14T02:47:10.299494+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.299610+00:00 app[web.1]: debug: cleared close timeout for client iJmKkRHXTqDMD8jsfC0x
+2014-01-14T02:47:11.152715+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/yEQWwjf4enm0KuZ_fC08?t=1389667612622 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=1ms service=4ms status=200 bytes=46
+2014-01-14T02:47:10.375715+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/iJmKkRHXTqDMD8jsfC0x?t=1389667630751
+2014-01-14T02:47:10.375844+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.376373+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.376373+00:00 app[web.1]: debug: cleared close timeout for client iJmKkRHXTqDMD8jsfC0x
+2014-01-14T02:47:10.381622+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.381573+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/JJDVWdoJminm982GfC01?t=1389703614330
+2014-01-14T02:47:10.381726+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.381799+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.382002+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.336337+00:00 app[web.1]: info: handshake authorized Tjj93vc_Hhdm4KB3fC05
+2014-01-14T02:47:10.385131+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/O21s84w4zT-ZKYGEfC0z?t=1389667629806
+2014-01-14T02:47:10.385305+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.385394+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.382077+00:00 app[web.1]: debug: set close timeout for client JJDVWdoJminm982GfC01
+2014-01-14T02:47:10.385497+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.385698+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.385775+00:00 app[web.1]: debug: set close timeout for client O21s84w4zT-ZKYGEfC0z
+2014-01-14T02:47:10.387873+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.388255+00:00 app[web.1]: info: handshake authorized k7MJZLtcubWkLKYHfC06
+2014-01-14T02:47:10.401974+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.404385+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/1BA9GZz2zJf22A1ofC02?t=1389667630345
+2014-01-14T02:47:10.404487+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.404586+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.404676+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.404904+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.404971+00:00 app[web.1]: debug: set close timeout for client 1BA9GZz2zJf22A1ofC02
+2014-01-14T02:47:10.423607+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/6zCDM5KlCquU7NoVfC0y?t=1389667629738
+2014-01-14T02:47:10.423607+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.423793+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.424032+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.424131+00:00 app[web.1]: debug: set close timeout for client 6zCDM5KlCquU7NoVfC0y
+2014-01-14T02:47:10.424219+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.424258+00:00 app[web.1]: debug: cleared close timeout for client 6zCDM5KlCquU7NoVfC0y
+2014-01-14T02:47:10.435257+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/m3SPTwlzdtaf00pXfC03?t=1389667611486
+2014-01-14T02:47:11.232764+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667631191 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=6ms service=7ms status=200 bytes=49
+2014-01-14T02:47:10.435317+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.435464+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.435776+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.435866+00:00 app[web.1]: debug: set close timeout for client m3SPTwlzdtaf00pXfC03
+2014-01-14T02:47:10.435549+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.439504+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/BLMiZ13-793d6GhAfC04?t=1389667630332
+2014-01-14T02:47:10.439617+00:00 app[web.1]: debug: setting poll t
+imeout
+2014-01-14T02:47:10.439617+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.439709+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.439892+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.439958+00:00 app[web.1]: debug: set close timeout for client BLMiZ13-793d6GhAfC04
+2014-01-14T02:47:11.386259+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/G6sd-Ob8yULXKrPFfC0-?t=1389667631343 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=7ms status=200 bytes=3
+2014-01-14T02:47:10.483188+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.483188+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Tjj93vc_Hhdm4KB3fC05?t=1389667620718
+2014-01-14T02:47:10.483188+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:11.457039+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/56M9dbUHu7l0JQomfC07?t=1389667628416 host=livechan.herokuapp.com fwd="123.243.239.97" dyno=web.1 connect=4ms service=4ms status=200 bytes=1
+2014-01-14T02:47:11.459373+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/G6sd-Ob8yULXKrPFfC0-?t=1389667631409 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=6ms service=16ms status=200 bytes=1
+2014-01-14T02:47:11.476334+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/yEQWwjf4enm0KuZ_fC08?t=1389667612916 host=livechan.herokuapp.com fwd="210.50.134.137" dyno=web.1 connect=6ms service=4ms status=200 bytes=1
+2014-01-14T02:47:10.483372+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.483587+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.483674+00:00 app[web.1]: debug: set close timeout for client Tjj93vc_Hhdm4KB3fC05
+2014-01-14T02:47:10.491991+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/O21s84w4zT-ZKYGEfC0z?t=1389667629899
+2014-01-14T02:47:10.491991+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.492177+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.492407+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.492484+00:00 app[web.1]: debug: set close timeout for client O21s84w4zT-ZKYGEfC0z
+2014-01-14T02:47:10.492630+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.492698+00:00 app[web.1]: debug: cleared close timeout for client O21s84w4zT-ZKYGEfC0z
+2014-01-14T02:47:10.520961+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/JJDVWdoJminm982GfC01?t=1389703614470
+2014-01-14T02:47:10.521336+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.521556+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.522044+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.522376+00:00 app[web.1]: debug: set close timeout for client JJDVWdoJminm982GfC01
+2014-01-14T02:47:10.522577+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.522791+00:00 app[web.1]: debug: cleared close timeout for client JJDVWdoJminm982GfC01
+2014-01-14T02:47:10.535847+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/1BA9GZz2zJf22A1ofC02?t=1389667630478
+2014-01-14T02:47:10.535847+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.536019+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.536520+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.536631+00:00 app[web.1]: debug: set close timeout for client 1BA9GZz2zJf22A1ofC02
+2014-01-14T02:47:10.536701+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.536791+00:00 app[web.1]: debug: cleared close timeout for client 1BA9GZz2zJf22A1ofC02
+2014-01-14T02:47:10.537564+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.550486+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ibiTZPW6smr2pT6FfC00?t=1389667633310
+2014-01-14T02:47:10.550486+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.550779+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.550906+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.551188+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.551329+00:00 app[web.1]: debug: set close timeout for client ibiTZPW6smr2pT6FfC00
+2014-01-14T02:47:10.565673+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.566026+00:00 app[web.1]: info: handshake authorized 56M9dbUHu7l0JQomfC07
+2014-01-14T02:47:10.566400+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/BLMiZ13-793d6GhAfC04?t=1389667630477
+2014-01-14T02:47:10.566505+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.566673+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.566879+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.566926+00:00 app[web.1]: debug: set close timeout for client BLMiZ13-793d6GhAfC04
+2014-01-14T02:47:10.567013+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.567013+00:00 app[web.1]: debug: cleared close timeout for client BLMiZ13-793d6GhAfC04
+2014-01-14T02:47:10.570944+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/m3SPTwlzdtaf00pXfC03?t=1389667611629
+2014-01-14T02:47:10.570990+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.571069+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.571222+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.571287+00:00 app[web.1]: debug: set close timeout for client m3SPTwlzdtaf00pXfC03
+2014-01-14T02:47:10.571348+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.571425+00:00 app[web.1]: debug: cleared close timeout for client m3SPTwlzdtaf00pXfC03
+2014-01-14T02:47:10.572893+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:10.573300+00:00 app[web.1]: info: handshake authorized yEQWwjf4enm0KuZ_fC08
+2014-01-14T02:47:10.586755+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/k7MJZLtcubWkLKYHfC06?t=1389667626989
+2014-01-14T02:47:10.587439+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.587672+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.587865+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.588061+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.588127+00:00 app[web.1]: debug: set close timeout for client k7MJZLtcubWkLKYHfC06
+2014-01-14T02:47:10.592002+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.592347+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/O21s84w4zT-ZKYGEfC0z?t=1389667630024
+2014-01-14T02:47:10.592464+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.592576+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.592688+00:00 app[web.1]: debug: cleared close timeout for client O21s84w4zT-ZKYGEfC0z
+2014-01-14T02:47:10.636952+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Tjj93vc_Hhdm4KB3fC05?t=1389667620870
+2014-01-14T02:47:10.636952+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.636952+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.637444+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.637444+00:00 app[web.1]: debug: set close timeout for client Tjj93vc_Hhdm4KB3fC05
+2014-01-14T02:47:10.637444+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.637444+00:00 app[web.1]: debug: cleared close timeout for client Tjj93vc_Hhdm4KB3fC05
+2014-01-14T02:47:10.676099+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["all"]}
+2014-01-14T02:47:10.687783+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/BLMiZ13-793d6GhAfC04?t=1389667630610
+2014-01-14T02:47:10.687881+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.687956+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.688041+00:00 app[web.1]: debug: cleared close timeout for client BLMiZ13-793d6GhAfC04
+2014-01-14T02:47:10.697915+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ibiTZPW6smr2pT6FfC00?t=1389667633466
+2014-01-14T02:47:10.698101+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.698286+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.698487+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.698582+00:00 app[web.1]: debug: set close timeout for client ibiTZPW6smr2pT6FfC00
+2014-01-14T02:47:10.698648+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.698717+00:00 app[web.1]: debug: cleared close timeout for client ibiTZPW6smr2pT6FfC00
+2014-01-14T02:47:10.712093+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.715077+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.767325+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/k7MJZLtcubWkLKYHfC06?t=1389667627177
+2014-01-14T02:47:10.767434+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.767434+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.767737+00:00 app[web.1]: debug: set close timeout for client k7MJZLtcubWkLKYHfC06
+2014-01-14T02:47:10.767673+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:10.767798+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:45:31.812589+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/bIB5xOEhhnpuZ1jJfC0X?t=1389667531783 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=1ms service=3ms status=200 bytes=3
+2014-01-14T02:47:12.037917+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/BeXyaazMSzsCeYSlfC09?t=1389667631336 host=livechan.herokuapp.com fwd="165.123.192.109" dyno=web.1 connect=7ms service=4ms status=200 bytes=3
+2014-01-14T02:47:10.767798+00:00 app[web.1]: debug: cleared close timeout for client k7MJZLtcubWkLKYHfC06
+2014-01-14T02:47:10.783358+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.807027+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.813122+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.814773+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/Tjj93vc_Hhdm4KB3fC05?t=1389667621040
+2014-01-14T02:47:10.814816+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.814880+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.814967+00:00 app[web.1]: debug: cleared close timeout for client Tjj93vc_Hhdm4KB3fC05
+2014-01-14T02:47:10.858631+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/56M9dbUHu7l0JQomfC07?t=1389667627822
+2014-01-14T02:47:10.858631+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.858796+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.867302+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/yEQWwjf4enm0KuZ_fC08?t=1389667612329
+2014-01-14T02:47:10.858884+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.859065+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:10.867394+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.867525+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:10.867729+00:00 app[web.1]: debug: set close timeout for client yEQWwjf4enm0KuZ_fC08
+2014-01-14T02:47:10.867394+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:10.867669+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:12.084911+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/BeXyaazMSzsCeYSlfC09?t=1389667631383 host=livechan.herokuapp.com fwd="165.123.192.109" dyno=web.1 connect=3ms service=4ms status=200 bytes=46
+2014-01-14T02:47:10.859144+00:00 app[web.1]: debug: set close timeout for client 56M9dbUHu7l0JQomfC07
+2014-01-14T02:47:12.117076+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/BeXyaazMSzsCeYSlfC09?t=1389667631418 host=livechan.herokuapp.com fwd="165.123.192.109" dyno=web.1 connect=11ms service=5ms status=200 bytes=1
+2014-01-14T02:47:10.969102+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/ibiTZPW6smr2pT6FfC00?t=1389667633575
+2014-01-14T02:47:10.969226+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.969287+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.960035+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:10.969370+00:00 app[web.1]: debug: cleared close timeout for client ibiTZPW6smr2pT6FfC00
+2014-01-14T02:47:10.970922+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/k7MJZLtcubWkLKYHfC06?t=1389667627361
+2014-01-14T02:47:10.970972+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.971048+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:10.971048+00:00 app[web.1]: debug: cleared close timeout for client k7MJZLtcubWkLKYHfC06
+2014-01-14T02:47:11.032569+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:11.032971+00:00 app[web.1]: info: handshake authorized BeXyaazMSzsCeYSlfC09
+2014-01-14T02:47:11.069011+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/JJDVWdoJminm982GfC01?t=1389703614617
+2014-01-14T02:47:11.069189+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.069344+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.069580+00:00 app[web.1]: debug: cleared close timeout for client JJDVWdoJminm982GfC01
+2014-01-14T02:47:11.077540+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/m3SPTwlzdtaf00pXfC03?t=1389667611764
+2014-01-14T02:47:11.077589+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.077686+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.077686+00:00 app[web.1]: debug: cleared close timeout for client m3SPTwlzdtaf00pXfC03
+2014-01-14T02:47:11.108289+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/1BA9GZz2zJf22A1ofC02?t=1389667630623
+2014-01-14T02:47:11.108289+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.108289+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.108448+00:00 app[web.1]: debug: cleared close timeout for client 1BA9GZz2zJf22A1ofC02
+2014-01-14T02:47:11.152702+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/56M9dbUHu7l0JQomfC07?t=1389667628117
+2014-01-14T02:47:11.152974+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:11.152974+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.153296+00:00 app[web.1]: debug: set close timeout for client 56M9dbUHu7l0JQomfC07
+2014-01-14T02:47:11.153370+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.153246+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:11.153441+00:00 app[web.1]: debug: cleared close timeout for client 56M9dbUHu7l0JQomfC07
+2014-01-14T02:47:11.159672+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/yEQWwjf4enm0KuZ_fC08?t=1389667612622
+2014-01-14T02:47:11.159719+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.159823+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:11.159941+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:11.160009+00:00 app[web.1]: debug: set close timeout for client yEQWwjf4enm0KuZ_fC08
+2014-01-14T02:47:11.160009+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.160065+00:00 app[web.1]: debug: cleared close timeout
+ for client yEQWwjf4enm0KuZ_fC08
+2014-01-14T02:47:11.241692+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:11.242105+00:00 app[web.1]: info: handshake authorized G6sd-Ob8yULXKrPFfC0-
+2014-01-14T02:47:11.380227+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/G6sd-Ob8yULXKrPFfC0-?t=1389667631343
+2014-01-14T02:47:11.380227+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.380370+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:11.380471+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:11.380792+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:11.380874+00:00 app[web.1]: debug: set close timeout for client G6sd-Ob8yULXKrPFfC0-
+2014-01-14T02:47:11.410133+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/G6sd-Ob8yULXKrPFfC0-?t=1389667631378
+2014-01-14T02:47:11.410133+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.410133+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:11.410467+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:11.410467+00:00 app[web.1]: debug: set close timeout for client G6sd-Ob8yULXKrPFfC0-
+2014-01-14T02:47:11.410578+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.410578+00:00 app[web.1]: debug: cleared close timeout for client G6sd-Ob8yULXKrPFfC0-
+2014-01-14T02:47:11.446559+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/G6sd-Ob8yULXKrPFfC0-?t=1389667631410
+2014-01-14T02:47:11.446612+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.446704+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.446704+00:00 app[web.1]: debug: cleared close timeout for client G6sd-Ob8yULXKrPFfC0-
+2014-01-14T02:47:11.460640+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["n"]}
+2014-01-14T02:47:11.462702+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:11.470603+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:11.624677+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/6zCDM5KlCquU7NoVfC0y?t=1389667629853
+2014-01-14T02:47:11.624789+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.624891+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.624937+00:00 app[web.1]: debug: cleared close timeout for client 6zCDM5KlCquU7NoVfC0y
+2014-01-14T02:47:11.731825+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/yEQWwjf4enm0KuZ_fC08?t=1389667612917
+2014-01-14T02:47:11.731915+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:11.731978+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:11.732036+00:00 app[web.1]: debug: cleared close timeout for client yEQWwjf4enm0KuZ_fC08
+2014-01-14T02:47:13.574172+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/k2sJFATPPKjmQJcXfC0S?t=1389667602023 host=livechan.herokuapp.com fwd="118.210.207.220" dyno=web.1 connect=2ms service=30001ms status=503 bytes=0
+2014-01-14T02:46:03.737875+00:00 heroku[router]: at=info method=GET path=/data/n host=livechan.herokuapp.com fwd="94.11.14.30" dyno=web.1 connect=15ms service=12ms status=200 bytes=63484
+2014-01-14T02:47:12.042731+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/BeXyaazMSzsCeYSlfC09?t=1389667631336
+2014-01-14T02:47:12.042826+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:12.042951+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:12.043028+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:12.043252+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:12.043315+00:00 app[web.1]: debug: set close timeout for client BeXyaazMSzsCeYSlfC09
+2014-01-14T02:47:12.077669+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:12.077669+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:12.077474+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/BeXyaazMSzsCeYSlfC09?t=1389667631383
+2014-01-14T02:47:12.077948+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:12.078062+00:00 app[web.1]: debug: set close timeout for client BeXyaazMSzsCeYSlfC09
+2014-01-14T02:47:12.078231+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:12.078231+00:00 app[web.1]: debug: cleared close timeout for client BeXyaazMSzsCeYSlfC09
+2014-01-14T02:45:36.345457+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/GiE9hQMFT7mqQ_f-fC0Q?t=1389667513041 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=1ms service=23606ms status=200 bytes=244
+2014-01-14T02:47:12.122876+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["g"]}
+2014-01-14T02:47:12.128750+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/BeXyaazMSzsCeYSlfC09?t=1389667631419
+2014-01-14T02:47:12.128878+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:12.128878+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:12.129025+00:00 app[web.1]: debug: cleared close timeout for client BeXyaazMSzsCeYSlfC09
+2014-01-14T02:47:14.356716+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667632805 host=livechan.herokuapp.com fwd="118.210.207.220" dyno=web.1 connect=2ms service=3ms status=200 bytes=49
+2014-01-14T02:46:57.876183+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/Ke_ApNPb3Nn_BZUtfC0t?t=1389667617697 host=livechan.herokuapp.com fwd="60.228.198.78" dyno=web.1 connect=1ms service=9ms status=200 bytes=3
+2014-01-14T02:47:12.306969+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:12.307007+00:00 app[web.1]: debug: cleared close timeout for client 56M9dbUHu7l0JQomfC07
+2014-01-14T02:47:12.306824+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/56M9dbUHu7l0JQomfC07?t=1389667628420
+2014-01-14T02:47:12.306878+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:10.300824+00:00 heroku[router]: at=info method=GET path=/socket.io/1/?t=1389667630225 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=4ms status=200 bytes=49
+2014-01-14T02:47:12.463454+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:12.463841+00:00 app[web.1]: info: handshake authorized WMZdbBEYBfUjzJEyfC0_
+2014-01-14T02:47:14.764699+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/WMZdbBEYBfUjzJEyfC0_?t=1389667564294 host=livechan.herokuapp.com fwd="193.48.226.65" dyno=web.1 connect=2ms service=5ms status=200 bytes=46
+2014-01-14T02:44:40.576026+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/WHWvCLqvRD7gZbixfCzc?t=1389667450944 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=1ms service=30000ms status=503 bytes=0
+2014-01-14T02:47:08.660155+00:00 heroku[router]: at=error code=H12 desc="Request timeout" method=GET path=/socket.io/1/xhr-polling/JN1sczeiS4ynepb3fC0r?t=1389667598990 host=livechan.herokuapp.com fwd="98.234.184.36" dyno=web.1 connect=2ms service=30000ms status=503 bytes=0
+2014-01-14T02:47:13.657574+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/WMZdbBEYBfUjzJEyfC0_?t=1389667563077
+2014-01-14T02:47:13.657656+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:13.657715+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:13.657715+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:13.658100+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:13.658100+00:00 app[web.1]: debug: set close timeout for client WMZdbBEYBfUjzJEyfC0_
+2014-01-14T02:47:15.406723+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/dvwSnZ2e2ocQSa1KfC1A?t=1389667633605 host=livechan.herokuapp.com fwd="118.210.207.220" dyno=web.1 connect=1ms service=2ms status=200 bytes=1
+2014-01-14T02:47:14.364207+00:00 app[web.1]: info: handshake authorized dvwSnZ2e2ocQSa1KfC1A
+2014-01-14T02:47:14.363816+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:14.632156+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/dvwSnZ2e2ocQSa1KfC1A?t=1389667633073
+2014-01-14T02:47:14.632271+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:14.632348+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:14.632528+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:14.632710+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:14.632775+00:00 app[web.1]: debug: set close timeout for client dvwSnZ2e2ocQSa1KfC1A
+2014-01-14T02:47:14.756734+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/WMZdbBEYBfUjzJEyfC0_?t=1389667564294
+2014-01-14T02:47:14.756734+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:14.756830+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:14.757067+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:14.757114+00:00 app[web.1]: debug: set close timeout for client WMZdbBEYBfUjzJEyfC0_
+2014-01-14T02:47:14.757195+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:14.757195+00:00 app[web.1]: debug: cleared close timeout for client WMZdbBEYBfUjzJEyfC0_
+2014-01-14T02:47:14.894722+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/dvwSnZ2e2ocQSa1KfC1A?t=1389667633340
+2014-01-14T02:47:14.894873+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:14.894873+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:14.895095+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:14.895163+00:00 app[web.1]: debug: set close timeout for client dvwSnZ2e2ocQSa1KfC1A
+2014-01-14T02:47:14.895163+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:14.895250+00:00 app[web.1]: debug: cleared close timeout for client dvwSnZ2e2ocQSa1KfC1A
+2014-01-14T02:47:08.445860+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-1d11pfe.png host=livechan.herokuapp.com fwd="64.92.63.91" dyno=web.1 connect=1ms service=3ms status=304 bytes=0
+2014-01-14T02:47:15.163930+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/dvwSnZ2e2ocQSa1KfC1A?t=1389667633607
+2014-01-14T02:47:15.164044+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:15.164112+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:15.164206+00:00 app[web.1]: debug: cleared close timeout for client dvwSnZ2e2ocQSa1KfC1A
+2014-01-14T02:47:15.414787+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["all"]}
+2014-01-14T02:47:15.839795+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["all"]}
+2014-01-14T02:46:06.159225+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/C06kWthlkddQgnQrfC0M?t=1389667538220 host=livechan.herokuapp.com fwd="123.243.239.97" dyno=web.1 connect=1ms service=24905ms status=200 bytes=175
+2014-01-14T02:47:16.823892+00:00 heroku[router]: at=info method=GET path=/chat/n host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=9ms status=200 bytes=2116
+2014-01-14T02:47:16.375390+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:16.375570+00:00 app[web.1]: debug: xhr-polling writing 8::
+2014-01-14T02:47:16.375652+00:00 app[web.1]: debug: set close timeout for client CLjddtAU3vjcjQ46fC0Z
+2014-01-14T02:47:16.375652+00:00 app[web.1]: debug: xhr-polling closed due to exceeded duration
+2014-01-14T02:47:16.420224+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/WMZdbBEYBfUjzJEyfC0_?t=1389667565555
+2014-01-14T02:47:16.420334+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:16.420334+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:16.420437+00:00 app[web.1]: debug: cleared close timeout for client WMZdbBEYBfUjzJEyfC0_
+2014-01-14T02:47:16.477667+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:16.477804+00:00 app[web.1]: debug: xhr-polling writing 8::
+2014-01-14T02:47:16.477883+00:00 app[web.1]: debug: set close timeout for client GiE9hQMFT7mqQ_f-fC0Q
+2014-01-14T02:47:16.477947+00:00 app[web.1]: debug: xhr-polling closed due to exceeded duration
+2014-01-14T02:47:16.716969+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:16.716969+00:00 app[web.1]: debug: xhr-polling writing 8::
+2014-01-14T02:47:16.716969+00:00 app[web.1]: debug: set close timeout for client AqSIhup1L3a36kW1fC0P
+2014-01-14T02:47:16.717187+00:00 app[web.1]: debug: xhr-polling closed due to exceeded duration
+2014-01-14T02:47:11.416595+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/G6sd-Ob8yULXKrPFfC0-?t=1389667631378 host=livechan.herokuapp.com fwd="128.237.139.128" dyno=web.1 connect=2ms service=5ms status=200 bytes=46
+2014-01-14T02:47:17.202704+00:00 heroku[router]: at=info method=GET path=/jquery.thumbhover.js host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=5ms status=304 bytes=0
+2014-01-14T02:47:16.814191+00:00 app[web.1]: ip=10.6.166.207 time=2014-01-14T02:47:16.813Z method=GET path=/chat/n status=200 content_length=2116 content_type="text/html; charset=UTF-8" elapsed=2ms
+2014-01-14T02:45:40.953309+00:00 heroku[router]: at=info method=POST path=/chat/g host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=4ms service=9ms status=200 bytes=40
+2014-01-14T02:47:17.351160+00:00 heroku[router]: at=info method=GET path=/socket.io/socket.io.js host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=7ms status=200 bytes=60602
+2014-01-14T02:47:17.163699+00:00 app[web.1]: ip=10.236.143.6 time=2014-01-14T02:47:17.163Z method=GET path=/style.css status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:17.197185+00:00 app[web.1]: ip=10.214.127.48 time=2014-01-14T02:47:17.196Z method=GET path=/jquery.thumbhover.js status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:14.631028+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/dvwSnZ2e2ocQSa1KfC1A?t=1389667633073 host=livechan.herokuapp.com fwd="118.210.207.220" dyno=web.1 connect=2ms service=9ms status=200 bytes=3
+2014-01-14T02:47:17.351651+00:00 app[web.1]: ip=10.238.165.77 time=2014-01-14T02:47:17.351Z method=GET path=/main.js status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:17.355970+00:00 app[web.1]: debug: served static content /socket.io.js
+2014-01-14T02:47:17.813920+00:00 heroku[router]: at=info method=GET path=/data/n host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=3ms service=12ms status=200 bytes=63484
+2014-01-14T02:47:17.737099+00:00 app[web.1]: debug: client authorized
+2014-01-14T02:47:17.737532+00:00 app[web.1]: info: handshake authorized qjwPXZ6Vt3nyKT4afC1B
+2014-01-14T02:47:17.803929+00:00 app[web.1]: ip=10.214.127.48 time=2014-01-14T02:47:17.803Z method=GET path=/data/n status=200 content_length=63484 content_type="application/json; charset=utf-8" elapsed=3ms
+2014-01-14T02:47:17.867533+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/qjwPXZ6Vt3nyKT4afC1B?t=1389667637774 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=5ms service=7ms status=200 bytes=3
+2014-01-14T02:47:17.872188+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/qjwPXZ6Vt3nyKT4afC1B?t=1389667637774
+2014-01-14T02:47:17.872248+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:17.872339+00:00 app[web.1]: debug: client authorized for 
+2014-01-14T02:47:17.872412+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:17.872639+00:00 app[web.1]: debug: xhr-polling writing 1::
+2014-01-14T02:47:17.872728+00:00 app[web.1]: debug: set close timeout for client qjwPXZ6Vt3nyKT4afC1B
+2014-01-14T02:47:18.048548+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/qjwPXZ6Vt3nyKT4afC1B?t=1389667637911 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=4ms service=6ms status=200 bytes=46
+2014-01-14T02:46:39.461423+00:00 heroku[router]: at=info
+ method=GET path=/socket.io/1/xhr-polling/pxEvdSSgOvi5Z1nefC0Y?t=1389667577733 host=livechan.herokuapp.com fwd="86.87.67.4" dyno=web.1 connect=2ms service=2791ms status=200 bytes=200
+2014-01-14T02:47:18.227676+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-cotkdg.svg host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=5ms status=404 bytes=48
+2014-01-14T02:47:18.254959+00:00 heroku[router]: at=info method=POST path=/socket.io/1/xhr-polling/qjwPXZ6Vt3nyKT4afC1B?t=1389667638173 host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=4ms service=6ms status=200 bytes=1
+2014-01-14T02:47:18.054588+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/qjwPXZ6Vt3nyKT4afC1B?t=1389667637911
+2014-01-14T02:47:18.054588+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:18.054588+00:00 app[web.1]: debug: clearing poll timeout
+2014-01-14T02:47:18.055013+00:00 app[web.1]: debug: xhr-polling writing 5:::{"name":"request_location","args":["pls"]}
+2014-01-14T02:47:18.055065+00:00 app[web.1]: debug: set close timeout for client qjwPXZ6Vt3nyKT4afC1B
+2014-01-14T02:47:18.055132+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:18.055132+00:00 app[web.1]: debug: cleared close timeout for client qjwPXZ6Vt3nyKT4afC1B
+2014-01-14T02:46:31.435020+00:00 heroku[router]: at=info method=GET path=/socket.io/1/xhr-polling/pWijXfx-kRggmG8gfC0L?t=1389667565594 host=livechan.herokuapp.com fwd="96.252.125.110" dyno=web.1 connect=1ms service=25151ms status=200 bytes=212
+2014-01-14T02:47:18.334311+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-l31yq1.svg host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=2ms service=5ms status=304 bytes=0
+2014-01-14T02:47:18.414742+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-m0yvor.svg host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=5ms service=5ms status=304 bytes=0
+2014-01-14T02:47:18.427361+00:00 heroku[router]: at=info method=GET path=/tmp/uploads/2-k2iaw3.svg host=livechan.herokuapp.com fwd="98.160.196.182" dyno=web.1 connect=4ms service=4ms status=304 bytes=0
+2014-01-14T02:47:18.231486+00:00 app[web.1]: Access granted to IP address: 98.160.196.182
+2014-01-14T02:47:18.232049+00:00 app[web.1]: ip=10.209.207.143 time=2014-01-14T02:47:18.231Z method=GET path=/tmp/uploads/2-hdf4ot.svg status=404 content_length= content_type=text/html elapsed=1ms
+2014-01-14T02:47:18.235101+00:00 app[web.1]: Access granted to IP address: 98.160.196.182
+2014-01-14T02:47:18.235409+00:00 app[web.1]: ip=10.151.73.185 time=2014-01-14T02:47:18.235Z method=GET path=/tmp/uploads/2-cotkdg.svg status=404 content_length= content_type=text/html elapsed=1ms
+2014-01-14T02:47:18.235810+00:00 app[web.1]: Access granted to IP address: 98.160.196.182
+2014-01-14T02:47:18.236138+00:00 app[web.1]: ip=10.239.18.116 time=2014-01-14T02:47:18.235Z method=GET path=/tmp/uploads/2-1ml1cn0.svg status=404 content_length= content_type=text/html elapsed=2ms
+2014-01-14T02:47:18.247854+00:00 app[web.1]: Access granted to IP address: 98.160.196.182
+2014-01-14T02:47:18.248164+00:00 app[web.1]: ip=10.6.130.86 time=2014-01-14T02:47:18.247Z method=GET path=/tmp/uploads/2-1o68fev.svg status=404 content_length= content_type=text/html elapsed=1ms
+2014-01-14T02:47:18.260882+00:00 app[web.1]: debug: xhr-polling received data packet 5:::{"name":"subscribe","args":["n"]}
+2014-01-14T02:47:18.338409+00:00 app[web.1]: ip=10.209.207.143 time=2014-01-14T02:47:18.338Z method=GET path=/tmp/uploads/2-vew4sr.svg status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:18.332375+00:00 app[web.1]: debug: setting request GET /socket.io/1/xhr-polling/qjwPXZ6Vt3nyKT4afC1B?t=1389667638177
+2014-01-14T02:47:18.332529+00:00 app[web.1]: debug: setting poll timeout
+2014-01-14T02:47:18.332583+00:00 app[web.1]: debug: discarding transport
+2014-01-14T02:47:18.332642+00:00 app[web.1]: debug: cleared close timeout for client qjwPXZ6Vt3nyKT4afC1B
+2014-01-14T02:47:18.337657+00:00 app[web.1]: ip=10.137.5.173 time=2014-01-14T02:47:18.337Z method=GET path=/tmp/uploads/2-l31yq1.svg status=304 content_length= content_type= elapsed=1ms
+2014-01-14T02:47:18.408889+00:00 app[web.1]: ip=10.214.127.48 time=2014-01-14T02:47:18.408Z method=GET path=/tmp/uploads/2-m0yvor.svg status=304 content_length= content_type= elapsed=0ms
+2014-01-14T02:47:18.436918+00:00 app[web.1]: ip=10.4.173.249 time=2014-01-14T02:47:18.436Z method=GET path=/tmp/uploads/2-k2iaw3.svg status=304 content_length= content_type= elapsed=0ms

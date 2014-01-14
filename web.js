@@ -95,7 +95,7 @@ function get_extension(filename) {
 }
 
 function invalid_extension(filename){
-    var test=['jpg','jpeg','png','gif','svg'].indexOf(get_extension(filename));
+    var test=['jpg','jpeg','png','gif'].indexOf(get_extension(filename));
     console.log("INDEX IS",get_extension(filename), test);
     if (test > -1)
     return false;
@@ -205,9 +205,12 @@ app.post('/ban/:id([a-z0-9]+)', function(req, res, next){
     var board = req.params.id;
     var ip = req.query.ip;
     var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0,10);
-    if (hash == "CnB7SkWsyx"){
-        console.log(ip);
-    }
+});
+
+app.post('/delete/:id([a-z0-9]+)', function(req, res, next){
+    var board = req.params.id;
+    var ip = req.query.ip;
+    var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0,10);
 });
 
 app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
@@ -323,8 +326,6 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     }
     data.body = req.body.body;
     data.name = req.body.name ? req.body.name : "Anonymous";
-
-
 
     count++;
     data.count = count;
