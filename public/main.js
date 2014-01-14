@@ -46,7 +46,7 @@ if(html5)
         $("#name").val(localStorage['name']);
         $("#convo").val(localStorage['convo']);
         $("#theme_select").val(localStorage['theme']);
-        if(!$("#theme_select").val()) $("#theme_select").val("Main");
+        if(!$("#theme_select").val().trim()) $("#theme_select").val("Main");
         get_css($("#theme_select").val());
     });
 }
@@ -471,6 +471,7 @@ window.onload = function(){
     
     $('#theme_select').change(function(){
         get_css($(this).val());
+        localStorage['theme'] = $(this).val();
     });
     
     $("#autoimages").change(function () {
