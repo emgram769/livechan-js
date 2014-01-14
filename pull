@@ -1,0 +1,1 @@
+curl -o public/chats.json http://livechan.herokuapp.com/chats.json;
