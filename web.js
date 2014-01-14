@@ -298,7 +298,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     if(trip_index > -1) {
         var trip = req.body.name.substr(trip_index+1);
         var secure = trip.indexOf("#") == 0;
-        if(secure) trip = trip.substr(1) + securetrip_salt;
+        if(secure) trip = crypto.createHash('sha1').update(trip.substr(1) + securetrip_salt).digest('base64').toString();
         data.trip = (secure ? "!!" : "!")+tripcode(trip);
         req.body.name = req.body.name.slice(0,trip_index);
     }
