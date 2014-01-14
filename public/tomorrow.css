@@ -64,6 +64,14 @@ input{
   color: #6F9FC7;
 }
 
+.chat_name.admin .trip_code {
+  color:rgb(221, 0, 0);
+}
+
+.chat_name.admin {
+  color:rgb(221, 0, 0);
+}
+
 .chat_name.contrib .trip_code {
   color: #8CA8BF;
 }
