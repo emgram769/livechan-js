@@ -6,9 +6,16 @@ var crypto = require('crypto');
 var ipfilter = require('ipfilter');
 var captcha = require('captcha');
 var tripcode = require('tripcode');
+var fs = require('fs');
 
 /* globals */
 var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
+fs.readFile('salt.txt', 'utf8', function(err,data){
+    securetrip_salt = data;
+});
+
+console.log("TRIP PASS IS:", securetrip_salt);
+
 var format = require('util').format;
 var app = express();
 var port = process.env.PORT || 5000;
@@ -30,7 +37,6 @@ app.use(express.bodyParser({
 app.use(express.limit('5mb'));
 
 /* blocked end nodes. this file can include more */
-fs = require('fs');
 fs.readFile('tor_list.txt', 'utf8', function(err,data){
     var tor_list = data.split("\n");
     app.use(ipfilter(tor_list));
