@@ -14,13 +14,18 @@ var unread_chats = 0;
 
 var admin = ["!/b/suPrEmE","!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
-var default_contribs = ["!7cNl93Dbb6","!9jPA5pCF9c"];
+var default_contribs = ["!7cNl93Dbb6","!9jPA5pCF9c","!!/sHKSsQsyk"];
 var my_ids = [];
 var contribs = default_contribs;
 
-var html5 = supports_html5_storage();
-
 var socket = io.connect('/');
+
+var html5 = false;
+try {
+    html5 = ('localStorage' in window && window['localStorage'] !== null);
+} catch (e) {
+    html5 = false;
+}
 
 if(html5)
 {
@@ -51,14 +56,6 @@ if(html5)
         if(!$("#theme_select").val().trim()) $("#theme_select").val("Main");
         get_css($("#theme_select").val());
     });
-}
-
-function supports_html5_storage() {
-    try {
-        return 'localStorage' in window && window['localStorage'] !== null;
-    } catch (e) {
-        return false;
-    }
 }
 
 function get_cookie(cname) {
@@ -303,8 +300,8 @@ function draw_new_chat(data, fast){
     
     if ($('#chat_'+data.count).length != 0)
         return;
-    var extra_class = (data.trip &&  (admin.indexOf(data.trip) >-1)) ? "admin" : "";
-    extra_class = (data.trip && (contribs.indexOf(data.trip) >-1)) ? "contrib" : extra_class;
+    var extra_class = (data.trip && (contribs.indexOf(data.trip) >-1)) ? "contrib" : "";
+    extra_class = (data.trip && (admins.indexOf(data.trip) >-1)) ? "admin" : extra_class;
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var convo = "<span class='chat_convo' onclick='add_convo_to_post(\""+escapeHTML(data.convo)+"\")'>"+escapeHTML(data.convo)+"</span>";
 
