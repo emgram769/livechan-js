@@ -5,8 +5,10 @@ var http = require('http');
 var crypto = require('crypto');
 var ipfilter = require('ipfilter');
 var captcha = require('captcha');
+var tripcode = require('tripcode');
 
 /* globals */
+var securetrip_salt = "This is used to make tripcodes secure by making part of them a server secret, which hinders people from cracking them with tools";
 var format = require('util').format;
 var app = express();
 var port = process.env.PORT || 5000;
@@ -294,8 +296,10 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     var trip_index = req.body.name.indexOf("#");
 
     if(trip_index > -1) {
-        var tripcode = require('tripcode');
-        data.trip = "!"+tripcode(req.body.name.substr(trip_index+1));
+        var trip = req.body.name.substr(trip_index+1);
+        var secure = trip.indexOf("#") == 0;
+        if(secure) trip = trip.substr(1) + securetrip_salt;
+        data.trip = (secure ? "!!" : "!")+tripcode(trip);
         req.body.name = req.body.name.slice(0,trip_index);
     }
 
