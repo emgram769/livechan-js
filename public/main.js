@@ -1,7 +1,9 @@
 var socket = io.connect('/');
 var chat = [];
 var my_ids = [];
+var future_ids = [];
 
+var posting = false;
 var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
@@ -49,6 +51,7 @@ function escapeHTML( string ) {
 function submit_chat(){
     if(get_cookie("password_livechan")=="")
         window.location.href='/login?page='+path;
+    posting = true;
     if($("#body").val()=="")
         $("#body").val("  ");
     $("#comment-form").submit();
@@ -150,6 +153,12 @@ function make_image(element,url){
 }
 
 function draw_new_chat(data, fast){
+    if(posting)
+    {
+        setTimeout(function(){draw_new_chat(data, fast)}, 150);
+        return;
+    }
+    
     if (window_focus === false) {
         if ($('#convo_filter').val()=='filter') {
             var convo = $('#convo').val() ? $('#convo').val() : "General";
@@ -168,17 +177,47 @@ function draw_new_chat(data, fast){
     var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
     var convo = "<span class='chat_convo' onclick='add_convo_to_post(\""+escapeHTML(data.convo)+"\")'>"+escapeHTML(data.convo)+"</span>";
 
-    var name = "<div class='chat_header'><span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span></div>";
-
+    var refs = data.count in future_ids ? future_ids[data.count] : "";
+    
     var new_image = data.image ? "<img id='chat_img_"+data.count+"' height='100px' class='chat_img' src='/"+data.image.slice(7)+"' onClick='window.open(\"/"+data.image.slice(7)+"\")'>" : "";
 
-    var new_chat = "<div class='chat' id='chat_"+data.count+"' data-convo='"+data.convo+"' style='opacity:0;'>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)' onmouseover='show_text($1,this)' onmouseout='kill_excess()'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
-    
+    var body = escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}");
+    var res = body.match(/\{([0-9]+)\}/g);
+    if(res)
+    {
+        var done = [];
+        res.forEach(function(ref) { var postid = ref.replace('{','').replace('}','');
+            if(done.indexOf(postid) > -1) return;
+            var idtext = ( my_ids.indexOf(data.count) > -1 ? data.count + " (You)" : data.count);
+            var reftext = "<a href='#' onclick='scroll_to_number("+data.count+")' onmouseover='show_text("+data.count+",this)' onmouseout='kill_excess()'>&gt;&gt;"+idtext+"</a> ";
+            if(postid == data.count)
+                refs += reftext
+            else if($('#chat_'+postid+'_refs').length == 0)
+                future_ids[postid] = (postid in future_ids ? future_ids[postid] : "") + reftext;
+            else
+                $('#chat_'+postid+'_refs')[0].innerHTML += reftext;
+            done.push(postid);
+        });
+    }i
+    var name = "<div class='chat_header'><span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span> <span class='chat_refs' id='chat_"+data.count+"_refs'>"+refs+"</span></div>";
+
+    var new_chat = "<div class='chat' id='chat_"+data.count+"' data-convo='"+escapeHTML(data.convo)+"' style='opacity:0;'>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)' onmouseover='show_text($1,this)' onmouseout='kill_excess()'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
+
     my_ids.forEach(function(id) {
         new_chat = new_chat.replace("onmouseout='kill_excess()'>&gt;&gt;" + id + "</a>", "onmouseout='kill_excess()'>&gt;&gt;" + id + " (You)</a>");
     });
     
     $(".chats:first").append(new_chat);
+    
+    // apply hover zoom to image
+    if(data.image)
+    {
+        $("#chat_img_"+data.count).thumbPopup({
+            imgSmallFlag: "",
+            imgLargeFlag: "",
+            popupCSS: {'max-height': '97%', 'max-width': '75%'}
+        });
+    }
     
     if(fast){
         $("#chat_"+data.count).css('opacity','1');
@@ -191,18 +230,6 @@ function draw_new_chat(data, fast){
         opacity:1
     },300, 'swing', function(){
     });
-    
-    // apply hover zoom to image
-    if(data.image)
-    {
-        $(function(){
-            $("#chat_img_"+data.count).thumbPopup({
-                imgSmallFlag: "",
-                imgLargeFlag: "",
-               popupCSS: {'max-height': '97%', 'max-width': '75%'}
-            });
-        });
-    }
     return;
     
 }
@@ -315,6 +342,7 @@ window.onload = function(){
 
 
     $('iframe#miframe').load(function() {
+        posting = false;
         var resp = JSON.parse($("#miframe"
         ).contents()[0].body.childNodes[0].innerHTML);
         if(resp.failure)
