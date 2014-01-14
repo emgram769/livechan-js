@@ -45,7 +45,12 @@ function escapeHTML( string ) {
     var pre = document.createElement('pre');
     var text = document.createTextNode( string );
     pre.appendChild(text);
-    return pre.innerHTML;
+    return pre.innerHTML
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
 }
 
 function submit_chat(){
@@ -87,7 +92,21 @@ function submit_chat(){
                break;
             case "help":
             default:
-                alert("/addtryp !tripcode: add emphasis to tripcode\n/remtryp !tripcode: remove emphasis from tripcode\n/join /channel: join channel\n/help: display this text");
+                alert(
+"/addtryp !tripcode: add emphasis to tripcode\n" +
+"/remtryp !tripcode: remove emphasis from tripcode\n" +
+"/join /channel: join channel\n" +
+"/help: display this text\n\n" +
+"CONVERSATIONS\n" +
+"==============\n" +
+"On this site threads are known as \"conversations\"\n" +
+"You can change your active conversation from the default \"General\" in the second text box\n" +
+"Setting a conversation allows you filter posts to it by using the dropdown box in the lower right\n\n" +
+"SESSIONS\n" +
+"==============\n" +
+"After logging in by entering a CAPTCHA your session will last for 15 minutes\n" +
+"Once your session expires posts won't show for other users until you re-login"
+);
         }
         return;
     }
