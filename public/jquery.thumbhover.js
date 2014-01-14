@@ -96,7 +96,7 @@
 				scrollLeft: $(window).scrollLeft(),
 				scrollTop: $(window).scrollTop(),
 				width: $(window).width(),
-				height: getDocHeight()
+				height: document.body.clientHeight
 			};
 		}
 		
