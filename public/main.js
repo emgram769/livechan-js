@@ -117,6 +117,7 @@ function submit_chat(){
     if(get_cookie("password_livechan")=="") {
         var path = window.location.pathname;
         window.location.href='/login?page='+path;
+        //div_alert("<iframe src='/login?page='+path></iframe>");
     }
     posting = true;
     if(html5)
