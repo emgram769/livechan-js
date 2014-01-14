@@ -1,1 +1,4 @@
 node_modules
+public/tmp/uploads/?*
+public/chats.json
+.DS_STORE
