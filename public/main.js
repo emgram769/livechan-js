@@ -113,7 +113,8 @@ function escapeHTML(str) {
 function submit_chat(){
     if(get_cookie("password_livechan")=="") {
         var path = window.location.pathname;
-        window.location.href='/login?page='+path;
+        window.open('/login?page=/', '_blank');
+	return false;
         //div_alert("<iframe src='/login?page='+path></iframe>");
     }
     posting = true;
@@ -336,6 +337,9 @@ function draw_new_chat(data, fast){
     });
     
     $(".chats:first").append(new_chat);
+    if(!$("#autoimages").prop('checked')){	
+        $('.chat_img').css('display','none');
+    }
     
     // apply hover zoom to image
     if(data.image)

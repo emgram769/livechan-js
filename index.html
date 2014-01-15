@@ -16,7 +16,7 @@
 		<form id="comment-form" action="" target="miframe" method="post" enctype="multipart/form-data">
 			<input id="name" name="name" placeholder="Anonymous" class="name" type="text"/>
 			<input id="convo" name="convo" placeholder="General" class="convo" type="text"/>
-			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" type="text"></textarea>
+			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" type="text" maxlength="399"></textarea>
 			<input id="image" class="input_button" name="image" type="file" style="max-width:50%;"></input>
 			<input id="submit_button" class="input_button" type="button" value="Submit" onclick="submit_chat();"></input>
 			<span id="cool_down"></span>
