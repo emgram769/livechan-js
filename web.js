@@ -365,11 +365,11 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
 
 /* socket.io content */
 // no actual websockets in heroku
-io.configure(function () {
+/*io.configure(function () {
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 100);
     //io.set('log level', 1);
-});
+});*/
 
 io.sockets.on('connection', function (socket) {
     socket.emit('request_location', "pls");
