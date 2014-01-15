@@ -2,6 +2,6 @@
 push
 logs.txt
 salt.txt
-node_modules/*/node_modules
+node_modules/*
 public/tmp/*
 nohup.out
