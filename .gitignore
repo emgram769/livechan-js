@@ -1,7 +1,0 @@
-.DS_Store
-push
-logs.txt
-salt.txt
-node_modules/*
-public/tmp/*
-nohup.out
