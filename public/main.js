@@ -341,7 +341,8 @@ function update_chat(data, fast) {
         post.find(".chat_convo").text(data.convo);
     }
     if ("date" in data) {
-        post.find(".chat_date").text(data.date);
+        var date = new Date(data.date);
+        post.find(".chat_date").text(date);
     }
     if ("image" in data) {
         var container = post.find(".chat_img_cont");
@@ -413,9 +414,10 @@ function update_chat(data, fast) {
             $("#chat_"+id).css('opacity','1');
             apply_filter($('#convo_filter').val()); 
             return;
+        } else {
+            $(".chats:first").append(post);
         }
 
-        $(".chats:first").append(post);
         apply_filter($('#convo_filter').val()); 
         
         $("#chat_"+id).animate({
@@ -465,6 +467,15 @@ function apply_filter(value){
             return 'chat_hidden';
             }, true);
     }
+}
+
+function max_count(obj){
+    var max = 0;
+    for (i in obj){
+        if (obj[i].count >= max)
+            max = obj[i].count;
+    }
+    return max;
 }
 
 function draw_chat(data){
