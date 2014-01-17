@@ -8,7 +8,7 @@ var captcha = require('captcha');
 var tripcode = require('tripcode');
 var fs = require('fs');
 var mongoose = require('mongoose');
-
+var gm = require('gm');
 
 /* globals */
 var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
@@ -82,6 +82,10 @@ var chat_schema = new Schema({
     ip: String,
     chat: String,
     image: String,
+    image_filename: String,
+    image_filesize: Number,
+    image_width: Number,
+    image_height: Number,
     trip: String
 }, {capped:{size:10000000, max:1000}});
 
@@ -301,7 +305,7 @@ app.get('/data/:id([a-z0-9]+)', function(req, res) {
     }
     chat_db.find({chat:req.params.id})
         .sort({count:-1})
-        .select('chat name body convo count date image trip')
+        .select('chat name body convo count date image image_filename image_filesize image_width image_height trip')
         .limit(100)
         .exec(function(e,d){
             if(!e)
@@ -325,7 +329,9 @@ app.get('/delete/:id([a-z0-9]+)', function(req, res, next){
         console.log('works');
 });
 
-app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
+app.post('/chat/:id([a-z0-9]+)', function(req, res, next) { handleChatPost(req, res, next, null); });
+
+function handleChatPost(req, res, next, image)
     if (boards.indexOf(req.params.id) < 0){
         res.send("Does not exist :(");
         return;
@@ -349,9 +355,31 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
             res.json({failure:"nothing substantial submitted"});
             return;
          }
+     } else if(image == null) {
+         gm(req.files.image.path).size(function(err, dimensions){
+             var idata = {image:"null"};
+             if(dimensions.height > 0 && dimensions.width > 0)
+             {
+                 console.log('image loaded to ', req.files.image.path);
+            	 idata.image = req.files.image.path;
+            	 idata.image_filename = req.files.image.originalFilename;
+            	 idata.image_filesize = fs.statSync(idata.image)["size"];
+            	 idata.image_width = dimensions.width;
+            	 idata.image_height = dimensions.height;
+             }
+             handleChatPost(req, res, next, idata);
+         });
+         return;
      } else {
-         console.log('image loaded to', req.files.image.path);
-         data.image = req.files.image.path;
+         console.log('image fully loaded to ', req.files.image.path);
+         if(image.image && image.image != null)
+         {
+             data.image = image.image;
+             data.image_filename = image.image_filename;
+             data.image_filesize = image.image_filesize;
+             data.image_width = image.image_width;
+             data.image_height = image.image_height;
+         }
      }
 
      if (!req.cookies['password_livechan']) {
@@ -465,7 +493,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     io.sockets.in(req.params.id).emit('chat', data);
     io.sockets.in('all').emit('chat', data);
     return;
-});
+}
 
 /* socket.io content */
 // no actual websockets in heroku
