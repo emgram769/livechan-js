@@ -447,8 +447,8 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     data.count = count;
     data.date = (new Date).toString();
     data.ip = req.connection.remoteAddress;
-
-    add_to_chat(data, req.params.id);
+    if(port==80)
+        add_to_chat(data, req.params.id);
 
     delete data.ip;
     data.chat = req.params.id;
