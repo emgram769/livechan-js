@@ -57,7 +57,10 @@ if(html5)
         get_css($("#theme_select").val());
     });
 }
-
+function captcha_div()
+{
+    return '<img src="/captcha.jpg#' + new Date().getTime() + '" alt="Lynx is best browser" /><form action="/login" method="post" target="miframe"><br /><input type="text" name="digits" /></form>';
+}
 function get_cookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -84,10 +87,12 @@ function get_css(file) {
     scroll();
 }
 
-function div_alert(message) {
+function div_alert(message, addbutton = true, div_id = "") {
     var alert_div = document.createElement('div');
     alert_div.setAttribute('class', 'alert_div');
-    var button_html = "<button class='alert_button' onclick='$(\".alert_div\").remove();'>Close</button>";
+    alert_div.setAttribute('id', 'alert_div_' + div_id);
+    var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
+    if(!addbutton) button_html = "";
     alert_div.innerHTML = "<div class='alert_message'>"+message.replace(/\r?\n/g, '<br />')+"</div>"+button_html;
     $(alert_div).css({
         position:  'fixed',
@@ -112,8 +117,8 @@ function escapeHTML(str) {
 
 function submit_chat(){
     if(get_cookie("password_livechan")=="") {
-        var path = window.location.pathname;
-        window.open('/login?page=/', '_blank');
+        div_alert(captcha_div(), false, "captcha");
+        $("#submit_button").prop("disabled",true);
 	return false;
         //div_alert("<iframe src='/login?page='+path></iframe>");
     }
@@ -531,7 +536,7 @@ window.onload = function(){
 
     $("#body").keydown(function (e) {
         if (!e.shiftKey && e.keyCode == 13 && $("#autosubmit").prop('checked')
-        && cool_down_timer<=0) {
+        && cool_down_timer<=0 && !$("#submit_button").prop("disabled")) {
             submit_chat();
             return false;
         }
@@ -551,8 +556,10 @@ window.onload = function(){
     });
 
     if(get_cookie("password_livechan")=="")
-        window.location.href='/login?page='+path;
-
+    {
+    	div_alert(captcha_div(), false, "captcha");
+    	$("#submit_button").prop("disabled",true);
+    }
 
     $('iframe#miframe').load(function() {
         posting = false;
@@ -566,6 +573,11 @@ window.onload = function(){
             if(html5) localStorage['my_ids'] = JSON.stringify(my_ids);
             var links = $([$("body")[0], future_ids[0]]).find(".quote_link, .back_link").filter("[data-dest='"+resp.id+"']");
             setup_quote_links(links);
+        }
+        else if(resp.success == "CAPTCHA")
+        {
+            $("#submit_button").prop("disabled",false);
+            $("#alert_div_captcha").remove();
         }
     });
 
