@@ -574,7 +574,7 @@ window.onload = function(){
             var links = $([$("body")[0], future_ids[0]]).find(".quote_link, .back_link").filter("[data-dest='"+resp.id+"']");
             setup_quote_links(links);
         }
-        else if(resp.success == "CAPTCHA")
+        else if(resp.success == "captcha")
         {
             $("#submit_button").prop("disabled",false);
             $("#alert_div_captcha").remove();
