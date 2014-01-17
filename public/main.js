@@ -87,12 +87,14 @@ function get_css(file) {
     scroll();
 }
 
-function div_alert(message, addbutton = true, div_id = "") {
+function div_alert(message, add_button, div_id) {
+    if(typeof(add_button)==='undefined') add_button = true;
+    if(typeof(div_id)==='undefined') div_id = "";
     var alert_div = document.createElement('div');
     alert_div.setAttribute('class', 'alert_div');
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
-    if(!addbutton) button_html = "";
+    if(!add_button) button_html = "";
     alert_div.innerHTML = "<div class='alert_message'>"+message.replace(/\r?\n/g, '<br />')+"</div>"+button_html;
     $(alert_div).css({
         position:  'fixed',
