@@ -332,6 +332,7 @@ app.get('/delete/:id([a-z0-9]+)', function(req, res, next){
 app.post('/chat/:id([a-z0-9]+)', function(req, res, next) { handleChatPost(req, res, next, null); });
 
 function handleChatPost(req, res, next, image)
+{
     if (boards.indexOf(req.params.id) < 0){
         res.send("Does not exist :(");
         return;
