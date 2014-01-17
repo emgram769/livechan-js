@@ -317,7 +317,7 @@ function generate_post(id) {
     return post;
 }
 
-function update_chat(data, fast) {
+function update_chat(data, first_load) {
     var id = data.count;
     var new_post = !(id in chat);
     if (new_post) {
@@ -416,7 +416,7 @@ function update_chat(data, fast) {
             }
         }
 
-        if(fast){
+        if(first_load){
             $(".chats:first").prepend(post);
             $("#chat_"+id).css('opacity','1');
             apply_filter($('#convo_filter').val()); 
