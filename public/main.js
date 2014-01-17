@@ -281,10 +281,10 @@ function make_image(element,url){
     $(element).html("<img height='100px' class='chat_img' src='/"+url+"' onClick='window.open(\"/"+url+"\")'>")
 }
 
-function draw_new_chat(data, fast){
+function draw_new_chat(data, first){
     if(posting)
     {
-        setTimeout(function(){draw_new_chat(data, fast)}, 150);
+        setTimeout(function(){draw_new_chat(data, first)}, 150);
         return;
     }
     
@@ -327,16 +327,21 @@ function draw_new_chat(data, fast){
                 $('#chat_'+postid+'_refs')[0].innerHTML += reftext;
             done.push(postid);
         });
-    }i
-    var name = "<div class='chat_header'><span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+data.date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span> <span class='chat_refs' id='chat_"+data.count+"_refs'>"+refs+"</span></div>";
+    }
+
+    var date = new Date(data.date).toString();
+
+    var name = "<div class='chat_header'><span class='chat_name "+extra_class+"'>"+escapeHTML(data.name)+trip+"</span>"+convo+date+"<span class='chat_number' onclick='add_number_to_post("+data.count+")'>"+data.count+"</span> <span class='chat_refs' id='chat_"+data.count+"_refs'>"+refs+"</span></div>";
 
     var new_chat = "<div class='chat' id='chat_"+data.count+"' data-convo='"+escapeHTML(data.convo)+"' style='opacity:0;'>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)' onmouseover='show_text($1,this)' onmouseout='kill_excess()'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
 
     my_ids.forEach(function(id) {
         new_chat = new_chat.replace("onmouseout='kill_excess()'>&gt;&gt;" + id + "</a>", "onmouseout='kill_excess()'>&gt;&gt;" + id + " (You)</a>");
     });
-    
-    $(".chats:first").append(new_chat);
+    if(first)
+        $(".chats:first").prepend(new_chat);
+    else
+        $(".chats:first").append(new_chat);
     if(!$("#autoimages").prop('checked')){	
         $('.chat_img').css('display','none');
     }
@@ -351,7 +356,7 @@ function draw_new_chat(data, fast){
         });
     }
     
-    if(fast){
+    if(first){
         $("#chat_"+data.count).css('opacity','1');
         apply_filter($('#convo_filter').val()); 
         return;
@@ -406,17 +411,38 @@ function apply_filter(value){
     }
 }
 
+function max_count(obj){
+    var max = 0;
+    for (i in obj) {
+        if (obj[i].count >= max)
+        max = obj[i].count;
+    }
+    return max;
+}
+
+
 function draw_chat(){
     for(i in chat) {
         draw_new_chat(chat[i], true);
     }
+    var max = max_count(chat);
+    var too_long = 1000;
+    var counter = 0;
+    var wait_for_last = setInterval(function(){
+        if($('#chat_'+max).length) {
+            clearInterval(wait_for_last);
+            scroll();
+        } else {
+            if(counter++ > too_long)
+                clearInterval(wait_for_last);
+        }
+    },100);
 }
 
 window.onload = function(){
     var path = window.location.pathname;
     var chat_id = path.slice(path.lastIndexOf('/')+1);
     socket.on('request_location',function(data){
-        scroll();
         socket.emit('subscribe', chat_id);
     });
     var title = 'LiveChan';

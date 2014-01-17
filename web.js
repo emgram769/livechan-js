@@ -7,6 +7,8 @@ var ipfilter = require('ipfilter');
 var captcha = require('captcha');
 var tripcode = require('tripcode');
 var fs = require('fs');
+var mongoose = require('mongoose');
+
 
 /* globals */
 var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
@@ -19,6 +21,7 @@ console.log("TRIP PASS IS:", securetrip_salt);
 var format = require('util').format;
 var app = express();
 var port = process.env.PORT || 5000;
+
 /* listen now */
 var server = http.createServer(app).listen(port, function(){
     console.log('Express server listening on port %d in %s mode',
@@ -26,6 +29,11 @@ var server = http.createServer(app).listen(port, function(){
 });
 var io = require('socket.io').listen(server);
 var fs = require('fs');
+
+/* set up db */
+mongoose.connect('mongodb://localhost/livechan_db');
+var Schema = mongoose.Schema;
+
 
 /* for saving images */
 app.use(express.bodyParser({
@@ -64,6 +72,39 @@ session_list = [];
 ips = {};
 boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x', 'dev'];
 
+/* db schema */
+var chat_schema = new Schema({
+    convo: String,
+    body: String,
+    name: String,
+    count: {type: Number, unique: true},
+    date: { type: Date, default: Date.now },
+    ip: String,
+    chat: String,
+    image: String,
+    trip: String
+}, {capped:{size:10000000, max:1000}});
+
+var session_schema = new Schema({
+    date: { type: Date, default: Date.now, expires: '24h' },
+    session_key: String,
+    ip: String
+});
+
+mongoose.connection.db.dropCollection('session_dbs', function(e){console.log(e)});
+
+chat_db = mongoose.model('chat_db', chat_schema);
+session_db = mongoose.model('session_db', session_schema);
+/*
+chat_db.remove({}, function(err) { 
+       console.log('chat_db reset');
+       read_in();
+});
+*/
+session_db.remove({}, function(err) { 
+       console.log('session_db reset') 
+});
+
 /* snapshot location. for download when pushing updates */
 // TO DO: Set up database to make this legitimate
 fs.readFile('public/chats.json', 'utf8', function (err, data) {
@@ -71,10 +112,20 @@ fs.readFile('public/chats.json', 'utf8', function (err, data) {
     console.log('Error: ' + err);
     return;
   }
-  data = JSON.parse(data);
-  chat = data.chat;
-  data_chat = data.chat;
-  count = data.count;
+  //data = JSON.parse(data);
+  //chat = data.chat;
+  //data_chat = data.chat;
+  //count = data.count;
+ /* for (id in chat) {
+    for (i in chat[id]) {
+        if (typeof(chat[id][i].count)!="undefined" )
+            chat_db(chat[id][i]).save(function(){});
+    }
+  }*/
+});
+
+chat_db.findOne().sort({count:-1}).exec(function(e,d){
+    count = d.count;
 });
 
 function demote_ips(){
@@ -99,18 +150,25 @@ setInterval(demote_ips,1000);
 
 function get_extension(filename) {
     var i = filename.lastIndexOf('.');
-    return (i < 0) ? '' : filename.substr(i+1);
+    return (i < 0) ? '' : filename.substr(i+1).toLowerCase();
 }
 
 function invalid_extension(filename){
     var test=['jpg','jpeg','png','gif'].indexOf(get_extension(filename));
-    console.log("INDEX IS",get_extension(filename), test);
+    console.log("INDEX IS", get_extension(filename), test);
     if (test > -1)
-    return false;
+        return false;
     return true;
 }
 
 function add_to_chat(data,id){
+    /* store in the db */
+    if(!data.chat)
+        data.chat=id;
+    new chat_db(data).save(function(err){
+        if (err) console.log(err);
+    });
+/*
     if (!chat[id])
         chat[id] = [];
     if (chat[id].length>100){
@@ -128,20 +186,28 @@ function add_to_chat(data,id){
     if (curr_chat.length>20){
         delete curr_chat[0];
         curr_chat = curr_chat.slice(-19);
-    }
+    }*/
+    /* store in memory 
     chat[id].push(data);
+    */
+    /* store in public memory 
     if(data.ip)
         data.ip = 'hidden';
     data_chat[id].push(data);
+    */
+    /* store in front page
     curr_chat.push(data);
-    
-    fs.writeFile('public/chats.json', JSON.stringify({chat:data_chat, count:count}) , function(){
-    });
+    */
+    if (port==80){
+        fs.writeFile('public/chats.json', JSON.stringify({chat:data_chat, count:count}),
+	function(){
+    	});
+    }
 }
 
 function session_exists(session){
-    if (session_list.indexOf(session)>-1)
-    return true;
+    if (session_db.count({session_key:session}))
+        return true;
     return false;
 }
 
@@ -160,9 +226,9 @@ app.get('/login', function(req, res){
 });
 
 app.post('/login', function(req, res){
-    var ipAddr = req.headers["x-forwarded-for"];
-    if (ipAddr){
-        var list = ipAddr.split(",");
+    var ip_addr = req.headers["x-forwarded-for"];
+    if (ip_addr){
+        var list = ip_addr.split(",");
         req.connection.remoteAddress = list[list.length-1];
     } else {
         req.connection.remoteAddress = req.connection.remoteAddress;
@@ -173,9 +239,18 @@ app.post('/login', function(req, res){
         var info = req.headers['user-agent']+req.connection.remoteAddress+key;
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
-        session_list.push(password);
-        res.cookie('password_livechan', password+key, { maxAge: 900000, httpOnly: false});
+        res.cookie('password_livechan', password+key, { maxAge: 9000000, httpOnly: false});
         res.redirect(req.body.page);
+
+        var data = {session_key:password,
+        ip:req.connection.remoteAddress};
+
+        new session_db(data).save(function(){
+            session_db.find().exec(function(e,d){
+                console.log(e,d);    
+            });
+        });
+
         return;
     } else {
         res.send("You mistyped the captcha!");
@@ -186,7 +261,6 @@ app.post('/login', function(req, res){
 app.get('/', function(req, res) {
     res.sendfile('home.html');
 });
-
 
 app.get('/chat/:id([a-z0-9]+)', function(req, res) {
     if (boards.indexOf(req.params.id) < 0){
@@ -199,7 +273,16 @@ app.get('/chat/:id([a-z0-9]+)', function(req, res) {
 
 app.get('/data/:id([a-z0-9]+)', function(req, res) {
     if (req.params.id == "all") {
-        res.json(curr_chat);
+        chat_db.find()
+            .sort({count:-1})
+            .select('chat name body convo count date trip')
+            .limit(20)
+            .exec(function(e,d){
+                if(!e)
+                    res.json(d);
+                else
+                    res.send('db_error');
+            });
         return;
     }
     if (boards.indexOf(req.params.id) < 0) {
@@ -209,7 +292,16 @@ app.get('/data/:id([a-z0-9]+)', function(req, res) {
     if (!data_chat[req.params.id]) {
         data_chat[req.params.id] = [];
     }
-    res.json(data_chat[req.params.id]);
+    chat_db.find({chat:req.params.id})
+        .sort({count:-1})
+        .select('chat name body convo count date image trip')
+        .limit(100)
+        .exec(function(e,d){
+            if(!e)
+                res.json(d);
+            else
+                res.send('db_error');
+        });
 });
 
 app.post('/ban/:id([a-z0-9]+)', function(req, res, next){
@@ -234,9 +326,9 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     
     var data = {};
     
-    var ipAddr = req.headers["x-forwarded-for"];
-    if (ipAddr){
-        var list = ipAddr.split(",");
+    var ip_addr = req.headers["x-forwarded-for"];
+    if (ip_addr){
+        var list = ip_addr.split(",");
         req.connection.remoteAddress = list[list.length-1];
     } else {
         req.connection.remoteAddress = req.connection.remoteAddress;
@@ -246,6 +338,10 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
     if(req.files.image.size == 0 || invalid_extension(req.files.image.path)) {
          fs.unlink(req.files.image.path);
          console.log("DELETED");
+         if (/^\s*$/.test(req.body.body)) {
+            res.json({failure:"nothing substantial submitted"});
+            return;
+         }
      } else {
          console.log('image loaded to', req.files.image.path);
          data.image = req.files.image.path;
@@ -309,7 +405,7 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
         req.body.name = req.body.name.slice(0,trip_index);
     }
 
-    if(data.trip != "!CnB7SkWsyx") {
+    if(data.trip != "!KRBtzmcDIw") {
         /* update hash cool down */
         if(user_pass in hash_list) {
             if(hash_list[user_pass] >= 1 && hash_list[user_pass] <= 100000){
@@ -334,14 +430,14 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
             ips[req.connection.remoteAddress] = 0;
         }
 
-
+/*
         if(req.body.body != ""){
             if(already_exists(req.body.body, req.params.id) || /^\s+$/.test(req.body.body)){
                 console.log("exists");
                 res.json({failure:"post exists"});
                 return;
             }
-        }
+        }*/
 
     }
     data.body = req.body.body;
@@ -354,13 +450,14 @@ app.post('/chat/:id([a-z0-9]+)', function(req, res, next) {
 
     add_to_chat(data, req.params.id);
 
-    data.ip = 'hidden';
+    delete data.ip;
     data.chat = req.params.id;
 
     res.json({success:"SUCCESS", id:data.count});
     
     io.sockets.in(req.params.id).emit('chat', data);
     io.sockets.in('all').emit('chat', data);
+    return;
 });
 
 /* socket.io content */
