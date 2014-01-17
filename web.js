@@ -125,7 +125,7 @@ fs.readFile('public/chats.json', 'utf8', function (err, data) {
 });
 
 chat_db.findOne().sort({count:-1}).exec(function(e,d){
-    count = d.count;
+    if(d) count = d.count;
 });
 
 function demote_ips(){
@@ -240,8 +240,12 @@ app.post('/login', function(req, res){
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
         res.cookie('password_livechan', password+key, { maxAge: 9000000, httpOnly: false});
-        res.redirect(req.body.page);
-
+        
+        if(req.body.page)
+            res.redirect(req.body.page);
+	else
+	    res.json({success:"captcha"});
+	    
         var data = {session_key:password,
         ip:req.connection.remoteAddress};
 
@@ -253,7 +257,10 @@ app.post('/login', function(req, res){
 
         return;
     } else {
-        res.send("You mistyped the captcha!");
+    	if(req.body.page)
+            res.send("You mistyped the captcha!");
+        else
+            res.json({failure:"You mistyped the captcha."});
         return;
     }
 });
