@@ -57,6 +57,17 @@ if(html5)
         get_css($("#theme_select").val());
     });
 }
+function humanFileSize(bytes, si) {
+    var thresh = si ? 1000 : 1024;
+    if(bytes < thresh) return bytes + ' B';
+    var units = si ? ['kB','MB','GB','TB','PB','EB','ZB','YB'] : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+    var u = -1;
+    do {
+        bytes /= thresh;
+        ++u;
+    } while(bytes >= thresh);
+    return bytes.toFixed(1)+' '+units[u];
+}
 function captcha_div()
 {
     return '<img src="/captcha.jpg#' + new Date().getTime() + '" alt="Lynx is best browser" /><form action="/login" method="post" target="miframe"><br /><input type="text" name="digits" /></form>';
@@ -369,6 +380,8 @@ function update_chat(data, first_load) {
                 imgLargeFlag: "",
                 popupCSS: {'max-height': '97%', 'max-width': '75%'}
             });
+            var imageinfo = $('<div class="fileText">File: <a href="' + imageURL + '" target="_blank">' + data.image.match(/[\w\-\.]*$/)[0] + '</a>-(' + humanFileSize(data.image_filesize, false) + ', ' + data.image_width + 'x' + data.image_height + ', <span>' + data.image_filename + '</span>)</div>');
+            container.append(imageinfo);
             container.append(image);
         }
     }
