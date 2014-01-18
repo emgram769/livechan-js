@@ -50,11 +50,14 @@ if(html5)
     else
         contribs = default_contribs;
         
+    if(localStorage['theme'])
+    	localStorage['theme'] = "Main";
+    	
     $(document).ready(function() {
         $("#name").val(localStorage['name']);
         $("#convo").val(localStorage['convo']);
         $("#theme_select").val(localStorage['theme']);
-        if(!$("#theme_select").val().trim()) $("#theme_select").val("Main");
+        if(!$("#theme_select").val().trim() || $("#theme_select").val() == "null") $("#theme_select").val("Main");
         get_css($("#theme_select").val());
     });
 }
