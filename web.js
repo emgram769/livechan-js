@@ -87,7 +87,7 @@ var chat_schema = new Schema({
     image_width: Number,
     image_height: Number,
     trip: String
-}, {capped:{size:10000000, max:1000}});
+});
 
 var session_schema = new Schema({
     date: { type: Date, default: Date.now, expires: '24h' },
@@ -169,8 +169,17 @@ function add_to_chat(data,id){
     /* store in the db */
     if(!data.chat)
         data.chat=id;
-    new chat_db(data).save(function(err){
+    new chat_db(data).save(function(err) {
         if (err) console.log(err);
+        chat_db.findOne().sort({count: -1}).skip(3).exec(function(err, data) {
+            if (err) {
+                console.log(err);
+            } else if (data) {
+                chat_db.remove({count: {"$lte": data.count}}, function(err) {
+                    console.log(err);
+                });
+            }
+        });
     });
 /*
     if (!chat[id])
