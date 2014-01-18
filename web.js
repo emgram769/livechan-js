@@ -122,7 +122,7 @@ var session_schema = new Schema({
 
 mongoose.connection.db.dropCollection('session_dbs', function (e) {
     "use strict";
-    console.log(e);
+    console.log("sessions drop error", e);
 });
 
 var chat_db = mongoose.model('chat_db', chat_schema);
@@ -228,7 +228,7 @@ function add_to_convo(data, id) {
     }
     new convo_db(data).save(function(err) {
         if (err) {
-            console.log(err);
+            console.log("data save error",err);
             return;
         }
         convo_db.find({chat: id})
@@ -236,12 +236,12 @@ function add_to_convo(data, id) {
             .skip(100)
             .exec(function(e, ds) {
                 if (e) {
-                    console.log(e);
+                    console.log("find error", e);
                     return;
                 }
                 ds.forEach(function(d) {
                     if (d.image) fs.unlink(d.image);
-                    d.remove(function(e2) {console.log(e2);});
+                    d.remove(function(e2) {console.log("removal error", e2);});
                 });
             });
     });
@@ -261,7 +261,7 @@ function add_to_chat(data, id) {
         data.chat = id;
     }
     new chat_db(data).save(function(err) {
-        if (err) {
+        if ("chat save error",err) {
             console.log(err);
             return;
         }
@@ -270,12 +270,12 @@ function add_to_chat(data, id) {
             .skip(100)
             .exec(function(e, ds) {
                 if (e) {
-                    console.log(e);
+                    console.log("chat find error", e);
                     return;
                 }
                 ds.forEach(function(d) {
                     if (d.image && d.convo_id != d.count) fs.unlink(d.image);
-                    d.remove(function(e2) {console.log(e2);});
+                    d.remove(function(e2) {console.log("chat removal error",e2);});
                 });
             });
     });
@@ -378,7 +378,7 @@ app.post('/login', function (req, res) {
 
         new session_db(data).save(function () {
             session_db.find().exec(function (e, d) {
-                console.log(e, d);
+                console.log("session found", e, d);
             });
         });
 
@@ -537,7 +537,7 @@ function handleChatPost(req, res, next, image) {
         if (image === null) {
             gm(req.files.image.path).size(function (err, dimensions) {
                 if (err) {
-                    console.log(err);
+                    console.log("gm size error", err);
                     return;
                 }
                 var idata = {
