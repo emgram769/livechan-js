@@ -1,6 +1,7 @@
 var chat = {};
 var future_ids = $("<span />");
 
+var auto_post = false;
 var posting = false;
 var cool_down_timer = 0;
 var cool_down_interval;
@@ -35,7 +36,7 @@ if(html5)
         localStorage['contribs'] = "[\"0\"]";
         localStorage['convo'] = "";
         localStorage['name'] = "";
-        localStorage['theme'] = "Main";
+        localStorage['theme'] = "/style.css";
     }
     my_ids = localStorage['my_ids'];
     if(my_ids)
@@ -49,11 +50,14 @@ if(html5)
     else
         contribs = default_contribs;
         
+    if(localStorage['theme'] == "null")
+    	localStorage['theme'] = "/style.css";
+    	
     $(document).ready(function() {
         $("#name").val(localStorage['name']);
         $("#convo").val(localStorage['convo']);
         $("#theme_select").val(localStorage['theme']);
-        if(!$("#theme_select").val().trim()) $("#theme_select").val("Main");
+        if(!$("#theme_select").val().trim() || $("#theme_select").val() == "null") $("#theme_select").val("/style.css");
         get_css($("#theme_select").val());
     });
 }
@@ -132,9 +136,13 @@ function submit_chat(){
     if(get_cookie("password_livechan")=="") {
         div_alert(captcha_div(), false, "captcha");
         $("#submit_button").prop("disabled",true);
+        $("#submit_button").prop("value", "Submit (Auto)");
+        auto_post = true;
 	return false;
         //div_alert("<iframe src='/login?page='+path></iframe>");
     }
+    $("#submit_button").prop("value", "Submit");
+    auto_post = false;
     posting = true;
     if(html5)
     {
@@ -224,6 +232,8 @@ function cool_down(){
         clearInterval(cool_down_interval);
         $("#cool_down").text("");
         $("#submit_button").prop("disabled",false);
+        if(auto_post)
+            submit_chat();
     } else {
         $("#cool_down").text(cool_down_timer);
         $("#submit_button").prop("disabled",true);
@@ -305,7 +315,7 @@ function generate_post(id) {
                 + "<span class='chat_date'/>"
                 + "<span class='chat_number'/>"
                 + "<span class='chat_refs'/>"
-            + "</div><span class='chat_img_cont'/><span class='chat_body'/>"
+            + "</div><div class='chat_file'/><span class='chat_img_cont'/><span class='chat_body'/>"
         + "</div>"
     );
     post.attr("id", "chat_"+id);
@@ -314,6 +324,9 @@ function generate_post(id) {
     number.text(id);
     number.click(function() {
         insert_text_at_cursor($("#body")[0], ">>"+id+"\n");
+        var cur_convo = $("#convo").val();
+	if((!cur_convo || (cur_convo == "" || cur_convo == "General")) && chat[id].convo && chat[id].convo != "General" && chat[id].convo != "")
+	    post.find(".chat_convo").click();
     });
 
     var links = future_ids.find("[data-src='"+id+"']");
@@ -328,26 +341,27 @@ function generate_post(id) {
     return post;
 }
 
-function update_chat(data, first_load) {
-    var id = data.count;
+function update_chat(new_data, first_load) {
+    var id = new_data.count;
     var new_post = !(id in chat);
     if (new_post) {
-        chat[id] = data;
+        chat[id] = new_data;
         var post = generate_post(id);
     } else {
-        for (key in data) {
-            if (chat[id][key] === data[key]) {
-                delete data[key];
+        for (key in new_data) {
+            if (chat[id][key] === new_data[key]) {
+                delete new_data[key];
             } else {
-                chat[id][key] = data[key];
+                chat[id][key] = new_data[key];
             }
         }
         var post = $("#chat_"+id);
     }
-    if ("name" in data) {
+    var data = chat[id];
+    if ("name" in new_data) {
         post.find(".name_part").text(data.name);
     }
-    if ("trip" in data) {
+    if ("trip" in new_data) {
         post.find(".trip_code").text(data.trip);
         var contrib = (contribs.indexOf(data.trip) > -1);
         var admin = (admins.indexOf(data.trip) > -1);
@@ -355,37 +369,60 @@ function update_chat(data, first_load) {
         name.toggleClass("contrib", contrib && !admin);
         name.toggleClass("admin", admin);
     }
-    if ("convo" in data) {
+    if ("convo" in new_data) {
         post.find(".chat_convo").text(data.convo);
     }
-    if ("date" in data) {
+    if ("date" in new_data) {
         var date = new Date(data.date);
         post.find(".chat_date").text(date);
     }
-    if ("image" in data) {
+    if ("image" in new_data) {
+        var file_info = post.find(".chat_file");
         var container = post.find(".chat_img_cont");
-        container.empty();
         if (data.image) {
-            var imageURL = "/tmp/uploads/" + data.image.match(/[\w\-\.]*$/)[0];
-            var image = $("<img height='100px' class='chat_img'>");
-            image.attr("src", imageURL);
+            var base_name = data.image.match(/[\w\-\.]*$/)[0];
+            var image_url = "/tmp/uploads/" + base_name;
+
+            file_info.html("File: <a class='file_link' target='_blank'/><span class='file_data'/>");
+            file_info.find(".file_link").attr("href", image_url).text(base_name);
+
+            container.html("<img height='100px' class='chat_img'>");
+            var image = container.find(".chat_img");
+            image.attr("src", image_url);
             if(!$("#autoimages").prop('checked')) {	
                 image.css('display', 'none');
             }
             image.click(function() {
-                window.open(imageURL);
+                window.open(image_url);
             });
             image.thumbPopup({
                 imgSmallFlag: "",
                 imgLargeFlag: "",
                 popupCSS: {'max-height': '97%', 'max-width': '75%'}
             });
-            var imageinfo = $('<div class="fileText">File: <a href="' + imageURL + '" target="_blank">' + data.image.match(/[\w\-\.]*$/)[0] + '</a>-(' + humanFileSize(data.image_filesize, false) + ', ' + data.image_width + 'x' + data.image_height + ', <span>' + data.image_filename + '</span>)</div>');
-            container.append(imageinfo);
-            container.append(image);
+        } else {
+            file_info.empty();
+            container.empty();
         }
     }
-    if ("body" in data) {
+    if ("image" in new_data || "image_filesize" in new_data || "image_width" in new_data || "image_height" in new_data || "image_filename" in new_data) {
+        var data_items = [];
+        if ("image_filesize" in data) {
+            data_items.push(humanFileSize(data.image_filesize, false));
+        }
+        if ("image_width" in data && "image_height" in data) {
+            data_items.push(data.image_width + "x" + data.image_height);
+        }
+        if ("image_filename" in data) {
+            data_items.push(data.image_filename);
+        }
+        if (data_items.length > 0) {
+            post.find(".file_data").text("-(" + data_items.join(", ") + ")");
+        } else {
+            post.find(".file_data").text("");
+        }
+    }
+    if ("body" in new_data) {
         // Remove any old backlinks to this post
         $([$("body")[0], future_ids[0]]).find(".back_link[data-dest='"+id+"']").remove();
 
@@ -402,6 +439,7 @@ function update_chat(data, first_load) {
         body_html = body_html.replace(/\r?\n/g, '<br />');
         var body = post.find(".chat_body");
         body.html(body_html);
+        body.linkify({target: "_blank"});
         setup_quote_links(body.find(".quote_link"));
 
         // Create new backlinks
@@ -537,9 +575,15 @@ window.onload = function(){
     });
 
     $("#body").keydown(function (e) {
-        if (!e.shiftKey && e.keyCode == 13 && $("#autosubmit").prop('checked')
-        && cool_down_timer<=0 && !$("#submit_button").prop("disabled")) {
-            submit_chat();
+        if (!e.shiftKey && e.keyCode == 13)
+        {
+            if($("#autosubmit").prop('checked') && cool_down_timer<=0 && !$("#submit_button").prop("disabled"))
+                submit_chat();
+            else
+            {
+                auto_post = true;
+                $("#submit_button").prop("value", "Submit (Auto)");
+            }
             return false;
         }
     });
@@ -580,6 +624,7 @@ window.onload = function(){
         {
             $("#submit_button").prop("disabled",false);
             $("#alert_div_captcha").remove();
+            if(auto_post) submit_chat();
         }
     });
 
@@ -589,7 +634,7 @@ window.onload = function(){
     
     $('#theme_select').change(function(){
         get_css($(this).val());
-        localStorage['theme'] = $(this).val();
+        localStorage['theme'] = $(this).val().replace("null", "/style.css");
     });
     
     $("#autoimages").change(function () {

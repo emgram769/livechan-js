@@ -26,6 +26,7 @@ function draw_new_chat(data){
     var new_chat = "<div class='chat' id='chat_"+data.count+"'><span class='chat_label' onclick='window.location.href=\"/chat/"+data.chat+"\"'>/"+data.chat+"/</span>"+name+new_image+escapeHTML(data.body).replace(/\&gt;\&gt;([0-9]+)/g,"{$1}").replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>").replace(/\{([0-9]+)\}/g,"<a href='#' onclick='scroll_to_number($1)' onmouseover='show_text($1,this)' onmouseout='kill_excess()'>&gt;&gt;$1</a>").replace(/\r?\n/g, '<br />')+"</div>";
 
     $('.chats-home:first').append(new_chat);
+    $("#chat_"+data.count).linkify({target: "_blank"});
 }
 
 function draw_chat(){
