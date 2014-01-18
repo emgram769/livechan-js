@@ -36,7 +36,7 @@ if(html5)
         localStorage['contribs'] = "[\"0\"]";
         localStorage['convo'] = "";
         localStorage['name'] = "";
-        localStorage['theme'] = "Main";
+        localStorage['theme'] = "/style.css";
     }
     my_ids = localStorage['my_ids'];
     if(my_ids)
@@ -51,13 +51,13 @@ if(html5)
         contribs = default_contribs;
         
     if(localStorage['theme'] == "null")
-    	localStorage['theme'] = "Main";
+    	localStorage['theme'] = "/style.css";
     	
     $(document).ready(function() {
         $("#name").val(localStorage['name']);
         $("#convo").val(localStorage['convo']);
         $("#theme_select").val(localStorage['theme']);
-        if(!$("#theme_select").val().trim() || $("#theme_select").val() == "null") $("#theme_select").val("Main");
+        if(!$("#theme_select").val().trim() || $("#theme_select").val() == "null") $("#theme_select").val("/style.css");
         get_css($("#theme_select").val());
     });
 }
@@ -622,7 +622,7 @@ window.onload = function(){
     
     $('#theme_select').change(function(){
         get_css($(this).val());
-        localStorage['theme'] = $(this).val();
+        localStorage['theme'] = $(this).val().replace("null", "/style.css");
     });
     
     $("#autoimages").change(function () {
