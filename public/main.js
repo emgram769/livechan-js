@@ -566,7 +566,7 @@ function update_chat(new_data, is_convo, first_load) {
             notifications();
         }
         apply_filter(post);
-        if(first_load) {
+        if (first_load) {
             $(".chats:first").prepend(post);
         } else {
             $("#chat_" + id).css('opacity', '0');
