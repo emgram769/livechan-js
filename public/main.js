@@ -324,6 +324,9 @@ function generate_post(id) {
     number.text(id);
     number.click(function() {
         insert_text_at_cursor($("#body")[0], ">>"+id+"\n");
+        var cur_convo = $("#convo").val();
+	if((!cur_convo || (cur == "" || cur == "General")) && chat[id].convo && chat[id].convo != "General" && chat[id].convo != "")
+	    post.find(".chat_convo").click();
     });
 
     var links = future_ids.find("[data-src='"+id+"']");
