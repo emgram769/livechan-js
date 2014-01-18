@@ -328,8 +328,6 @@ app.post('/login', function (req, res) {
     if (ip_addr) {
         var list = ip_addr.split(",");
         req.connection.remoteAddress = list[list.length - 1];
-    } else {
-        req.connection.remoteAddress = req.connection.remoteAddress;
     }
 
     if (req.body.digits === req.session.captcha) {
