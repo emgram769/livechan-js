@@ -564,7 +564,7 @@ window.onload = function(){
             else
             {
                 auto_post = true;
-                $("#submit_button").prop("value", "Submit (AUTO)");
+                $("#submit_button").prop("value", "Submit (Auto)");
             }
             return false;
         }
