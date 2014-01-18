@@ -4,7 +4,6 @@ push
 logs.txt
 salt.txt
 node_modules/*
-public/tmp/*
 public/chats.json
 nohup.out
 *.swp
