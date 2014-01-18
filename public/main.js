@@ -426,7 +426,7 @@ function generate_post(id) {
     return post;
 }
 
-function update_chat(new_data, is_convo, first_load) {
+function update_chat(new_data, first_load) {
     "use strict";
     var id = new_data.count;
     var new_post = (chat[id] === undefined);
@@ -445,9 +445,6 @@ function update_chat(new_data, is_convo, first_load) {
         }
         post = $("#chat_" + id);
     }
-    if (is_convo) {
-        post.addClass("convo_op");
-    }
 
     var data = chat[id];
     if (new_data.name !== undefined) {
@@ -461,12 +458,12 @@ function update_chat(new_data, is_convo, first_load) {
         name.toggleClass("contrib", contrib && !admin);
         name.toggleClass("admin", admin);
     }
-    if (new_data.convo !== undefined) {
+    if (new_data.convo !== undefined || new_data.convo_id !== undefined) {
+        var is_op = (data.convo_id === data.count);
+        post.toggleClass("convo_op", is_op);
         var container = post.find(".chat_convo");
-        container.text(data.convo + (data.convo_id === data.count ? " (OP)" : ""));
-        if (data.convo_id !== data.count) {
-            container.data("dest", data.convo_id);
-        }
+        container.text(data.convo + (is_op ? " (OP)" : ""));
+        if (!is_op) container.data("dest", data.convo_id);
     }
     if (new_data.date !== undefined) {
         var date = (new Date(data.date)).toLocaleString();
@@ -591,11 +588,11 @@ function max_count(obj) {
     return max;
 }
 
-function draw_chat(data, is_convo) {
+function draw_chat(data) {
     "use strict";
     var i = null;
     for (i in data) {
-        update_chat(data[i], is_convo, true);
+        update_chat(data[i], true);
     }
     var max = max_count(chat);
     var too_long = 1000;
@@ -663,24 +660,12 @@ window.onload = function () {
         type: "GET",
         url: "/data/" + chat_id
     }).done(function (data) {
-        draw_chat(data, false);
+        draw_chat(data);
         socket.on('chat', function (data) {
-            update_chat(data, false);
+            update_chat(data);
             if ($("#autoscroll").prop('checked')) {
                 scroll();
             }
-        });
-        $.ajax({
-            type: "GET",
-            url: "/data_convo/" + chat_id
-        }).done(function (data) {
-            draw_chat(data, true);
-            socket.on('convo', function (data) {
-                update_chat(data, true);
-                if ($("#autoscroll").prop('checked')) {
-                    scroll();
-                }
-            });
         });
     });
 
