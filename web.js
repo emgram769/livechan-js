@@ -66,6 +66,7 @@ app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,2
 chat = {};
 data_chat = {};
 count = 2232;
+convo_count = 0;
 curr_chat =[];
 hash_list = [];
 session_list = [];
@@ -75,6 +76,7 @@ boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p
 /* db schema */
 var chat_schema = new Schema({
     convo: String,
+    convo_id: Number,
     body: String,
     name: String,
     count: {type: Number, unique: true},
@@ -98,6 +100,7 @@ var session_schema = new Schema({
 mongoose.connection.db.dropCollection('session_dbs', function(e){console.log(e)});
 
 chat_db = mongoose.model('chat_db', chat_schema);
+convo_db = mongoose.model('convo_db', chat_schema);
 session_db = mongoose.model('session_db', session_schema);
 /*
 chat_db.remove({}, function(err) { 
@@ -130,6 +133,9 @@ fs.readFile('public/chats.json', 'utf8', function (err, data) {
 
 chat_db.findOne().sort({count:-1}).exec(function(e,d){
     if(d) count = d.count;
+});
+convo_db.findOne().sort({count:-1}).exec(function(e,d){
+    if(d) convo_count = d.count;
 });
 
 function demote_ips(){
@@ -164,7 +170,20 @@ function invalid_extension(filename){
         return false;
     return true;
 }
-
+function add_to_convo(data,id){
+    console.log('new convo');
+    /* store in the db */
+    if(!data.chat)
+        data.chat=id;
+    new convo_db(data).save(function(err){
+        if (err) console.log(err);
+    });
+    if (port==80){
+        fs.writeFile('public/convos.json', JSON.stringify({chat:data_chat, count:count}),
+        function(){
+        });
+    }
+}
 function add_to_chat(data,id){
     /* store in the db */
     if(!data.chat)
@@ -282,11 +301,44 @@ app.get('/chat/:id([a-z0-9]+)', function(req, res) {
     return;
 });
 
+app.get('/data_convo/:id([a-z0-9]+)', function(req, res) {
+    if (req.params.id == "all") {
+        convos_db.find()
+            .sort({count:-1})
+            .select('chat name body convo convo_id count date trip')
+            .limit(20)
+            .exec(function(e,d){
+                if(!e)
+                    res.json(d);
+                else
+                    res.send('db_error');
+            });
+        return;
+    }
+    if (boards.indexOf(req.params.id) < 0) {
+        res.send("Does not exist :(");
+        return;
+    }
+    if (!data_chat[req.params.id]) {
+        data_chat[req.params.id] = [];
+    }
+    convo_db.find({chat:req.params.id})
+        .sort({count:-1})
+        .select('chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip')
+        .limit(100)
+        .exec(function(e,d){
+            if(!e)
+                res.json(d);
+            else
+                res.send('db_error');
+        });
+});
+
 app.get('/data/:id([a-z0-9]+)', function(req, res) {
     if (req.params.id == "all") {
         chat_db.find()
             .sort({count:-1})
-            .select('chat name body convo count date trip')
+            .select('chat name body convo convo_id count date trip')
             .limit(20)
             .exec(function(e,d){
                 if(!e)
@@ -305,7 +357,7 @@ app.get('/data/:id([a-z0-9]+)', function(req, res) {
     }
     chat_db.find({chat:req.params.id})
         .sort({count:-1})
-        .select('chat name body convo count date image image_filename image_filesize image_width image_height trip')
+        .select('chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip')
         .limit(100)
         .exec(function(e,d){
             if(!e)
@@ -487,16 +539,41 @@ function handleChatPost(req, res, next, image)
     data.count = count;
     data.date = (new Date).toString();
     data.ip = req.connection.remoteAddress;
-    if(port==80)
-        add_to_chat(data, req.params.id);
+    //if(port==80)
+    var announce = true;
+    if(data.convo && data.convo != "General")
+    {
+        announce = false;
+        console.log("??????? CONVO???????");
+        convo_db.findOne( { convo: data.convo } ).exec(function (err, convo_ent) {
+            var type = "convo";
+            if(!convo_ent)
+            {
+                data.convo_id = data.count;
+                add_to_convo(data, req.params.id);
+                add_to_chat(data, req.params.id);
+            }
+            else
+            {
+                data.convo_id = convo_ent.count;
+                add_to_chat(data, req.params.id);
+                type = "chat";
+            }
+            io.sockets.in(req.params.id).emit(type, data);
+            io.sockets.in('all').emit(type, data);
+        });
+    } else add_to_chat(data, req.params.id);
 
     delete data.ip;
     data.chat = req.params.id;
 
     res.json({success:"SUCCESS", id:data.count});
     
-    io.sockets.in(req.params.id).emit('chat', data);
-    io.sockets.in('all').emit('chat', data);
+    if(announce)
+    {
+        io.sockets.in(req.params.id).emit('chat', data);
+        io.sockets.in('all').emit('chat', data);
+    }
     return;
 }
 
@@ -515,4 +592,3 @@ io.sockets.on('connection', function (socket) {
         //console.log("UPDATE", data);
     });
 });
-
