@@ -415,7 +415,7 @@ function update_chat(data, first_load) {
         body_html = body_html.replace(/\r?\n/g, '<br />');
         var body = post.find(".chat_body");
         body.html(body_html);
-        body.linkify();
+        body.linkify({target: "_blank"});
         setup_quote_links(body.find(".quote_link"));
 
         // Create new backlinks
