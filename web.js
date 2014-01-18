@@ -551,6 +551,7 @@ function handleChatPost(req, res, next, image) {
                     idata.image_width = dimensions.width;
                     idata.image_height = dimensions.height;
                 }
+                console.log("FILE SIZE",idata.image_filesize);
                 handleChatPost(req, res, next, idata);
             });
             return;
