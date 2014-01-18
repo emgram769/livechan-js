@@ -50,7 +50,7 @@ if(html5)
     else
         contribs = default_contribs;
         
-    if(localStorage['theme'])
+    if(localStorage['theme'] == "null")
     	localStorage['theme'] = "Main";
     	
     $(document).ready(function() {
