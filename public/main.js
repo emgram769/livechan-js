@@ -147,7 +147,7 @@ function submit_chat(){
     if(html5)
     {
         localStorage['name'] = $("#name").val();
-        localStorage['convo'] = $("#convo").val().replace("General", "");
+        localStorage['convo'] = $("#convo").val().replace(/^General$/, "");
         localStorage['theme'] = $("#theme_select").val();
     }
     
@@ -308,7 +308,7 @@ function setup_quote_links(links) {
 
 function generate_post(id) {
     var post = $(
-        "<div class='chat' style='opacity:0;'>"
+        "<div class='chat'>"
             + "<div class='chat_header'>"
                 + "<span class='chat_name'><span class='name_part'/><span class='trip_code'/></span>"
                 + "<span class='chat_convo'/>"
@@ -335,7 +335,7 @@ function generate_post(id) {
 
     post.find(".chat_convo").click(function() {
         $("#convo").val(chat[id].convo);
-        apply_filter($('#convo_filter').val());
+        apply_filter();
     });
 
     return post;
@@ -456,32 +456,20 @@ function update_chat(new_data, first_load) {
         });
     }
     if (new_post) {
-        if (window_focus === false) {
-            if ($('#convo_filter').val()=='filter') {
-                var convo = $('#convo').val() ? $('#convo').val() : "General";
-                if (data.convo == convo) {
-                    notifications();
-                }
-            } else {
-                notifications();
-            }
+        if (window_focus === false && ($('#convo_filter').val() != 'filter' || data.convo == get_convo())) {
+            notifications();
         }
-
-        if(first_load){
+        apply_filter(post);
+        if(first_load) {
             $(".chats:first").prepend(post);
-            $("#chat_"+id).css('opacity','1');
-            apply_filter($('#convo_filter').val()); 
-            return;
         } else {
+            $("#chat_"+id).css('opacity', '0');
             $(".chats:first").append(post);
+            $("#chat_"+id).animate({
+                opacity: 1
+            }, 300, 'swing', function() {
+            });
         }
-
-        apply_filter($('#convo_filter').val()); 
-        
-        $("#chat_"+id).animate({
-            opacity:1
-        },300, 'swing', function(){
-        });
     }
 }
 
@@ -501,29 +489,28 @@ function clear_fields(){
     $("#sum").val('');
 }
 
-function apply_filter(value){
+function get_convo() {
     var convo = $('#convo').val();
-    if(convo == "")
-    convo = "General";
-    $('.chat').toggleClass('chat_dim', false);
-    $('.chat').toggleClass('chat_hidden', false);
+    return (convo == "") ? "General" : convo;
+}
+
+function apply_filter(posts) {
+    if (posts === undefined) posts = $('.chat');
+    var convo = get_convo();
+    var value = $('#convo_filter').val();
+    posts.toggleClass('chat_dim', false);
+    posts.toggleClass('chat_hidden', false);
 
     if (value == "highlight"){
-        $('.chat').toggleClass(function() {
+        posts.toggleClass(function() {
             var id = parseInt(this.id.match(/\d+/)[0]);
-            if(convo == chat[id].convo)
-            return '';
-            else
-            return 'chat_dim';
-            }, true);
+            return (convo == chat[id].convo) ? '' : 'chat_dim';
+        }, true);
     } else if (value == "filter"){
-        $('.chat').toggleClass(function() {
+        posts.toggleClass(function() {
             var id = parseInt(this.id.match(/\d+/)[0]);
-            if(convo == chat[id].convo)
-            return '';
-            else
-            return 'chat_hidden';
-            }, true);
+            return (convo == chat[id].convo) ? '' : 'chat_hidden';
+        }, true);
     }
 }
 
@@ -641,8 +628,8 @@ window.onload = function(){
         }
     });
 
-    $('#convo_filter').change(function(){
-        apply_filter($(this).val()); 
+    $('#convo, #convo_filter').change(function(){
+        apply_filter();
     });
     
     $('#theme_select').change(function(){
