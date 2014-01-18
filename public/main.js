@@ -469,7 +469,7 @@ function update_chat(new_data, is_convo, first_load) {
         }
     }
     if (new_data.date !== undefined) {
-        var date = new Date(data.date);
+        var date = (new Date(data.date)).toLocaleString();
         post.find(".chat_date").text(date);
     }
     if (new_data.image !== undefined) {
