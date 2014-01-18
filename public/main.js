@@ -325,7 +325,7 @@ function generate_post(id) {
     number.click(function() {
         insert_text_at_cursor($("#body")[0], ">>"+id+"\n");
         var cur_convo = $("#convo").val();
-	if((!cur_convo || (cur == "" || cur == "General")) && chat[id].convo && chat[id].convo != "General" && chat[id].convo != "")
+	if((!cur_convo || (cur_convo == "" || cur_convo == "General")) && chat[id].convo && chat[id].convo != "General" && chat[id].convo != "")
 	    post.find(".chat_convo").click();
     });
 
@@ -415,6 +415,7 @@ function update_chat(data, first_load) {
         body_html = body_html.replace(/\r?\n/g, '<br />');
         var body = post.find(".chat_body");
         body.html(body_html);
+        body.linkify();
         setup_quote_links(body.find(".quote_link"));
 
         // Create new backlinks
