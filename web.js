@@ -292,9 +292,9 @@ app.get('/chat/:id([a-z0-9]+)', function (req, res) {
     return;
 });
 
-app.get('/data:ops(_convo)/:id([a-z0-9]+)', function (req, res) {
+app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
     "use strict";
-    if (req.params.id !== "all" && boards.indexOf(req.params.id) < 0)
+    if (req.params.id !== "all" && boards.indexOf(req.params.id) < 0) {
         res.send("Does not exist :(");
         return;
     }
@@ -309,7 +309,7 @@ app.get('/data:ops(_convo)/:id([a-z0-9]+)', function (req, res) {
         limit = 100;
         fields = 'chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip';
     }
-    if (req.params.id === "_convo") {
+    if (req.params.ops === "_convo") {
         search.is_chat_op = true;
     }
     chat_db.find(search)
@@ -511,9 +511,10 @@ function handleChatPost(req, res, next, image) {
     var announce = true;
     if (data.convo && data.convo !== "General") {
         announce = false;
-        convo_db.findOne({
+        chat_db.findOne({
             convo: data.convo,
-            chat: data.chat
+            chat: data.chat,
+            is_convo_op: true
         }).exec(function (err, convo_ent) {
             if (!convo_ent) {
                 data.is_convo_op = true;
