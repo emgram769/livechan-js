@@ -165,21 +165,28 @@ function invalid_extension(filename){
     return true;
 }
 
-function add_to_chat(data,id){
+function add_to_chat(data, id){
     /* store in the db */
     if(!data.chat)
         data.chat=id;
     new chat_db(data).save(function(err) {
-        if (err) console.log(err);
-        chat_db.findOne().sort({count: -1}).skip(1000).exec(function(err, data) {
-            if (err) {
-                console.log(err);
-            } else if (data) {
-                chat_db.remove({count: {"$lte": data.count}}, function(err) {
-                    console.log(err);
+        if (err) {
+            console.log(err);
+            return;
+        }
+        chat_db.find({chat: id})
+            .sort({count: -1})
+            .skip(100)
+            .exec(function(e, ds) {
+                if (e) {
+                    console.log(e);
+                    return;
+                }
+                ds.forEach(function(d) {
+                    if (d.image) fs.unlink(d.image);
+                    d.remove(function(e2) {console.log(e2);});
                 });
-            }
-        });
+            });
     });
 /*
     if (!chat[id])
