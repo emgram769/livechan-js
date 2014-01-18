@@ -320,6 +320,14 @@ function generate_post(id) {
     );
     post.attr("id", "chat_"+id);
 
+    var convo = post.find(".chat_convo");
+    convo.mouseover(quote_mouseover);
+    convo.mouseout(quote_mouseout);
+    convo.click(function() {
+        $("#convo").val(chat[id].convo);
+        apply_filter();
+    });
+
     var number = post.find(".chat_number");
     number.text(id);
     number.click(function() {
@@ -333,15 +341,10 @@ function generate_post(id) {
     post.find(".chat_refs").append(links);
     links.before(" ");
 
-    post.find(".chat_convo").click(function() {
-        $("#convo").val(chat[id].convo);
-        apply_filter();
-    });
-
     return post;
 }
 
-function update_chat(new_data, first_load) {
+function update_chat(new_data, is_convo, first_load) {
     var id = new_data.count;
     var new_post = !(id in chat);
     if (new_post) {
@@ -357,6 +360,9 @@ function update_chat(new_data, first_load) {
         }
         var post = $("#chat_"+id);
     }
+    if(is_convo)
+        post.addClass("convo_op");
+
     var data = chat[id];
     if ("name" in new_data) {
         post.find(".name_part").text(data.name);
@@ -370,7 +376,10 @@ function update_chat(new_data, first_load) {
         name.toggleClass("admin", admin);
     }
     if ("convo" in new_data) {
-        post.find(".chat_convo").text(data.convo);
+        var container = post.find(".chat_convo");
+        container.text(data.convo + (data.convo_id == data.count ? " (OP)" : ""));
+        if(data.convo_id != data.count)
+            container.data("dest", data.convo_id);
     }
     if ("date" in new_data) {
         var date = new Date(data.date);
@@ -523,9 +532,9 @@ function max_count(obj){
     return max;
 }
 
-function draw_chat(data){
+function draw_chat(data, is_convo){
     for(i in data) {
-        update_chat(data[i], true);
+        update_chat(data[i], is_convo, true);
     }
     var max = max_count(chat);
     var too_long = 1000;
@@ -593,9 +602,21 @@ window.onload = function(){
         type: "GET",
         url: "/data/"+chat_id
     }).done(function(data) {
-        draw_chat(data);
+        draw_chat(data, false);
         socket.on('chat', function (data) {
-            update_chat(data);
+            update_chat(data, false);
+            if($("#autoscroll").prop('checked'))
+                scroll();
+        });
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "/data_convo/"+chat_id
+    }).done(function(data) {
+        draw_chat(data, true);
+        socket.on('convo', function (data) {
+            update_chat(data, true);
             if($("#autoscroll").prop('checked'))
                 scroll();
         });
