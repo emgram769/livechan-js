@@ -539,13 +539,13 @@ function handleChatPost(req, res, next, image)
     data.count = count;
     data.date = (new Date).toString();
     data.ip = req.connection.remoteAddress;
+    data.chat = req.params.id;
     //if(port==80)
     var announce = true;
     if(data.convo && data.convo != "General")
     {
         announce = false;
-        console.log("??????? CONVO???????");
-        convo_db.findOne( { convo: data.convo } ).exec(function (err, convo_ent) {
+        convo_db.findOne( { convo: data.convo, chat: data.chat } ).exec(function (err, convo_ent) {
             var type = "convo";
             if(!convo_ent)
             {
@@ -565,7 +565,6 @@ function handleChatPost(req, res, next, image)
     } else add_to_chat(data, req.params.id);
 
     delete data.ip;
-    data.chat = req.params.id;
 
     res.json({success:"SUCCESS", id:data.count});
     
