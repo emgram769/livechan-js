@@ -305,7 +305,7 @@ function generate_post(id) {
                 + "<span class='chat_date'/>"
                 + "<span class='chat_number'/>"
                 + "<span class='chat_refs'/>"
-            + "</div><span class='chat_img_cont'/><span class='chat_body'/>"
+            + "</div><div class='chat_file'/><span class='chat_img_cont'/><span class='chat_body'/>"
         + "</div>"
     );
     post.attr("id", "chat_"+id);
@@ -328,26 +328,27 @@ function generate_post(id) {
     return post;
 }
 
-function update_chat(data, first_load) {
-    var id = data.count;
+function update_chat(new_data, first_load) {
+    var id = new_data.count;
     var new_post = !(id in chat);
     if (new_post) {
-        chat[id] = data;
+        chat[id] = new_data;
         var post = generate_post(id);
     } else {
-        for (key in data) {
-            if (chat[id][key] === data[key]) {
-                delete data[key];
+        for (key in new_data) {
+            if (chat[id][key] === new_data[key]) {
+                delete new_data[key];
             } else {
-                chat[id][key] = data[key];
+                chat[id][key] = new_data[key];
             }
         }
         var post = $("#chat_"+id);
     }
-    if ("name" in data) {
+    var data = chat[id];
+    if ("name" in new_data) {
         post.find(".name_part").text(data.name);
     }
-    if ("trip" in data) {
+    if ("trip" in new_data) {
         post.find(".trip_code").text(data.trip);
         var contrib = (contribs.indexOf(data.trip) > -1);
         var admin = (admins.indexOf(data.trip) > -1);
@@ -355,37 +356,60 @@ function update_chat(data, first_load) {
         name.toggleClass("contrib", contrib && !admin);
         name.toggleClass("admin", admin);
     }
-    if ("convo" in data) {
+    if ("convo" in new_data) {
         post.find(".chat_convo").text(data.convo);
     }
-    if ("date" in data) {
+    if ("date" in new_data) {
         var date = new Date(data.date);
         post.find(".chat_date").text(date);
     }
-    if ("image" in data) {
+    if ("image" in new_data) {
+        var file_info = post.find(".chat_file");
         var container = post.find(".chat_img_cont");
-        container.empty();
         if (data.image) {
-            var imageURL = "/tmp/uploads/" + data.image.match(/[\w\-\.]*$/)[0];
-            var image = $("<img height='100px' class='chat_img'>");
-            image.attr("src", imageURL);
+            var base_name = data.image.match(/[\w\-\.]*$/)[0];
+            var image_url = "/tmp/uploads/" + base_name;
+
+            file_info.html("File: <a class='file_link' target='_blank'/><span class='file_data'/>");
+            file_info.find(".file_link").attr("href", image_url).text(base_name);
+
+            container.html("<img height='100px' class='chat_img'>");
+            var image = container.find(".chat_img");
+            image.attr("src", image_url);
             if(!$("#autoimages").prop('checked')) {	
                 image.css('display', 'none');
             }
             image.click(function() {
-                window.open(imageURL);
+                window.open(image_url);
             });
             image.thumbPopup({
                 imgSmallFlag: "",
                 imgLargeFlag: "",
                 popupCSS: {'max-height': '97%', 'max-width': '75%'}
             });
-            var imageinfo = $('<div class="fileText">File: <a href="' + imageURL + '" target="_blank">' + data.image.match(/[\w\-\.]*$/)[0] + '</a>-(' + humanFileSize(data.image_filesize, false) + ', ' + data.image_width + 'x' + data.image_height + ', <span>' + data.image_filename + '</span>)</div>');
-            container.append(imageinfo);
-            container.append(image);
+        } else {
+            file_info.empty();
+            container.empty();
         }
     }
-    if ("body" in data) {
+    if ("image" in new_data || "image_filesize" in new_data || "image_width" in new_data || "image_height" in new_data || "image_filename" in new_data) {
+        var data_items = [];
+        if ("image_filesize" in data) {
+            data_items.push(humanFileSize(data.image_filesize, false));
+        }
+        if ("image_width" in data && "image_height" in data) {
+            data_items.push(data.image_width + "x" + data.image_height);
+        }
+        if ("image_filename" in data) {
+            data_items.push(data.image_filename);
+        }
+        if (data_items.length > 0) {
+            post.find(".file_data").text("-(" + data_items.join(", ") + ")");
+        } else {
+            post.find(".file_data").text("");
+        }
+    }
+    if ("body" in new_data) {
         // Remove any old backlinks to this post
         $([$("body")[0], future_ids[0]]).find(".back_link[data-dest='"+id+"']").remove();
 
