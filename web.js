@@ -171,7 +171,7 @@ function add_to_chat(data,id){
         data.chat=id;
     new chat_db(data).save(function(err) {
         if (err) console.log(err);
-        chat_db.findOne().sort({count: -1}).skip(3).exec(function(err, data) {
+        chat_db.findOne().sort({count: -1}).skip(1000).exec(function(err, data) {
             if (err) {
                 console.log(err);
             } else if (data) {
