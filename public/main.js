@@ -15,7 +15,7 @@ var unread_chats = 0;
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
-var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
+var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps", "!!rr1C6aJjtk"];
 var my_ids = [];
 var contribs = default_contribs;
 
