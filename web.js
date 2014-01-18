@@ -76,20 +76,21 @@ app.use(captcha({
 }));
 
 /* stored data in memory */
-var chat = {};
-var data_chat = {};
 var count = 2232;
-var convo_count = 0;
-var curr_chat = [];
 var hash_list = [];
 var session_list = [];
 var ips = {};
 var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x', 'dev'];
 
+/* database fields to transmit */
+var all_fields = 'chat name body convo convo_id count date trip';
+var board_fields = 'chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip';
+
 /* db schema */
 var chat_schema = new Schema({
     convo: String,
     convo_id: Number,
+    is_convo_op: Boolean,
     body: String,
     name: String,
     count: {
@@ -126,7 +127,6 @@ mongoose.connection.db.dropCollection('session_dbs', function (e) {
 });
 
 var chat_db = mongoose.model('chat_db', chat_schema);
-var convo_db = mongoose.model('convo_db', chat_schema);
 var session_db = mongoose.model('session_db', session_schema);
 /*
 chat_db.remove({}, function (err) { 
@@ -142,40 +142,12 @@ session_db.remove({}, function (err) {
     console.log('session_db reset');
 });
 
-/* snapshot location. for download when pushing updates */
-// TO DO: Set up database to make this legitimate
-/*fs.readFile('public/chats.json', 'utf8', function (err, data) {
-    "use strict";
-    if (err) {
-        console.log('Error: ' + err);
-        return;
-    }
-  //data = JSON.parse(data);
-  //chat = data.chat;
-  //data_chat = data.chat;
-  //count = data.count;
-  for (id in chat) {
-    for (i in chat[id]) {
-        if (typeof(chat[id][i].count)!="undefined" )
-            chat_db(chat[id][i]).save(function () {});
-    }
-  }
-});*/
-
 chat_db.findOne().sort({
     count: -1
 }).exec(function (e, d) {
     "use strict";
     if (d) {
         count = d.count;
-    }
-});
-convo_db.findOne().sort({
-    count: -1
-}).exec(function (e, d) {
-    "use strict";
-    if (d) {
-        convo_count = d.count;
     }
 });
 
@@ -196,9 +168,6 @@ function demote_ips() {
             hash_list[i]--;
         }
     }
-    /*fs.writeFile('public/chats.json', JSON.stringify({chat: data_chat, count: count}) , function () {
-        //console.log('written');
-    });*/
 }
 
 setInterval(demote_ips, 1000);
@@ -219,103 +188,50 @@ function invalid_extension(filename) {
     return true;
 }
 
-function add_to_convo(data, id) {
+function delete_posts(e, ds) {
     "use strict";
-    console.log('new convo');
-    /* store in the db */
-    if(!data.chat) {
-        data.chat = id;
+    if (e) {
+        console.log("chat find error", e);
+        return;
     }
-    new convo_db(data).save(function(err) {
-        if (err) {
-            console.log("data save error",err);
-            return;
-        }
-        convo_db.find({chat: id})
-            .sort({count: -1})
-            .skip(100)
-            .exec(function(e, ds) {
-                if (e) {
-                    console.log("find error", e);
-                    return;
-                }
-                ds.forEach(function(d) {
-                    if (d.image) fs.unlink(d.image);
-                    d.remove(function(e2) {console.log("removal error", e2);});
-                });
-            });
+    ds.forEach(function(d) {
+        if (d.image) fs.unlink(d.image);
+        d.remove(function(e2) {console.log("chat removal error",e2);});
     });
-    if (port === 80) {
-        fs.writeFile('public/convos.json', JSON.stringify({
-                chat: data_chat,
-                count: count
-            }),
-            function () {});
-    }
 }
 
-function add_to_chat(data, id) {
+function send_data(room, event, data, fields) {
     "use strict";
-    /* store in the db */
-    if(!data.chat) {
-        data.chat = id;
+    var fields_array = fields.split(" ");
+    var data2 = {};
+    for (var key in data) {
+        if (fields_array.indexOf(key) > -1) {
+            data2[key] = data[key];
+        }
     }
-    new chat_db(data).save(function(err) {
-        if ("chat save error",err) {
-            console.log(err);
+    io.sockets.in(room).emit(event, data2);
+}
+
+function add_to_chat(data) {
+    "use strict";
+    send_data(data.chat, 'chat', data, board_fields);
+    send_data('all', 'chat', data, all_fields);
+
+    /* store in the db */
+    chat_db.update({count: data.count}, data, {upsert: true}, function(err) {
+        if (err) {
+            console.log("chat save error", err);
             return;
         }
-        chat_db.find({chat: id})
+        chat_db.find({chat: data.chat, is_convo_op: false})
             .sort({count: -1})
             .skip(100)
-            .exec(function(e, ds) {
-                if (e) {
-                    console.log("chat find error", e);
-                    return;
-                }
-                ds.forEach(function(d) {
-                    if (d.image && d.convo_id != d.count) fs.unlink(d.image);
-                    d.remove(function(e2) {console.log("chat removal error",e2);});
-                });
-            });
+            .exec(delete_posts);
+        chat_db.find({chat: data.chat, is_convo_op: true})
+            .sort({count: -1})
+            .skip(100)
+            .exec(delete_posts);
     });
-    /*
-    if (!chat[id])
-        chat[id] = [];
-    if (chat[id].length>100) {
-        if (chat[id][0].image)
-            fs.unlink(chat[id][0].image);
-        delete chat[id][0];
-        chat[id] = chat[id].slice(-99);
-    }
-    if (!data_chat[id])
-        data_chat[id] = [];
-    if (data_chat[id].length>100) {
-        delete data_chat[id][0];
-        data_chat[id] = data_chat[id].slice(-99);
-    }
-    if (curr_chat.length>20) {
-        delete curr_chat[0];
-        curr_chat = curr_chat.slice(-19);
-    }*/
-    /* store in memory 
-    chat[id].push(data);
-    */
-    /* store in public memory 
-    if (data.ip)
-        data.ip = 'hidden';
-    data_chat[id].push(data);
-    */
-    /* store in front page
-    curr_chat.push(data);
-    */
-    if (port === 80) {
-        fs.writeFile('public/chats.json', JSON.stringify({
-                chat: data_chat,
-                count: count
-            }),
-            function () {});
-    }
 }
 
 function session_exists(session) {
@@ -324,18 +240,6 @@ function session_exists(session) {
         session_key: session
     })) {
         return true;
-    }
-    return false;
-}
-
-function already_exists(body, id) {
-    "use strict";
-    var i = 0;
-    for (i in chat[id]) {
-        if (chat[id][i].body === body && chat[id][i].ip) {
-            ips[chat[id][i].ip] += 600;
-            return true;
-        }
     }
     return false;
 }
@@ -408,81 +312,32 @@ app.get('/chat/:id([a-z0-9]+)', function (req, res) {
     return;
 });
 
-app.get('/data_convo/:id([a-z0-9]+)', function (req, res) {
+app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
     "use strict";
-    if (req.params.id === "all") {
-        convo_db.find()
-            .sort({
-                count: -1
-            })
-            .select('chat name body convo convo_id count date trip')
-            .limit(20)
-            .exec(function (e, d) {
-                if (!e) {
-                    res.json(d);
-                } else {
-                    res.send('db_error');
-                }
-            });
-        return;
-    }
-    if (boards.indexOf(req.params.id) < 0) {
+    if (req.params.id !== "all" && boards.indexOf(req.params.id) < 0) {
         res.send("Does not exist :(");
         return;
     }
-    if (!data_chat[req.params.id]) {
-        data_chat[req.params.id] = [];
-    }
-    convo_db.find({
-        chat: req.params.id
-    })
-        .sort({
-            count: -1
-        })
-        .select('chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip')
-        .limit(100)
-        .exec(function (e, d) {
-            if (!e) {
-                res.json(d);
-            } else {
-                res.send('db_error');
-            }
-        });
-});
-
-app.get('/data/:id([a-z0-9]+)', function (req, res) {
-    "use strict";
+    var search = {};
+    var limit = 0;
+    var fields = "";
     if (req.params.id === "all") {
-        chat_db.find()
-            .sort({
-                count: -1
-            })
-            .select('chat name body convo convo_id count date trip')
-            .limit(20)
-            .exec(function (e, d) {
-                if (!e) {
-                    res.json(d);
-                } else {
-                    res.send('db_error');
-                }
-            });
-        return;
+        limit = 20;
+        fields = all_fields;
+    } else  {
+        search.chat = req.params.id;
+        limit = 100;
+        fields = board_fields;
     }
-    if (boards.indexOf(req.params.id) < 0) {
-        res.send("Does not exist :(");
-        return;
+    if (req.params.ops === "_convo") {
+        search.is_chat_op = true;
     }
-    if (!data_chat[req.params.id]) {
-        data_chat[req.params.id] = [];
-    }
-    chat_db.find({
-        chat: req.params.id
-    })
+    chat_db.find(search)
         .sort({
             count: -1
         })
-        .select('chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip')
-        .limit(100)
+        .select(fields)
+        .limit(limit)
         .exec(function (e, d) {
             if (!e) {
                 res.json(d);
@@ -674,42 +529,29 @@ function handleChatPost(req, res, next, image) {
     data.ip = req.connection.remoteAddress;
     data.chat = req.params.id;
     //if (port == 80)
-    var announce = true;
     if (data.convo && data.convo !== "General") {
-        announce = false;
-        convo_db.findOne({
+        chat_db.findOne({
             convo: data.convo,
-            chat: data.chat
+            chat: data.chat,
+            is_convo_op: true
         }).exec(function (err, convo_ent) {
-            var type = "convo";
             if (!convo_ent) {
+                data.is_convo_op = true;
                 data.convo_id = data.count;
-                add_to_convo(data, req.params.id);
-                add_to_chat(data, req.params.id);
             } else {
+                data.is_convo_op = false;
                 data.convo_id = convo_ent.count;
-                add_to_chat(data, req.params.id);
-                type = "chat";
             }
-            io.sockets. in (req.params.id).emit(type, data);
-            io.sockets. in ('all').emit(type, data);
+            add_to_chat(data);
         });
     } else {
-        add_to_chat(data, req.params.id);
+        add_to_chat(data);
     }
-
-    delete data.ip;
 
     res.json({
         success: "SUCCESS",
         id: data.count
     });
-
-    if (announce) {
-        io.sockets. in (req.params.id).emit('chat', data);
-        io.sockets. in ('all').emit('chat', data);
-    }
-    return;
 }
 
 app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
