@@ -15,7 +15,7 @@ var unread_chats = 0;
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
-var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c"];
+var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
 var contribs = default_contribs;
 
@@ -159,6 +159,11 @@ function div_alert(message, add_button, div_id) {
 
 function escapeHTML(str) {
     "use strict";
+    var pre = document.createElement('pre');
+    var text = document.createTextNode( str );
+    pre.appendChild(text);
+    return pre.innerHTML;
+
     return String(str)
         .replace(/&/g, '&amp;')
         .replace(/"/g, '&quot;')
@@ -389,7 +394,7 @@ function apply_filter(posts) {
 function generate_post(id) {
     "use strict";
     var post = $(
-        "<div class='chat'>" +
+        "<div class='chat' style='opacity:0'>" +
             "<div class='chat_header'>" +
                 "<span class='chat_name'><span class='name_part'/><span class='trip_code'/></span>" +
                 "<span class='chat_convo'/>" +
@@ -539,7 +544,7 @@ function update_chat(new_data, is_convo, first_load) {
         });
         body_html = body_html.replace(/\r?\n/g, '<br />');
         var body = post.find(".chat_body");
-        body.html(body_html);
+        body.text(body_html);
         body.linkify({
             target: "_blank"
         });
@@ -568,8 +573,8 @@ function update_chat(new_data, is_convo, first_load) {
         apply_filter(post);
         if (first_load) {
             $(".chats:first").prepend(post);
+            $("#chat_" + id).css('opacity', '1');
         } else {
-            $("#chat_" + id).css('opacity', '0');
             $(".chats:first").append(post);
             $("#chat_" + id).animate({
                 opacity: 1
