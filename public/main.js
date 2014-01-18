@@ -1,6 +1,7 @@
 var chat = {};
 var future_ids = $("<span />");
 
+var auto_post = false;
 var posting = false;
 var cool_down_timer = 0;
 var cool_down_interval;
@@ -35,7 +36,7 @@ if(html5)
         localStorage['contribs'] = "[\"0\"]";
         localStorage['convo'] = "";
         localStorage['name'] = "";
-        localStorage['theme'] = "Main";
+        localStorage['theme'] = "/style.css";
     }
     my_ids = localStorage['my_ids'];
     if(my_ids)
@@ -49,11 +50,14 @@ if(html5)
     else
         contribs = default_contribs;
         
+    if(localStorage['theme'] == "null")
+    	localStorage['theme'] = "/style.css";
+    	
     $(document).ready(function() {
         $("#name").val(localStorage['name']);
         $("#convo").val(localStorage['convo']);
         $("#theme_select").val(localStorage['theme']);
-        if(!$("#theme_select").val().trim()) $("#theme_select").val("Main");
+        if(!$("#theme_select").val().trim() || $("#theme_select").val() == "null") $("#theme_select").val("/style.css");
         get_css($("#theme_select").val());
     });
 }
@@ -132,9 +136,13 @@ function submit_chat(){
     if(get_cookie("password_livechan")=="") {
         div_alert(captcha_div(), false, "captcha");
         $("#submit_button").prop("disabled",true);
+        $("#submit_button").prop("value", "Submit (Auto)");
+        auto_post = true;
 	return false;
         //div_alert("<iframe src='/login?page='+path></iframe>");
     }
+    $("#submit_button").prop("value", "Submit");
+    auto_post = false;
     posting = true;
     if(html5)
     {
@@ -224,6 +232,8 @@ function cool_down(){
         clearInterval(cool_down_interval);
         $("#cool_down").text("");
         $("#submit_button").prop("disabled",false);
+        if(auto_post)
+            submit_chat();
     } else {
         $("#cool_down").text(cool_down_timer);
         $("#submit_button").prop("disabled",true);
@@ -314,6 +324,9 @@ function generate_post(id) {
     number.text(id);
     number.click(function() {
         insert_text_at_cursor($("#body")[0], ">>"+id+"\n");
+        var cur_convo = $("#convo").val();
+	if((!cur_convo || (cur_convo == "" || cur_convo == "General")) && chat[id].convo && chat[id].convo != "General" && chat[id].convo != "")
+	    post.find(".chat_convo").click();
     });
 
     var links = future_ids.find("[data-src='"+id+"']");
@@ -426,6 +439,7 @@ function update_chat(new_data, first_load) {
         body_html = body_html.replace(/\r?\n/g, '<br />');
         var body = post.find(".chat_body");
         body.html(body_html);
+        body.linkify();
         setup_quote_links(body.find(".quote_link"));
 
         // Create new backlinks
@@ -574,9 +588,15 @@ window.onload = function(){
     });
 
     $("#body").keydown(function (e) {
-        if (!e.shiftKey && e.keyCode == 13 && $("#autosubmit").prop('checked')
-        && cool_down_timer<=0 && !$("#submit_button").prop("disabled")) {
-            submit_chat();
+        if (!e.shiftKey && e.keyCode == 13)
+        {
+            if($("#autosubmit").prop('checked') && cool_down_timer<=0 && !$("#submit_button").prop("disabled"))
+                submit_chat();
+            else
+            {
+                auto_post = true;
+                $("#submit_button").prop("value", "Submit (Auto)");
+            }
             return false;
         }
     });
@@ -617,6 +637,7 @@ window.onload = function(){
         {
             $("#submit_button").prop("disabled",false);
             $("#alert_div_captcha").remove();
+            if(auto_post) submit_chat();
         }
     });
 
@@ -626,7 +647,7 @@ window.onload = function(){
     
     $('#theme_select').change(function(){
         get_css($(this).val());
-        localStorage['theme'] = $(this).val();
+        localStorage['theme'] = $(this).val().replace("null", "/style.css");
     });
     
     $("#autoimages").change(function () {

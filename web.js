@@ -8,7 +8,7 @@ var captcha = require('captcha');
 var tripcode = require('tripcode');
 var fs = require('fs');
 var mongoose = require('mongoose');
-var gm = require('gm');
+var gm = require('gm').subClass({imageMagick:true});
 
 /* globals */
 var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
@@ -358,6 +358,10 @@ function handleChatPost(req, res, next, image)
          }
      } else if(image == null) {
          gm(req.files.image.path).size(function(err, dimensions){
+             if(err) {
+                 console.log(err);
+                 return;
+             }
              var idata = {image:"null"};
              if(dimensions.height > 0 && dimensions.width > 0)
              {
