@@ -2,13 +2,20 @@ var socket = io.connect('/');
 var chat = [];
 
 function escapeHTML( string ) {
-    var pre = document.createElement('pre');
+    
+   return string.replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+   var pre = document.createElement('pre');
     var text = document.createTextNode( string );
     pre.appendChild(text);
+    return $('<div/>').text(string).html();
     return pre.innerHTML;
 }
 
 function draw_new_chat(data){
+    return;
     if (!data)
     return false;
     var extra_class = (data.trip && data.trip == "!CnB7SkWsyx") ? "admin" : "";
