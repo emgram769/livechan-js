@@ -9,7 +9,7 @@ var tripcode = require('tripcode');
 var fs = require('fs');
 var mongoose = require('mongoose');
 var gm = require('gm').subClass({
-    imageMagick: false
+    imageMagick: true
 });
 
 /* globals */
