@@ -220,6 +220,9 @@ function submit_chat() {
                 div_alert("usage: /join /channel");
             }
             break;
+        case "settings":
+        	$('.hidden_settings').show();
+        	break;
         case "help":
         default:
             div_alert(
@@ -349,7 +352,7 @@ window.onload = function () {
     });
     var title = 'LiveChan';
     window.document.title = title;
-
+	
     $(window).focus(function () {
         unread_chats = 0;
         window.document.title = title;
@@ -445,6 +448,13 @@ window.onload = function () {
     $('#theme_select').change(function () {
         get_css($(this).val());
         localStorage.theme = $(this).val().replace("null", "/style.css");
+    });
+    
+    $('#board_select').change(function () {
+        var board = $(this).val();
+        if (board=="")
+        	return;
+		window.open('http://' + document.location.host + '/chat/' + board);
     });
 
     $("#autoimages").change(function () {
