@@ -34,7 +34,7 @@ body,html{
 }
 
 .comment{
-    width:100%;
+    width:99%;
 }
 
 .name{
@@ -57,7 +57,7 @@ body,html{
     position:absolute;
     overflow:auto;
     top:0;
-    bottom:160;
+    bottom:160px;
     width:100%;
 }
 
@@ -89,6 +89,7 @@ body,html{
     padding-right:5px;
     vertical-align:text-top;
     max-width:50%;
+    border: 0;
 }
 
 .chat_img:hover{
