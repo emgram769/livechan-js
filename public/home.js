@@ -7,6 +7,7 @@ function notifications(post_convo) {
 
 function quote(id) {
     "use strict";
+    window.location.href = "/chat/" + chat[id].chat + "#q" + id;
 }
 
 function apply_filter(posts) {
