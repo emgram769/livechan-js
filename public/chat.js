@@ -78,7 +78,7 @@ function generate_post(id) {
     if (chat_id === "all") {
         var label = $("<a class='chat_label'/>");
         post.find(".chat_header").prepend(label);
-        label.attr("href", "/chat/" + chat[id].chat + "#chat_" + id);
+        label.attr("href", "/chat/" + chat[id].chat);
     }
 
     var convo = post.find(".chat_convo");
@@ -184,6 +184,7 @@ function update_chat(new_data, first_load) {
             file_info.find(".file_link").attr("href", image_url).text(base_name);
 
             img_container.html("<a target='_blank'><img height='100px' class='chat_img'></a>");
+            img_container.find("a").attr("href", image_url);
             var image = img_container.find(".chat_img");
             image.attr("src", image_url);
             image.attr("alt", "Image #" + data.count);
@@ -272,17 +273,24 @@ function update_chat(new_data, first_load) {
     if (new_post) {
         notifications(data.convo);
         apply_filter(post);
-        insert_post(post);
-        if (!first_load) post.fadeIn(300);
-        if (window.location.hash === '#chat_' + id) {
-            $("#autoscroll").prop('checked', false);
-            var chat_container = post.parent();
-            loaded_callbacks.push(function() {
-                chat_container.scrollTop(
-                    post.offset().top - chat_container.offset().top + chat_container.scrollTop()
-                );
+        if (first_load) {
+            if (window.location.hash === '#chat_' + id) {
+                $("#autoscroll").prop('checked', false);
+                var chat_container = post.parent();
+                loaded_callbacks.push(function() {
+                    chat_container.scrollTop(
+                        post.offset().top - chat_container.offset().top + chat_container.scrollTop()
+                    );
+                });
+            }
+        } else {
+            post.css('opacity', '0');
+            post.animate({
+                opacity: 1
+            }, 300, 'swing', function () {
             });
         }
+        insert_post(post);
     }
 }
 
