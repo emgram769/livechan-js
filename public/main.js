@@ -200,7 +200,7 @@ function submit_chat() {
             break;
         case "remtryp":
             if (param) {
-                var idx = contribs.indexOf(param);
+                var idx = $.inArray(param, contribs);
                 if (idx > -1) {
                     contribs.splice(idx, 1);
                     if (html5) {

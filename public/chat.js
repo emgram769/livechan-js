@@ -58,7 +58,7 @@ function setup_quote_links(links) {
     "use strict";
     links.text(function () {
         var dest_id = parseInt($(this).data("dest"), 10);
-        return ">>" + dest_id + ((my_ids.indexOf(dest_id) > -1) ? " (You)" : "");
+        return ">>" + dest_id + (($.inArray(dest_id, my_ids) > -1) ? " (You)" : "");
     });
     links.click(quote_click);
     links.mouseover(quote_mouseover);
@@ -138,8 +138,8 @@ function update_chat(new_data, first_load) {
     }
     if (new_data.trip !== undefined) {
         post.find(".trip_code").text(data.trip);
-        var contrib = (contribs.indexOf(data.trip) > -1);
-        var admin = (admins.indexOf(data.trip) > -1);
+        var contrib = ($.inArray(data.trip, contribs) > -1);
+        var admin = ($.inArray(data.trip, admins) > -1);
         var name = post.find(".chat_name");
         name.toggleClass("contrib", contrib && !admin);
         name.toggleClass("admin", admin);
@@ -214,7 +214,7 @@ function update_chat(new_data, first_load) {
         var ref_ids = [];
         body_html = body_html.replace(/\{([0-9]+)\}/g, function (match_full, ref_id_str) {
             var ref_id = parseInt(ref_id_str, 10);
-            if (ref_ids.indexOf(ref_id) === -1) {
+            if ($.inArray(ref_id, ref_ids) === -1) {
                 ref_ids.push(ref_id);
             }
             return "<a class='quote_link' href='#' data-src='" + id + "' data-dest='" + ref_id + "'/>";
