@@ -24,7 +24,7 @@ function humanFileSize(bytes, si) {
 
 function escapeHTML(str) {
     "use strict";
-    return $('<aside/>').text(string).html();
+    return $('<aside/>').text(str).html();
 }
 
 function quote_click() {
