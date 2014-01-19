@@ -7,13 +7,15 @@ var ipfilter = require('ipfilter');
 var captcha = require('captcha');
 var tripcode = require('tripcode');
 var fs = require('fs');
+var format = require('util').format;
 var mongoose = require('mongoose');
 var gm = require('gm').subClass({
-    imageMagick: true
+    imageMagick: true // Necessary for hosted version, remove if you're using graphicmagick
 });
 
-/* globals */
+/* salt */
 var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
+
 fs.readFile('salt.txt', 'utf8', function (err, data) {
     "use strict";
     if (!err) {
@@ -21,9 +23,7 @@ fs.readFile('salt.txt', 'utf8', function (err, data) {
     }
 });
 
-console.log("TRIP PASS IS:", securetrip_salt);
-
-var format = require('util').format;
+/* initialize app */
 var app = express();
 var port = process.env.PORT || 5000;
 
@@ -48,20 +48,20 @@ app.use(express.bodyParser({
     keepExtensions: true
 }));
 
-/* blocked end nodes. this file can include more */
+/* blocked nodes. this file can include more */
 fs.readFile('tor_list.txt', 'utf8', function (err, data) {
     "use strict";
     if (err) {
         return;
     }
-    var tor_list = data.split("\n");
+    var tor_list = data.split("\n"); // IP per line
     app.use(ipfilter(tor_list));
 });
 
 /* logging */
 app.use(logfmt.requestLogger());
 
-/* serve public stuff and get cookies */
+/* serve public data (/public/*) and get cookies */
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser());
 app.use(express.cookieSession({
@@ -76,7 +76,7 @@ app.use(captcha({
 }));
 
 /* stored data in memory */
-var count = 2232;
+var count;
 var hash_list = [];
 var session_list = [];
 var ips = {};
@@ -111,30 +111,25 @@ var chat_schema = new Schema({
     trip: String
 });
 
-var session_schema = new Schema({
-    date: {
+var user_schema = new Schema({
+    date: { /* user session expires every 24 hours */
         type: Date,
         default: Date.now,
         expires: '24h'
     },
+    ip: String,
     session_key: String,
-    ip: String
-});
-
-mongoose.connection.db.dropCollection('session_dbs', function (e) {
-    "use strict";
-    console.log("sessions drop error", e);
+    last_post: {
+        type: Date,
+        default: Date.now
+    },
+    banned_rooms: Array /* list of rooms the user is banned from */
 });
 
 var chat_db = mongoose.model('chat_db', chat_schema);
-var session_db = mongoose.model('session_db', session_schema);
-/*
-chat_db.remove({}, function (err) { 
-       console.log('chat_db reset');
-       read_in();
-});
-*/
-session_db.remove({}, function (err) {
+var user_db = mongoose.model('user_db', user_schema);
+
+user_db.remove({}, function (err) {
     "use strict";
     if (err) {
         return;
@@ -142,6 +137,7 @@ session_db.remove({}, function (err) {
     console.log('session_db reset');
 });
 
+/* set counter to newest post */
 chat_db.findOne().sort({
     count: -1
 }).exec(function (e, d) {
@@ -172,6 +168,7 @@ function demote_ips() {
 
 setInterval(demote_ips, 1000);
 
+/* helper functions */
 function get_extension(filename) {
     "use strict";
     var i = filename.lastIndexOf('.');
@@ -236,13 +233,348 @@ function add_to_chat(data) {
 
 function session_exists(session) {
     "use strict";
-    if (session_db.count({
+    if (user_db.count({
         session_key: session
     })) {
         return true;
     }
     return false;
 }
+
+/* check_ip_validity:
+	- checks if ip is banned
+	- checks session validity
+	- checks cool down 
+	calls callback(req, res, next, callback) on success
+*/
+function check_ip_validity(req, res, next, callback) {
+
+	/* get IP */
+	
+	var ip_addr = req.headers["x-forwarded-for"];
+    if (ip_addr) {
+        var list = ip_addr.split(",");
+        req.connection.remoteAddress = list[list.length - 1];
+    }
+    
+    /* lookup IP */
+    
+    user_db.find({ip:req.connection.remoteAddress})
+    	   .exec(function (e, d) {
+    	   		if(e) {
+	    	   		res.json({ failure: "session_expiry" });
+	    	   		return;
+    	   		}
+                else if(d) {
+	                if (req.cookies.password_livechan != d.session_key) {
+						res.json({ failure: "session_expiry" });
+						return;
+	                } else if ((d.last_post.getTime() + 6) > (new Date).now.getTime()) {
+						res.json({ failure: "countdown_violation" });
+						return;
+					} else if (d.banned_rooms.indexOf(req.params.id) > -1) {
+						res.json({ failure: "ban_violation" });
+						return;
+	                } else {
+	                	/* update cool down here */
+		                callback(req, res, next, callback);
+	                }
+                } else {
+	                res.json({ failure: "unknown_error" });
+	    	   		return;
+                }
+            });
+}
+
+/* format_post:
+	- checks for image and sets data accordingly
+	- checks for text violations
+	- generates tripcode
+	calls callback(data) on success
+*/
+function format_post(req, res, next, callback) {
+
+	var data; /* to be stored in db and passed to  */
+	
+	/* no image uploaded */
+	
+	if (req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
+        fs.unlink(req.files.image.path); /* delete blank file */
+        if (/^\s*$/.test(req.body.body)) {
+            res.json({ failure: "nothing substantial submitted" });
+            return;
+        }
+    }
+    
+    /* image uploaded */
+    
+    else {
+        gm(req.files.image.path).size(function (err, dimensions) {
+            if (err) {
+                console.log("gm size error", err);
+                return;
+            }
+            
+            if (dimensions.height > 0 && dimensions.width > 0) {
+                data.image = req.files.image.path;
+                data.image_filename = req.files.image.originalFilename;
+                data.image_filesize = fs.statSync(idata.image).size;
+                data.image_width = dimensions.width;
+                data.image_height = dimensions.height;
+            }
+        });
+    }
+    
+    /* length checks */
+    
+    if (req.body.body.length > 400) {
+        req.body.body = req.body.body.substring(0, 399) + "...";
+    }
+
+    if (req.body.body.split("\n").length > 7) {
+        req.body.body = req.body.body.split("\n", 7).join("\n");
+    }
+
+    if (req.body.name.length > 40) {
+        req.body.name = req.body.name.substring(0, 39) + "...";
+    }
+
+    if (req.body.convo) {
+        if (req.body.convo.length > 40) {
+            req.body.convo = req.body.convo.substring(0, 39) + "...";
+        }
+    } else {
+        req.body.convo = 'General'; /* default conversation */
+    }
+
+	/* generate tripcode */
+	
+    var trip_index = req.body.name.indexOf("#");
+	var trip;
+	
+    if (trip_index > -1) {
+        var trip = req.body.name.substr(trip_index + 1);
+        var secure = trip.indexOf("#") === 0;
+        if (secure) {
+            trip = crypto.createHash('sha1').update(trip.substr(1) + 
+            		securetrip_salt).digest('base64').toString();
+        }
+
+        data.trip = (secure ? "!!" : "!") + tripcode(trip);
+        req.body.name = req.body.name.slice(0, trip_index);
+    }
+    
+    /* everything looks good, we can safely add this chat */
+    
+    count++; /* counter has been promoted */
+
+    data.count = count;
+    data.convo = req.body.convo;
+	data.body = req.body.body;
+    data.name = req.body.name || "Anonymous";
+    data.date = (new Date()).toString();
+    data.ip = req.connection.remoteAddress;
+    data.chat = req.params.id;
+    
+    
+    /* determine if OP of conversation topic */
+    if (data.convo && data.convo !== "General") {
+        chat_db.findOne({
+            convo: data.convo,
+            chat: data.chat,
+            is_convo_op: true
+        }).exec(function (err, convo_ent) {
+            if (!convo_ent) {
+                data.is_convo_op = true;
+                data.convo_id = data.count;
+            } else {
+                data.is_convo_op = false;
+                data.convo_id = convo_ent.count;
+            }
+            callback(data);
+        });
+    } else {
+        callback(data);
+    }
+
+	/* give the client information about the post */
+    res.json({
+        success: "success_posting",
+        id: data.count
+    });
+    
+    return;
+}
+
+function handleChatPost(req, res, next, image) {
+    "use strict";
+    
+    if (boards.indexOf(req.params.id) < 0) {
+        res.send("Does not exist :(");
+        return;
+    }
+
+    var data = {};
+
+    var ip_addr = req.headers["x-forwarded-for"];
+    if (ip_addr) {
+        var list = ip_addr.split(",");
+        req.connection.remoteAddress = list[list.length - 1];
+    }
+
+    if (req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
+        fs.unlink(req.files.image.path);
+        console.log("DELETED");
+        if (/^\s*$/.test(req.body.body)) {
+            res.json({
+                failure: "nothing substantial submitted"
+            });
+            return;
+        }
+    } else {
+        if (image === null) {
+            gm(req.files.image.path).size(function (err, dimensions) {
+                if (err) {
+                    console.log("gm size error", err);
+                    return;
+                }
+                var idata = {
+                    image: "null"
+                };
+                if (dimensions.height > 0 && dimensions.width > 0) {
+                    console.log('image loaded to ', req.files.image.path);
+                    idata.image = req.files.image.path;
+                    idata.image_filename = req.files.image.originalFilename;
+                    idata.image_filesize = fs.statSync(idata.image).size;
+                    idata.image_width = dimensions.width;
+                    idata.image_height = dimensions.height;
+                }
+                console.log("FILE SIZE",idata.image_filesize);
+                handleChatPost(req, res, next, idata);
+            });
+            return;
+        }
+        console.log('image fully loaded to ', req.files.image.path);
+        if (image.image && image.image !== null) {
+            data.image = image.image;
+            data.image_filename = image.image_filename;
+            data.image_filesize = image.image_filesize;
+            data.image_width = image.image_width;
+            data.image_height = image.image_height;
+        }
+    }
+
+    if (!req.cookies.password_livechan) {
+        res.json({
+            failure: "session expiry"
+        });
+        return;
+    }
+
+    // find should be password to prevent identity fraud 
+    var info = req.headers['user-agent'] + req.connection.remoteAddress + req.cookies.password_livechan.slice(-11);
+    var password = crypto.createHash('sha1').update(info).digest('base64').toString();
+    var user_pass = req.cookies.password_livechan.slice(0, -11);
+
+    if (req.body.body.length > 400) {
+        req.body.body = req.body.body.substring(0, 399) + "...";
+    }
+
+    if (req.body.body.split("\n").length > 7) {
+        req.body.body = req.body.body.split("\n", 7).join("\n");
+    }
+
+    if (req.body.name.length > 40) {
+        req.body.name = req.body.name.substring(0, 39) + "...";
+    }
+
+    if (req.body.convo) {
+        if (req.body.convo.length > 40) {
+            req.body.convo = req.body.convo.substring(0, 39) + "...";
+        }
+        data.convo = req.body.convo;
+    } else {
+        data.convo = 'General';
+    }
+
+    var trip_index = req.body.name.indexOf("#");
+
+    if (trip_index > -1) {
+        var trip = req.body.name.substr(trip_index + 1);
+        var secure = trip.indexOf("#") === 0;
+        if (secure) {
+            trip = crypto.createHash('sha1').update(trip.substr(1) + securetrip_salt).digest('base64').toString();
+        }
+
+        data.trip = (secure ? "!!" : "!") + tripcode(trip);
+        req.body.name = req.body.name.slice(0, trip_index);
+    }
+
+    if (data.trip !== "!KRBtzmcDIw") {
+        /* update hash cool down */
+        if (hash_list[user_pass] !== undefined) {
+            if (hash_list[user_pass] >= 1 && hash_list[user_pass] <= 100000) {
+                hash_list[user_pass] *= 2;
+            }
+            console.log("hash", hash_list[user_pass]);
+            res.json({
+                failure: "sorry a similar hash has been used and you must wait " + hash_list[user_pass] + " seconds due to bandwidth"
+            });
+            return;
+        }
+        hash_list[user_pass] = 5; // to do fix cooldowns
+
+        /* update ip cool down */
+        if (ips[req.connection.remoteAddress] !== undefined) {
+            if (ips[req.connection.remoteAddress] >= 1 && hash_list[user_pass] <= 100000) {
+                ips[req.connection.remoteAddress] *= 2;
+            }
+            console.log("IP", ips[req.connection.remoteAddress]);
+            res.json({
+                failure: "ip cool down violation. now " + ips[req.connection.remoteAddress] + " seconds"
+            });
+            return;
+        }
+        
+        ips[req.connection.remoteAddress] = 0;
+
+    }
+    data.body = req.body.body;
+    data.name = req.body.name || "Anonymous";
+
+    count++;
+    data.count = count;
+    data.date = (new Date()).toString();
+    data.ip = req.connection.remoteAddress;
+    data.chat = req.params.id;
+    //if (port == 80)
+    if (data.convo && data.convo !== "General") {
+        chat_db.findOne({
+            convo: data.convo,
+            chat: data.chat,
+            is_convo_op: true
+        }).exec(function (err, convo_ent) {
+            if (!convo_ent) {
+                data.is_convo_op = true;
+                data.convo_id = data.count;
+            } else {
+                data.is_convo_op = false;
+                data.convo_id = convo_ent.count;
+            }
+            add_to_chat(data);
+        });
+    } else {
+        add_to_chat(data);
+    }
+
+    res.json({
+        success: "SUCCESS",
+        id: data.count
+    });
+}
+
+
+/* REQUESTS */
 
 app.get('/login', function (req, res) {
     "use strict";
@@ -281,8 +613,8 @@ app.post('/login', function (req, res) {
             ip: req.connection.remoteAddress
         };
 
-        new session_db(data).save(function () {
-            session_db.find().exec(function (e, d) {
+        new user_db(data).save(function () {
+            user_db.find().exec(function (e, d) {
                 console.log("session found", e, d);
             });
         });
@@ -365,215 +697,17 @@ app.get('/delete/:id([a-z0-9]+)', function (req, res, next) {
     }
 });
 
-function handleChatPost(req, res, next, image) {
-    "use strict";
-    if (boards.indexOf(req.params.id) < 0) {
-        res.send("Does not exist :(");
-        return;
-    }
-
-    var data = {};
-
-    var ip_addr = req.headers["x-forwarded-for"];
-    if (ip_addr) {
-        var list = ip_addr.split(",");
-        req.connection.remoteAddress = list[list.length - 1];
-    }
-
-    if (req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
-        fs.unlink(req.files.image.path);
-        console.log("DELETED");
-        if (/^\s*$/.test(req.body.body)) {
-            res.json({
-                failure: "nothing substantial submitted"
-            });
-            return;
-        }
-    } else {
-        if (image === null) {
-            gm(req.files.image.path).size(function (err, dimensions) {
-                if (err) {
-                    console.log("gm size error", err);
-                    return;
-                }
-                var idata = {
-                    image: "null"
-                };
-                if (dimensions.height > 0 && dimensions.width > 0) {
-                    console.log('image loaded to ', req.files.image.path);
-                    idata.image = req.files.image.path;
-                    idata.image_filename = req.files.image.originalFilename;
-                    idata.image_filesize = fs.statSync(idata.image).size;
-                    idata.image_width = dimensions.width;
-                    idata.image_height = dimensions.height;
-                }
-                console.log("FILE SIZE",idata.image_filesize);
-                handleChatPost(req, res, next, idata);
-            });
-            return;
-        }
-        console.log('image fully loaded to ', req.files.image.path);
-        if (image.image && image.image !== null) {
-            data.image = image.image;
-            data.image_filename = image.image_filename;
-            data.image_filesize = image.image_filesize;
-            data.image_width = image.image_width;
-            data.image_height = image.image_height;
-        }
-    }
-
-    if (!req.cookies.password_livechan) {
-        res.json({
-            failure: "session expiry"
-        });
-        return;
-    }
-
-    // find should be password to prevent identity fraud 
-    var info = req.headers['user-agent'] + req.connection.remoteAddress + req.cookies.password_livechan.slice(-11);
-    var password = crypto.createHash('sha1').update(info).digest('base64').toString();
-    var user_pass = req.cookies.password_livechan.slice(0, -11);
-    /*
-    if (!user_pass || password != user_pass) {
-        console.log("NO PASSRROD");
-        res.redirect('/login');
-        return;
-    }
-
-    // check if it exists 
-    if (!session_exists(user_pass)) {
-        console.log(session_list);
-        console.log("NO PASSRROD");
-        res.redirect('/login');
-        return;
-    }
-    */
-
-    if (req.body.body.length > 400) {
-        req.body.body = req.body.body.substring(0, 399) + "...";
-    }
-
-    if (req.body.body.split("\n").length > 7) {
-        req.body.body = req.body.body.split("\n", 7).join("\n");
-    }
-
-    if (req.body.name.length > 40) {
-        req.body.name = req.body.name.substring(0, 39) + "...";
-    }
-
-    if (req.body.convo) {
-        if (req.body.convo.length > 40) {
-            req.body.convo = req.body.convo.substring(0, 39) + "...";
-        }
-        data.convo = req.body.convo;
-    } else {
-        data.convo = 'General';
-    }
-
-    /* passed most tests, make data object */
-    var trip_index = req.body.name.indexOf("#");
-
-    if (trip_index > -1) {
-        var trip = req.body.name.substr(trip_index + 1);
-        var secure = trip.indexOf("#") === 0;
-        if (secure) {
-            trip = crypto.createHash('sha1').update(trip.substr(1) + securetrip_salt).digest('base64').toString();
-        }
-
-        data.trip = (secure ? "!!" : "!") + tripcode(trip);
-        req.body.name = req.body.name.slice(0, trip_index);
-    }
-
-    if (data.trip !== "!KRBtzmcDIw") {
-        /* update hash cool down */
-        if (hash_list[user_pass] !== undefined) {
-            if (hash_list[user_pass] >= 1 && hash_list[user_pass] <= 100000) {
-                hash_list[user_pass] *= 2;
-            }
-            console.log("hash", hash_list[user_pass]);
-            res.json({
-                failure: "sorry a similar hash has been used and you must wait " + hash_list[user_pass] + " seconds due to bandwidth"
-            });
-            return;
-        }
-        hash_list[user_pass] = 5; // to do fix cooldowns
-
-        /* update ip cool down */
-        if (ips[req.connection.remoteAddress] !== undefined) {
-            if (ips[req.connection.remoteAddress] >= 1 && hash_list[user_pass] <= 100000) {
-                ips[req.connection.remoteAddress] *= 2;
-            }
-            console.log("IP", ips[req.connection.remoteAddress]);
-            res.json({
-                failure: "ip cool down violation. now " + ips[req.connection.remoteAddress] + " seconds"
-            });
-            return;
-        }
-        ips[req.connection.remoteAddress] = 0;
-
-        /*
-        if (req.body.body != "") {
-            if (already_exists(req.body.body, req.params.id) || /^\s+$/.test(req.body.body)) {
-                console.log("exists");
-                res.json({failure:"post exists"});
-                return;
-            }
-        }*/
-
-    }
-    data.body = req.body.body;
-    data.name = req.body.name || "Anonymous";
-
-    count++;
-    data.count = count;
-    data.date = (new Date()).toString();
-    data.ip = req.connection.remoteAddress;
-    data.chat = req.params.id;
-    //if (port == 80)
-    if (data.convo && data.convo !== "General") {
-        chat_db.findOne({
-            convo: data.convo,
-            chat: data.chat,
-            is_convo_op: true
-        }).exec(function (err, convo_ent) {
-            if (!convo_ent) {
-                data.is_convo_op = true;
-                data.convo_id = data.count;
-            } else {
-                data.is_convo_op = false;
-                data.convo_id = convo_ent.count;
-            }
-            add_to_chat(data);
-        });
-    } else {
-        add_to_chat(data);
-    }
-
-    res.json({
-        success: "SUCCESS",
-        id: data.count
-    });
-}
-
 app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
     "use strict";
     res.type("text/plain");
     handleChatPost(req, res, next, null);
 });
 
-/* socket.io content */
-// no actual websockets in heroku
-/*io.configure(function () {
-    io.set("transports", ["xhr-polling"]);
-    io.set("polling duration", 100);
-    //io.set('log level', 1);
-});*/
-
+/* join a chat room */
 io.sockets.on('connection', function (socket) {
     "use strict";
-    socket.emit('request_location', "pls");
+    socket.emit('request_location', "please return a chat room");
     socket.on('subscribe', function (data) {
         socket.join(data);
-        //console.log("UPDATE", data);
     });
 });
