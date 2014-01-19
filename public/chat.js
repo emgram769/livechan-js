@@ -234,8 +234,9 @@ function update_chat(new_data, first_load) {
         var ref_ids = [];
         var quote_links = [];
         var rules = [
-            [/\{(\d+)\}|>>(\d+)/, function(m, o) {
-                var ref_id = parseInt(m[1] ? m[1] : m[2], 10);
+            [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
+                if (m[1]) o.push($("<br>"));
+                var ref_id = parseInt(m[2] ? m[2] : m[3], 10);
                 ref_ids.push(ref_id);
                 o.push(quote_link(ref_id));
             }],
@@ -243,7 +244,7 @@ function update_chat(new_data, first_load) {
                 o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
             }],
             [/(^|\r?\n)(>+)([^\r\n]*)/, function(m, o) {
-                if (m[1] !== "") o.push($("<br>"));
+                if (m[1]) o.push($("<br>"));
                 var line = markup(m[3], rules);
                 o.push($("<output class='greentext'/>").text(m[2]).append(line));
             }],
