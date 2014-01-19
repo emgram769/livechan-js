@@ -39,14 +39,14 @@ mongoose.connect('mongodb://localhost/livechan_db');
 var Schema = mongoose.Schema;
 
 
+/* 5mb limit */
+app.use(express.limit('5mb'));
+
 /* for saving images */
 app.use(express.bodyParser({
     uploadDir: 'public/tmp/uploads',
     keepExtensions: true
 }));
-
-/* 5mb limit */
-app.use(express.limit('5mb'));
 
 /* blocked end nodes. this file can include more */
 fs.readFile('tor_list.txt', 'utf8', function (err, data) {
