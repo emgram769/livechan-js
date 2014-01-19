@@ -152,7 +152,8 @@ function update_chat(new_data, first_load) {
         if (!is_op) container.data("dest", data.convo_id);
     }
     if (new_data.date !== undefined) {
-        var date = (new Date(data.date)).toLocaleString();
+        var date = new Date(data.date);
+        date = (date == "NaN") ? data.date : date.toLocaleString();
         post.find(".chat_date").text(date);
     }
     if (new_data.image !== undefined) {
