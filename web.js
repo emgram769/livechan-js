@@ -278,8 +278,8 @@ function check_ip_validity(req, res, next) {
 
 /* format_image
 	- checks for image and sets data accordingly
-	calls */
-	
+	calls format_post(req, res, next, data, callback)
+*/	
 function format_image(req, res, next, callback) {
 
 	var data = {}; /* to be stored in db and passed to clients */
@@ -506,13 +506,13 @@ app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
     if (req.params.id === "all") {
         limit = 20;
         fields = all_fields;
-    } else  {
+    } else {
         search.chat = req.params.id;
         limit = 100;
         fields = board_fields;
     }
     if (req.params.ops === "_convo") {
-        search.is_chat_op = true;
+        search.is_convo_op = true;
     }
     chat_db.find(search)
         .sort({
