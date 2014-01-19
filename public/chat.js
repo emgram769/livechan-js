@@ -70,7 +70,6 @@ function generate_post(id) {
     var post = $(
         "<article class='chat' style='opacity:0'>" +
             "<header class='chat_header'>" +
-                "<output class='chat_label'/>" +
                 "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
                 "<output class='chat_convo'/>" +
                 "<output class='chat_date'/>" +
@@ -81,9 +80,13 @@ function generate_post(id) {
     );
     post.attr("id", "chat_" + id);
 
-    post.find(".chat_label").click(function() {
-        window.location.href = "/chat/" + chat[id].chat;
-    });
+    if (chat_id === "all") {
+        var label = $("<output class='chat_label'/>");
+        post.find(".chat_header").prepend(label);
+        label.click(function() {
+            window.location.href = "/chat/" + chat[id].chat;
+        });
+    }
 
     var convo = post.find(".chat_convo");
     convo.mouseover(quote_mouseover);
