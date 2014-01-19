@@ -278,7 +278,8 @@ function check_ip_validity(req, res, next) {
 
 /* format_image
 	- checks for image and sets data accordingly
-	calls format_post(req, res, next, data, callback)
+	calls generate_thumbnail(req, res, next, data, callback) in case of image
+	skips to format_post(req, res, next, data, callback) otherwise
 */	
 function format_image(req, res, next, callback) {
 
@@ -327,6 +328,24 @@ function format_image(req, res, next, callback) {
     }
 
 	
+}
+
+/* generate_thumbnail
+	- generates thumbnail for image
+	calls format_post(req, res, next, data, callback) on completion
+*/
+function generate_thumbnail(req, res, next, data, callback) {
+    var thumb_width = Math.min(data.image_width, 250);
+    var thumb_height = Math.min(data.image_height, 250);
+    data.thumb = "public/tmp/thumb/" + data.image.match(/([\w\-]+)\.\w+$/)[1] + ".jpg";
+
+    gm(data.image).thumb(thumb_width, thumb_height, data.thumb, function(err) {
+        if (err) {
+            console.log("thumbnail creation error", err);
+            return;
+        }
+        format_post(req, res, next, data, callback);
+    }
 }
 
 /* format_post:
