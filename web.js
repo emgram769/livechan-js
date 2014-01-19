@@ -243,7 +243,7 @@ function check_ip_validity(req, res, next) {
 	                if (req.cookies.password_livechan != d[0].session_key) {
 						res.json({ failure: "session_expiry" });
 						return;
-	                } else if ((d[0].last_post.getTime() + 6000) > (new Date).getTime()) {
+	                } else if ((d[0].last_post.getTime() + 5000) > (new Date).getTime()) {
 	                	var now = new Date;
 		                user_db.update(
 								{ _id: d[0]._id },

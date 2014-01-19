@@ -1,4 +1,5 @@
 var auto_post = false;
+var last_post = "";
 var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
@@ -159,6 +160,7 @@ function cool_down() {
 
 function submit_chat() {
     "use strict";
+    last_post = $("#body").val();
     if (get_cookie("password_livechan") === '') {
         div_alert(captcha_div(), false, "captcha");
         $("#submit_button").prop("disabled", true);
@@ -177,6 +179,7 @@ function submit_chat() {
     if ($("#body").val() === '') {
         $("#body").val("  ");
     }
+    
     var msg = $("#body").val();
     if (msg.indexOf('//') !== 0 && msg.indexOf('/') === 0) {
         var cmdend = msg.indexOf(' ');
@@ -242,7 +245,7 @@ function submit_chat() {
     if (!admin_mode) {
         $("#submit_button").prop("disabled", true);
         clear_fields();
-        cool_down_timer = 6;
+        cool_down_timer += 7;
         clearInterval(cool_down_timer);
         cool_down();
         cool_down_interval = setInterval(cool_down, 1000);
@@ -405,6 +408,7 @@ window.onload = function () {
     $('iframe#miframe').load(function () {
         var resp = JSON.parse($("#miframe").contents()[0].body.childNodes[0].innerHTML);
         if (resp.failure && resp.failure == "session_expiry") {
+        	$("#body").val(last_post);
 			div_alert(captcha_div(), false, "captcha");
         } else if (resp.failure) {
             div_alert(resp.failure);
