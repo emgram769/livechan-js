@@ -50,9 +50,9 @@ function quote_mouseover() {
     var display = $("#chat_" + $(this).data("dest")).clone();
     display.toggleClass("to_die", true);
     display.css({
-        position: 'fixed',
-        top: $(this).position().top + 10,
-        left: $(this).position().left + 10,
+        position: 'absolute',
+        top: $(this).offset().top + 10,
+        left: $(this).offset().left + 10,
         border: '1px black solid',
         zIndex: 1000
     });
