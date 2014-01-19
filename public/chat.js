@@ -170,7 +170,8 @@ function update_chat(new_data, first_load) {
         if (!is_op) chat_convo.data("dest", data.convo_id);
     }
     if (new_data.date !== undefined) {
-        var date = (new Date(data.date)).toLocaleString();
+        var date = new Date(data.date);
+        date = (date == "NaN") ? data.date : date.toLocaleString();
         post.find(".chat_date").text(date);
     }
     if (new_data.image !== undefined) {
@@ -285,12 +286,14 @@ function update_chat(new_data, first_load) {
             }
         } else {
             post.css('opacity', '0');
+        }
+        insert_post(post);
+        if (!first_load) {
             post.animate({
                 opacity: 1
             }, 300, 'swing', function () {
             });
         }
-        insert_post(post);
     }
 }
 
