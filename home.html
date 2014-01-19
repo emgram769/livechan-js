@@ -1,18 +1,16 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
+	<title>LiveChan - The live imageboard chatroom</title>
+	<meta name="description" content="LiveChan is a live anonymous chatroom with an imageboard twist. Join us and post images and comments to other people on one of our many discussion boards.">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
 	<link type="text/css" rel="stylesheet" href="/style.css">
-        <script src="/jquery.min.js"></script>
-        <script src="/jquery.linkify.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/home.js"></script>
-        <title>LiveChan - The live imageboard chatroom</title>
-        <meta name="description" content="LiveChan is a live anonymous chatroom with an imageboard twist. Join us and post images and comments to other people on one of our many discussion boards.">
-        <meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
 <body>
-	<div class="half-height">
-		<div class="center" style="padding-top:40px;font-size:40px;">Pick your channel</div><br/>
-		<div class="container" style="text-align:center;">
+	<header class="half-height">
+		<section class="center" style="padding-top:40px;font-size:40px;">Pick your channel</section><br/>
+		<nav class="container" style="text-align:center;">
 			<a class="link" href="/chat/a">/a/</a>
 			<a class="link" href="/chat/b">/b/</a>
 			<a class="link" href="/chat/g">/g/</a>
@@ -31,8 +29,8 @@
 			<a class="link" href="/chat/sci">/sci/</a>
 			<a class="link" href="/chat/soc">/soc/</a>
 			<a class="link" href="/chat/sp">/sp/</a>
-		</div>
-		<div class="container" style="text-align:center;">
+		</nav>
+		<section class="container" style="text-align:center;">
 		Please note that there is a strict 6 second cool down time throughout all channels.
 		Set your conversation and use the filter to create "threads."
 		You are not allowed to post anything that would be illegal to post in Australia.<br/>
@@ -41,10 +39,15 @@
 		<br/>If you'd like to help out financially, please donate Bitcoin to:
 		<br/>1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr
 			<br/>
-		</div>
-	</div>
-	<div class="chats-home half-height">
-	</div>
-	<div style="position:fixed;bottom:0;text-align:center;width:100%;background:rgb(238, 242, 255);">[images have been omitted from this section]</div>
+		</section>
+	</header>
+	<article class="chats-home half-height">
+	</article>
+	<footer style="position:fixed;bottom:0;text-align:center;width:100%;background:rgb(238, 242, 255);">[images have been omitted from this section]</footer>
+    <script src="/jquery.min.js"></script>
+    <script src="/jquery.linkify.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/home.js"></script>
 </body>
 </html>
+

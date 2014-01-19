@@ -88,7 +88,7 @@
 				scrollLeft: $(window).scrollLeft(),
 				scrollTop: $(window).scrollTop(),
 				width: $(window).width(),
-				height: document.body.clientHeight
+				height: $(window).height()
 			};
 		}
 		

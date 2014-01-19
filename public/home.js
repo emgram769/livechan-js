@@ -1,6 +1,6 @@
 var socket = io.connect('/');
 var chat = [];
-var future_ids = $("<span />");
+var future_ids = $("<output />");
 var window_focus = true;
 var window_alert;
 var blink;
@@ -22,7 +22,7 @@ function escapeHTML( string ) {
    var pre = document.createElement('pre');
     var text = document.createTextNode( string );
     pre.appendChild(text);
-    return $('<div/>').text(string).html();
+    return $('<aside/>').text(string).html();
     return pre.innerHTML;
 }
 
@@ -104,12 +104,13 @@ function update_chat(new_data, is_convo, first_load) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
             var image_url = "/tmp/uploads/" + base_name;
 
-            file_info.html("File: <a class='file_link' target='_blank'/><span class='file_data'/>");
+            file_info.html("File: <a class='file_link' target='_blank'/><output class='file_data'/>");
             file_info.find(".file_link").attr("href", image_url).text(base_name);
 
             img_container.html("<img height='100px' class='chat_img'>");
             var image = img_container.find(".chat_img");
             image.attr("src", image_url);
+	    image.attr("alt", "Image #" + data.count);
             if (!$("#autoimages").prop('checked')) {
                 image.css('display', 'none');
             }
@@ -153,7 +154,7 @@ function update_chat(new_data, is_convo, first_load) {
         // Process body markup
         var body_text = data.body.replace(/>>([0-9]+)/g, "{$1}");
         var body_html = escapeHTML(body_text);
-        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>");
+        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<output class='greentext'>&gt;$1</output>");
         var ref_ids = [];
         body_html = body_html.replace(/\{([0-9]+)\}/g, function (match_full, ref_id_str) {
             var ref_id = parseInt(ref_id_str, 10);
@@ -253,15 +254,15 @@ function quote_mouseout() {
 function generate_post(id) {
     "use strict";
     var post = $(
-        "<div class='chat' style='opacity:0'>" +
-            "<div class='chat_header'>" +
-                "<span class='chat_name'><span class='name_part'/><span class='trip_code'/></span>" +
-                "<span class='chat_convo'/>" +
-                "<span class='chat_date'/>" +
-                "<span class='chat_number'/>" +
-                "<span class='chat_refs'/>" +
-            "</div><div class='chat_file'/><span class='chat_img_cont'/><span class='chat_body'/>" +
-        "</div>"
+        "<article class='chat' style='opacity:0'>" +
+            "<header class='chat_header'>" +
+                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
+                "<output class='chat_convo'/>" +
+                "<output class='chat_date'/>" +
+                "<output class='chat_number'/>" +
+                "<output class='chat_refs'/>" +
+            "</header><section class='chat_file'/><output class='chat_img_cont'/><output class='chat_body'/>" +
+        "</article>"
     );
     post.attr("id", "chat_" + id);
 
@@ -298,7 +299,7 @@ function draw_new_chat(data){
     if (!data)
     return false;
     var extra_class = (data.trip && data.trip == "!CnB7SkWsyx") ? "admin" : "";
-    var trip = data.trip ? "<span class='trip_code "+extra_class+"'>"+data.trip+"</span>" : "";
+    var trip = data.trip ? "<article class='trip_code "+extra_class+"'>"+data.trip+"</article>" : "";
 
     var date = new Date(data.date).toString();
 

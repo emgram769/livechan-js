@@ -1,5 +1,5 @@
 var chat = {};
-var future_ids = $("<span />");
+var future_ids = $("<output />");
 
 var auto_post = false;
 var posting = false;
@@ -137,14 +137,14 @@ function div_alert(message, add_button, div_id) {
     if (div_id === undefined) {
         div_id = "";
     }
-    var alert_div = document.createElement('div');
+    var alert_div = document.createElement('aside');
     alert_div.setAttribute('class', 'alert_div');
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
     if (!add_button) {
         button_html = "";
     }
-    alert_div.innerHTML = "<div class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</div>" + button_html;
+    alert_div.innerHTML = "<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>" + button_html;
     $(alert_div).css({
         position: 'fixed',
         background: 'white',
@@ -394,15 +394,15 @@ function apply_filter(posts) {
 function generate_post(id) {
     "use strict";
     var post = $(
-        "<div class='chat' style='opacity:0'>" +
-            "<div class='chat_header'>" +
-                "<span class='chat_name'><span class='name_part'/><span class='trip_code'/></span>" +
-                "<span class='chat_convo'/>" +
-                "<span class='chat_date'/>" +
-                "<span class='chat_number'/>" +
-                "<span class='chat_refs'/>" +
-            "</div><div class='chat_file'/><span class='chat_img_cont'/><span class='chat_body'/>" +
-        "</div>"
+        "<article class='chat' style='opacity:0'>" +
+            "<header class='chat_header'>" +
+                "<output class='chat_name'><bdi><output class='name_part'/></bdi><output class='trip_code'/></output>" +
+                "<bdi><output class='chat_convo'/></bdi>" +
+                "<output class='chat_date'/>" +
+                "<output class='chat_number'/>" +
+                "<output class='chat_refs'/>" +
+            "</header><bdi><section class='chat_file'/></bdi><output class='chat_img_cont'/><output class='chat_body'/>" +
+        "</article>"
     );
     post.attr("id", "chat_" + id);
 
@@ -484,18 +484,16 @@ function update_chat(new_data, is_convo, first_load) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
             var image_url = "/tmp/uploads/" + base_name;
 
-            file_info.html("File: <a class='file_link' target='_blank'/><span class='file_data'/>");
+            file_info.html("File: <a class='file_link' target='_blank'/><output class='file_data'/>");
             file_info.find(".file_link").attr("href", image_url).text(base_name);
 
-            img_container.html("<img height='100px' class='chat_img'>");
+            img_container.html("<a href='"+image_url+"' target='_blank'><img height='100' class='chat_img'></a>");
             var image = img_container.find(".chat_img");
             image.attr("src", image_url);
+            image.attr("alt", "Image #" + data.count);
             if (!$("#autoimages").prop('checked')) {
                 image.css('display', 'none');
             }
-            image.click(function () {
-                window.open(image_url);
-            });
             image.thumbPopup({
                 imgSmallFlag: "",
                 imgLargeFlag: "",
@@ -533,7 +531,7 @@ function update_chat(new_data, is_convo, first_load) {
         // Process body markup
         var body_text = data.body.replace(/>>([0-9]+)/g, "{$1}");
         var body_html = escapeHTML(body_text);
-        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>");
+        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<output class='greentext'>&gt;$1</output>");
         var ref_ids = [];
         body_html = body_html.replace(/\{([0-9]+)\}/g, function (match_full, ref_id_str) {
             var ref_id = parseInt(ref_id_str, 10);
