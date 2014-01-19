@@ -114,14 +114,14 @@ function div_alert(message, add_button, div_id) {
     if (div_id === undefined) {
         div_id = "";
     }
-    var alert_div = document.createElement('div');
+    var alert_div = document.createElement('aside');
     alert_div.setAttribute('class', 'alert_div');
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
     if (!add_button) {
         button_html = "";
     }
-    alert_div.innerHTML = "<div class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</div>" + button_html;
+    alert_div.innerHTML = "<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>" + button_html;
     $(alert_div).css({
         position: 'fixed',
         background: 'white',
