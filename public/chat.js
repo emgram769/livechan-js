@@ -303,6 +303,8 @@ function draw_chat(data) {
     for (i = data.length - 1; i >= 0; i--) {
         update_chat(data[i], true);
     }
+    if (!data[0])
+    	return;
     var max_chat = data[0].count;
     var too_long = 1000;
     var counter = 0;

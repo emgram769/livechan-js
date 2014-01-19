@@ -386,17 +386,27 @@ window.onload = function () {
         }
     });
 
-
-    $.ajax({
+	$.ajax({
         type: "GET",
-        url: "/data/" + chat_id
-    }).done(function (data) {
-        draw_chat(data);
-        socket.on('chat', function (data) {
-            update_chat(data);
-            if ($("#autoscroll").prop('checked')) {
-                scroll();
-            }
+        url: "/data_convo/" + chat_id
+    }).done(function (data_convo) {
+        $.ajax({
+            type: "GET",
+            url: "/data/" + chat_id
+        }).done(function (data_chat) {
+        	var draw_data = data_convo.concat(data_chat);
+        	draw_data.sort(function(a,b){
+	        	if(a.count && b.count){
+		        	return b.count - a.count;
+	        	} return -1;
+        	});
+            draw_chat(draw_data);
+            socket.on('chat', function (d) {
+                update_chat(d);
+                if ($("#autoscroll").prop('checked')) {
+                    scroll();
+                }
+            });
         });
     });
 
