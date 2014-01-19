@@ -165,7 +165,6 @@ function submit_chat() {
         $("#submit_button").prop("value", "Submit (Auto)");
         auto_post = true;
         return false;
-        //div_alert("<iframe src='/login?page='+path></iframe>");
     }
     $("#submit_button").prop("value", "Submit");
     auto_post = false;
@@ -405,7 +404,9 @@ window.onload = function () {
 
     $('iframe#miframe').load(function () {
         var resp = JSON.parse($("#miframe").contents()[0].body.childNodes[0].innerHTML);
-        if (resp.failure) {
+        if (resp.failure && resp.failure == "session_expiry") {
+			div_alert(captcha_div(), false, "captcha");
+        } else if (resp.failure) {
             div_alert(resp.failure);
         } else if (resp.id) {
             my_ids.push(resp.id);

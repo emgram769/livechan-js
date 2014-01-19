@@ -129,15 +129,8 @@ var user_schema = new Schema({
 var chat_db = mongoose.model('chat_db', chat_schema);
 var user_db = mongoose.model('user_db', user_schema);
 
-user_db.remove({}, function (err) {
-    "use strict";
-    if (err) {
-        return;
-    }
-    console.log('session_db reset');
-});
-
 /* set counter to newest post */
+
 chat_db.findOne().sort({
     count: -1
 }).exec(function (e, d) {
@@ -147,28 +140,8 @@ chat_db.findOne().sort({
     }
 });
 
-function demote_ips() {
-    "use strict";
-    var i = 0;
-    for (i in ips) {
-        if (ips[i] === 0) {
-            delete ips[i];
-        } else {
-            ips[i]--;
-        }
-    }
-    for (i in hash_list) {
-        if (hash_list[i] === 0) {
-            delete hash_list[i];
-        } else {
-            hash_list[i]--;
-        }
-    }
-}
-
-setInterval(demote_ips, 1000);
-
 /* helper functions */
+
 function get_extension(filename) {
     "use strict";
     var i = filename.lastIndexOf('.');
@@ -178,7 +151,6 @@ function get_extension(filename) {
 function invalid_extension(filename) {
     "use strict";
     var test = ['jpg', 'jpeg', 'png', 'gif'].indexOf(get_extension(filename));
-    console.log("INDEX IS", get_extension(filename), test);
     if (test > -1) {
         return false;
     }
@@ -245,9 +217,9 @@ function session_exists(session) {
 	- checks if ip is banned
 	- checks session validity
 	- checks cool down 
-	calls callback(req, res, next, callback) on success
+	calls format_chat(req, res, next, add_to_chat) on success
 */
-function check_ip_validity(req, res, next, callback) {
+function check_ip_validity(req, res, next) {
 
 	/* get IP */
 	
@@ -260,49 +232,74 @@ function check_ip_validity(req, res, next, callback) {
     /* lookup IP */
     
     user_db.find({ip:req.connection.remoteAddress})
+    	   .sort({last_post:-1})
     	   .exec(function (e, d) {
+    	   		console.log(d);
     	   		if(e) {
 	    	   		res.json({ failure: "session_expiry" });
 	    	   		return;
     	   		}
-                else if(d) {
-	                if (req.cookies.password_livechan != d.session_key) {
+                else if(d[0]) {
+	                if (req.cookies.password_livechan != d[0].session_key) {
 						res.json({ failure: "session_expiry" });
 						return;
-	                } else if ((d.last_post.getTime() + 6) > (new Date).now.getTime()) {
-						res.json({ failure: "countdown_violation" });
+	                } else if ((d[0].last_post.getTime() + 6000) > (new Date).getTime()) {
+	                	var now = new Date;
+		                user_db.update(
+								{ _id: d[0]._id },
+								{ $set: {last_post: now.setTime(now.getTime() + 10000)}},
+								function(){
+									res.json({ failure: "countdown_violation" });
+									return;
+								});						
 						return;
-					} else if (d.banned_rooms.indexOf(req.params.id) > -1) {
+					} else if (d[0].banned_rooms.indexOf(req.params.id) > -1) {
 						res.json({ failure: "ban_violation" });
 						return;
 	                } else {
+	                	var now = new Date;
+	                	user_db.update(
+							{ _id: d[0]._id },
+							{ $set: {last_post: now}},
+							function(){
+							
+								console.log("formatting image...");
+								format_image(req, res, next, add_to_chat);
+								
+							});
 	                	/* update cool down here */
-		                callback(req, res, next, callback);
 	                }
                 } else {
-	                res.json({ failure: "unknown_error" });
+	                res.json({ failure: "session_expiry" });
 	    	   		return;
                 }
             });
 }
 
-/* format_post:
+/* format_image
 	- checks for image and sets data accordingly
-	- checks for text violations
-	- generates tripcode
-	calls callback(data) on success
-*/
-function format_post(req, res, next, callback) {
-
-	var data; /* to be stored in db and passed to  */
+	calls */
 	
+function format_image(req, res, next, callback) {
+
+	var data = {}; /* to be stored in db and passed to clients */
+
 	/* no image uploaded */
 	
 	if (req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
+	
         fs.unlink(req.files.image.path); /* delete blank file */
+        
         if (/^\s*$/.test(req.body.body)) {
+        
             res.json({ failure: "nothing substantial submitted" });
             return;
+            
+        } else {
+        
+	       	console.log("formatting post...");
+			format_post(req, res, next, data, callback)
+
         }
     }
     
@@ -318,13 +315,27 @@ function format_post(req, res, next, callback) {
             if (dimensions.height > 0 && dimensions.width > 0) {
                 data.image = req.files.image.path;
                 data.image_filename = req.files.image.originalFilename;
-                data.image_filesize = fs.statSync(idata.image).size;
+                data.image_filesize = fs.statSync(data.image).size;
                 data.image_width = dimensions.width;
                 data.image_height = dimensions.height;
             }
+
+			console.log("formatting post...");
+			format_post(req, res, next, data, callback)
+
         });
     }
-    
+
+	
+}
+
+/* format_post:
+	- checks for text violations
+	- generates tripcode
+	calls callback(data) on success
+*/
+function format_post(req, res, next, data, callback) {	
+	    
     /* length checks */
     
     if (req.body.body.length > 400) {
@@ -397,6 +408,9 @@ function format_post(req, res, next, callback) {
         callback(data);
     }
 
+	console.log("everything done.");
+
+
 	/* give the client information about the post */
     res.json({
         success: "success_posting",
@@ -405,174 +419,6 @@ function format_post(req, res, next, callback) {
     
     return;
 }
-
-function handleChatPost(req, res, next, image) {
-    "use strict";
-    
-    if (boards.indexOf(req.params.id) < 0) {
-        res.send("Does not exist :(");
-        return;
-    }
-
-    var data = {};
-
-    var ip_addr = req.headers["x-forwarded-for"];
-    if (ip_addr) {
-        var list = ip_addr.split(",");
-        req.connection.remoteAddress = list[list.length - 1];
-    }
-
-    if (req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
-        fs.unlink(req.files.image.path);
-        console.log("DELETED");
-        if (/^\s*$/.test(req.body.body)) {
-            res.json({
-                failure: "nothing substantial submitted"
-            });
-            return;
-        }
-    } else {
-        if (image === null) {
-            gm(req.files.image.path).size(function (err, dimensions) {
-                if (err) {
-                    console.log("gm size error", err);
-                    return;
-                }
-                var idata = {
-                    image: "null"
-                };
-                if (dimensions.height > 0 && dimensions.width > 0) {
-                    console.log('image loaded to ', req.files.image.path);
-                    idata.image = req.files.image.path;
-                    idata.image_filename = req.files.image.originalFilename;
-                    idata.image_filesize = fs.statSync(idata.image).size;
-                    idata.image_width = dimensions.width;
-                    idata.image_height = dimensions.height;
-                }
-                console.log("FILE SIZE",idata.image_filesize);
-                handleChatPost(req, res, next, idata);
-            });
-            return;
-        }
-        console.log('image fully loaded to ', req.files.image.path);
-        if (image.image && image.image !== null) {
-            data.image = image.image;
-            data.image_filename = image.image_filename;
-            data.image_filesize = image.image_filesize;
-            data.image_width = image.image_width;
-            data.image_height = image.image_height;
-        }
-    }
-
-    if (!req.cookies.password_livechan) {
-        res.json({
-            failure: "session expiry"
-        });
-        return;
-    }
-
-    // find should be password to prevent identity fraud 
-    var info = req.headers['user-agent'] + req.connection.remoteAddress + req.cookies.password_livechan.slice(-11);
-    var password = crypto.createHash('sha1').update(info).digest('base64').toString();
-    var user_pass = req.cookies.password_livechan.slice(0, -11);
-
-    if (req.body.body.length > 400) {
-        req.body.body = req.body.body.substring(0, 399) + "...";
-    }
-
-    if (req.body.body.split("\n").length > 7) {
-        req.body.body = req.body.body.split("\n", 7).join("\n");
-    }
-
-    if (req.body.name.length > 40) {
-        req.body.name = req.body.name.substring(0, 39) + "...";
-    }
-
-    if (req.body.convo) {
-        if (req.body.convo.length > 40) {
-            req.body.convo = req.body.convo.substring(0, 39) + "...";
-        }
-        data.convo = req.body.convo;
-    } else {
-        data.convo = 'General';
-    }
-
-    var trip_index = req.body.name.indexOf("#");
-
-    if (trip_index > -1) {
-        var trip = req.body.name.substr(trip_index + 1);
-        var secure = trip.indexOf("#") === 0;
-        if (secure) {
-            trip = crypto.createHash('sha1').update(trip.substr(1) + securetrip_salt).digest('base64').toString();
-        }
-
-        data.trip = (secure ? "!!" : "!") + tripcode(trip);
-        req.body.name = req.body.name.slice(0, trip_index);
-    }
-
-    if (data.trip !== "!KRBtzmcDIw") {
-        /* update hash cool down */
-        if (hash_list[user_pass] !== undefined) {
-            if (hash_list[user_pass] >= 1 && hash_list[user_pass] <= 100000) {
-                hash_list[user_pass] *= 2;
-            }
-            console.log("hash", hash_list[user_pass]);
-            res.json({
-                failure: "sorry a similar hash has been used and you must wait " + hash_list[user_pass] + " seconds due to bandwidth"
-            });
-            return;
-        }
-        hash_list[user_pass] = 5; // to do fix cooldowns
-
-        /* update ip cool down */
-        if (ips[req.connection.remoteAddress] !== undefined) {
-            if (ips[req.connection.remoteAddress] >= 1 && hash_list[user_pass] <= 100000) {
-                ips[req.connection.remoteAddress] *= 2;
-            }
-            console.log("IP", ips[req.connection.remoteAddress]);
-            res.json({
-                failure: "ip cool down violation. now " + ips[req.connection.remoteAddress] + " seconds"
-            });
-            return;
-        }
-        
-        ips[req.connection.remoteAddress] = 0;
-
-    }
-    data.body = req.body.body;
-    data.name = req.body.name || "Anonymous";
-
-    count++;
-    data.count = count;
-    data.date = (new Date()).toString();
-    data.ip = req.connection.remoteAddress;
-    data.chat = req.params.id;
-    //if (port == 80)
-    if (data.convo && data.convo !== "General") {
-        chat_db.findOne({
-            convo: data.convo,
-            chat: data.chat,
-            is_convo_op: true
-        }).exec(function (err, convo_ent) {
-            if (!convo_ent) {
-                data.is_convo_op = true;
-                data.convo_id = data.count;
-            } else {
-                data.is_convo_op = false;
-                data.convo_id = convo_ent.count;
-            }
-            add_to_chat(data);
-        });
-    } else {
-        add_to_chat(data);
-    }
-
-    res.json({
-        success: "SUCCESS",
-        id: data.count
-    });
-}
-
 
 /* REQUESTS */
 
@@ -595,7 +441,7 @@ app.post('/login', function (req, res) {
         var info = req.headers['user-agent'] + req.connection.remoteAddress + key;
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
-        res.cookie('password_livechan', password + key, {
+        res.cookie('password_livechan', password, {
             maxAge: 9000000,
             httpOnly: false
         });
@@ -607,16 +453,19 @@ app.post('/login', function (req, res) {
                 success: "captcha"
             });
         }
+		
+		var now = new Date;
 
         var data = {
             session_key: password,
-            ip: req.connection.remoteAddress
+            ip: req.connection.remoteAddress,
+            last_post: now.setTime(now.getTime() - 6000)
         };
 
         new user_db(data).save(function () {
-            user_db.find().exec(function (e, d) {
+            /*user_db.find().exec(function (e, d) {
                 console.log("session found", e, d);
-            });
+            });*/
         });
 
         return;
@@ -700,7 +549,8 @@ app.get('/delete/:id([a-z0-9]+)', function (req, res, next) {
 app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
     "use strict";
     res.type("text/plain");
-    handleChatPost(req, res, next, null);
+    check_ip_validity(req, res, next);
+    return;
 });
 
 /* join a chat room */
