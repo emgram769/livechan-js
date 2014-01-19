@@ -396,12 +396,12 @@ function generate_post(id) {
     var post = $(
         "<article class='chat' style='opacity:0'>" +
             "<header class='chat_header'>" +
-                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
-                "<output class='chat_convo'/>" +
+                "<output class='chat_name'><bdi><output class='name_part'/></bdi><output class='trip_code'/></output>" +
+                "<bdi><output class='chat_convo'/></bdi>" +
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
                 "<output class='chat_refs'/>" +
-            "</header><section class='chat_file'/><output class='chat_img_cont'/><output class='chat_body'/>" +
+            "</header><bdi><section class='chat_file'/></bdi><output class='chat_img_cont'/><output class='chat_body'/>" +
         "</article>"
     );
     post.attr("id", "chat_" + id);
