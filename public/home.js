@@ -24,14 +24,6 @@ function insert_post(post) {
     $('.chats-home:first').prepend(post);
 }
 
-function draw_chat(data) {
-    "use strict";
-    var i;
-    for (i = data.length - 1; i >= 0; i--) {
-        update_chat(data[i], true);
-    }
-}
-
 window.onload = function () {
     "use strict";
     socket.on('request_location',function(data){

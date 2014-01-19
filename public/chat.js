@@ -1,6 +1,7 @@
 var chat = {};
 var future_ids = {};
 var back_links = {};
+var loaded_callbacks = [];
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
@@ -164,13 +165,12 @@ function update_chat(new_data, first_load) {
     if (new_data.convo !== undefined || new_data.convo_id !== undefined) {
         var is_op = (data.convo_id === data.count);
         post.toggleClass("convo_op", is_op);
-        var container = post.find(".chat_convo");
-        container.text(data.convo + (is_op ? " (OP)" : ""));
-        if (!is_op) container.data("dest", data.convo_id);
+        var chat_convo = post.find(".chat_convo");
+        chat_convo.text(data.convo + (is_op ? " (OP)" : ""));
+        if (!is_op) chat_convo.data("dest", data.convo_id);
     }
     if (new_data.date !== undefined) {
-        var date = new Date(data.date);
-        date = (date == "NaN") ? data.date : date.toLocaleString();
+        var date = (new Date(data.date)).toLocaleString();
         post.find(".chat_date").text(date);
     }
     if (new_data.image !== undefined) {
@@ -273,5 +273,37 @@ function update_chat(new_data, first_load) {
         apply_filter(post);
         insert_post(post);
         if (!first_load) post.fadeIn(300);
+        if (window.location.hash === '#chat_' + id) {
+            $("#autoscroll").prop('checked', false);
+            var chat_container = post.parent();
+            loaded_callbacks.push(function() {
+                chat_container.scrollTop(
+                    post.offset().top - chat_container.offset().top + chat_container.scrollTop()
+                );
+            });
+        }
     }
+}
+
+function draw_chat(data) {
+    "use strict";
+    var i;
+    for (i = data.length - 1; i >= 0; i--) {
+        update_chat(data[i], true);
+    }
+    var max_chat = data[0].count;
+    var too_long = 1000;
+    var counter = 0;
+    var wait_for_last = setInterval(function () {
+        if ($('#chat_' + max_chat).length) {
+            clearInterval(wait_for_last);
+            $.each(loaded_callbacks, function() {
+                this();
+            });
+        } else {
+            if (counter++ > too_long) {
+                clearInterval(wait_for_last);
+            }
+        }
+    }, 100);
 }

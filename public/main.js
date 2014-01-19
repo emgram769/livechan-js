@@ -336,38 +336,9 @@ function insert_post(post) {
     $(".chats:first").append(post);
 }
 
-function max_count(obj) {
-    "use strict";
-    var max = 0;
-    var i = null;
-    for (i in obj) {
-        if (obj[i].count >= max) {
-            max = obj[i].count;
-        }
-    }
-    return max;
-}
-
-function draw_chat(data) {
-    "use strict";
-    var i;
-    for (i = data.length - 1; i >= 0; i--) {
-        update_chat(data[i], true);
-    }
-    var max = max_count(chat);
-    var too_long = 1000;
-    var counter = 0;
-    var wait_for_last = setInterval(function () {
-        if ($('#chat_' + max).length) {
-            clearInterval(wait_for_last);
-            scroll();
-        } else {
-            if (counter++ > too_long) {
-                clearInterval(wait_for_last);
-            }
-        }
-    }, 100);
-}
+loaded_callbacks.push(function() {
+    if ($("#autoscroll").prop('checked')) scroll();
+});
 
 window.onload = function () {
     "use strict";
@@ -469,7 +440,7 @@ window.onload = function () {
         }
     });
 
-    var quote_hash = window.location.hash.match(/^#q(\d+)/);
+    var quote_hash = window.location.hash.match(/^#q(\d+)$/);
     if (quote_hash) {
         quote(parseInt(quote_hash[1], 10));
     }
