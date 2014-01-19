@@ -471,6 +471,6 @@ window.onload = function () {
 
     var quote_hash = window.location.hash.match(/^#q(\d+)/);
     if (quote_hash) {
-        quote(parseInt(quote_hash[1]));
+        quote(parseInt(quote_hash[1], 10));
     }
 };

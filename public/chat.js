@@ -1,5 +1,6 @@
 var chat = {};
-var future_ids = $("<output />");
+var future_ids = {};
+var back_links = {};
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
@@ -22,18 +23,8 @@ function humanFileSize(bytes, si) {
     return bytes.toFixed(1) + ' ' + units[u];
 }
 
-function escapeHTML(str) {
-    "use strict";
-    return $('<aside/>').text(str).html();
-}
-
 function quote_click() {
-    var scrollTo = $('#chat_' + $(this).data("dest"));
-    var container = scrollTo.parent();
     $("#autoscroll").prop('checked', false);
-    container.scrollTop(
-        scrollTo.offset().top - container.offset().top + container.scrollTop()
-    );
 }
 
 function quote_mouseover() {
@@ -54,21 +45,24 @@ function quote_mouseout() {
     $('.to_die').remove();
 }
 
-function setup_quote_links(links) {
+function quote_link(dest) {
     "use strict";
-    links.text(function () {
-        var dest_id = parseInt($(this).data("dest"), 10);
-        return ">>" + dest_id + (($.inArray(dest_id, my_ids) > -1) ? " (You)" : "");
+    var link = $("<a class='quote_link'/>");
+    link.attr("href", "#chat_" + dest);
+    link.data("dest", dest);
+    link.text(function () {
+        return ">>" + dest + (($.inArray(dest, my_ids) > -1) ? " (You)" : "");
     });
-    links.click(quote_click);
-    links.mouseover(quote_mouseover);
-    links.mouseout(quote_mouseout);
+    link.click(quote_click);
+    link.mouseover(quote_mouseover);
+    link.mouseout(quote_mouseout);
+    return link;
 }
 
 function generate_post(id) {
     "use strict";
     var post = $(
-        "<article class='chat' style='opacity:0'>" +
+        "<article class='chat'>" +
             "<header class='chat_header'>" +
                 "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
                 "<output class='chat_convo'/>" +
@@ -81,11 +75,9 @@ function generate_post(id) {
     post.attr("id", "chat_" + id);
 
     if (chat_id === "all") {
-        var label = $("<output class='chat_label'/>");
+        var label = $("<a class='chat_label'/>");
         post.find(".chat_header").prepend(label);
-        label.click(function() {
-            window.location.href = "/chat/" + chat[id].chat;
-        });
+        label.attr("href", "/chat/" + chat[id].chat + "#chat_" + id);
     }
 
     var convo = post.find(".chat_convo");
@@ -102,11 +94,36 @@ function generate_post(id) {
         quote(id);
     });
 
-    var links = future_ids.find("[data-src='" + id + "']");
-    post.find(".chat_refs").append(links);
-    links.before(" ");
+    var chat_refs = post.find(".chat_refs");
+    if (future_ids[id] !== undefined) {
+        chat_refs.append(" ", future_ids[id].contents());
+    }
 
     return post;
+}
+
+function markup(text, rules) {
+    "use strict";
+    var output = [];
+    do {
+        var match = null;
+        var pos = text.length;
+        var f = null;
+        $.each(rules, function() {
+            var result = this[0].exec(text);
+            if (result !== null && result.index < pos) {
+                match = result;
+                pos = result.index;
+                f = this[1];
+            }
+        });
+        output.push(document.createTextNode(text.substr(0, pos)));
+        if (match !== null) {
+            f(match, output);
+            text = text.substr(pos + match[0].length);
+        }
+    } while (match !== null);
+    return output;
 }
 
 function update_chat(new_data, first_load) {
@@ -205,55 +222,55 @@ function update_chat(new_data, first_load) {
     }
     if (new_data.body !== undefined) {
         // Remove any old backlinks to this post
-        $([$("body")[0], future_ids[0]]).find(".back_link[data-dest='" + id + "']").remove();
+        if (back_links[id] !== undefined) {
+            $.each(back_links[id], function() {
+                this.remove();
+            });
+            delete back_links[id];
+        }
 
         // Process body markup
-        var body_text = data.body.replace(/>>([0-9]+)/g, "{$1}");
-        var body_html = escapeHTML(body_text);
-        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<output class='greentext'>&gt;$1</output>");
         var ref_ids = [];
-        body_html = body_html.replace(/\{([0-9]+)\}/g, function (match_full, ref_id_str) {
-            var ref_id = parseInt(ref_id_str, 10);
-            if ($.inArray(ref_id, ref_ids) === -1) {
+        var quote_links = [];
+        var rules = [
+            [/\{(\d+)\}|>>(\d+)/, function(m, o) {
+                var ref_id = parseInt(m[1] ? m[1] : m[2], 10);
                 ref_ids.push(ref_id);
-            }
-            return "<a class='quote_link' href='#' data-src='" + id + "' data-dest='" + ref_id + "'/>";
-        });
-        body_html = body_html.replace(/\r?\n/g, '<br />');
-        var body = post.find(".chat_body");
-        body.text(body_html);
-        body.linkify({
-            target: "_blank"
-        });
-        setup_quote_links(body.find(".quote_link"));
+                o.push(quote_link(ref_id));
+            }],
+            [/https?:\/\/\S+/, function(m, o) {
+                o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
+            }],
+            [/(^|\r?\n)(>+)([^\r\n]*)/, function(m, o) {
+                if (m[1] !== "") o.push($("<br>"));
+                var line = markup(m[3], rules);
+                o.push($("<output class='greentext'/>").text(m[2]).append(line));
+            }],
+            [/\r?\n/, function(m, o) {
+                o.push($("<br>"));
+            }]
+        ];
+        var body = markup(data.body, rules);
+        post.find(".chat_body").empty().append(body);
 
         // Create new backlinks
+        back_links[id] = [];
         $(ref_ids).each(function () {
-            var link = $("<a class='back_link' href='#'/>");
-            link.attr({
-                "data-src": this,
-                "data-dest": id
-            });
-            setup_quote_links(link);
+            var link = quote_link(id);
             var their_refs = $("#chat_" + this + " .chat_refs");
             if (their_refs.length === 0) {
-                future_ids.append(link);
+                if (future_ids[this] === undefined) future_ids[this] = $("<output />");
+                future_ids[this].append(" ", link);
             } else {
                 their_refs.append(" ", link);
             }
+            back_links[id].push(link);
         });
     }
     if (new_post) {
         notifications(data.convo);
         apply_filter(post);
         insert_post(post);
-        if (first_load) {
-            $("#chat_" + id).css('opacity', '1');
-        } else {
-            $("#chat_" + id).animate({
-                opacity: 1
-            }, 300, 'swing', function () {
-            });
-        }
+        if (!first_load) post.fadeIn(300);
     }
 }
