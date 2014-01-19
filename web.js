@@ -251,6 +251,7 @@ app.get('/login', function (req, res) {
 
 app.post('/login', function (req, res) {
     "use strict";
+    res.type("text/plain");
     var ip_addr = req.headers["x-forwarded-for"];
     if (ip_addr) {
         var list = ip_addr.split(",");
@@ -556,6 +557,7 @@ function handleChatPost(req, res, next, image) {
 
 app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
     "use strict";
+    res.type("text/plain");
     handleChatPost(req, res, next, null);
 });
 

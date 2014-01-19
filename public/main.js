@@ -79,7 +79,7 @@ if (html5) {
         $("#name").val(localStorage.name);
         $("#convo").val(localStorage.convo);
         $("#theme_select").val(localStorage.theme);
-        if (!$("#theme_select").val().trim() || $("#theme_select").val() === "null") {
+        if (!$("#theme_select").val().replace(/^\s+|\s+$/gm, '') || $("#theme_select").val() === "null") {
             $("#theme_select").val("/style.css");
         }
         get_css($("#theme_select").val());
@@ -98,7 +98,7 @@ function get_cookie(cname) {
     var i = 0;
     var c = null;
     for (i = 0; i < ca.length; i++) {
-        c = ca[i].trim();
+        c = ca[i].replace(/^\s+|\s+$/gm, '');
         if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
