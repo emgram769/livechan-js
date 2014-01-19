@@ -11,6 +11,43 @@
         <![endif]-->
 </head>
 <body>
+	<header class="header">
+		<select id="board_select" class="input_select left_float">
+			<option value="">Channel</option>
+			<option value="a">/a/</option>
+			<option value="b">/b/</option>
+			<option value="g">/g/</option>
+			<option value="gif">/gif/</option>
+			<option value="v">/v/</option>
+			<option value="r9k">/r9k/</option>
+			<option value="s4s">/s4s/</option>
+			<option value="diy">/diy/</option>
+			<option value="fa">/fa/</option>
+			<option value="fit">/fit/</option>
+			<option value="gd">/gd/</option>
+			<option value="mlp">/mlp/</option>
+			<option value="mu">/mu/</option>
+			<option value="n">/n/</option>
+			<option value="pol">/pol/</option>
+			<option value="sci">/sci/</option>
+			<option value="soc">/soc/</option>
+			<option value="sp">/sp/</option>
+		</select>
+		<input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label>
+		<input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on Enter</label>
+		<input type="checkbox" id="autoimages" class="input_checkbox" checked value="checked"/> <label for="autoimages" style="font-size:14px" >Images</label>
+		<select id="convo_filter" class="input_select">
+			<option value="no-filter" >No Conversation Filter</option>
+			<option value="highlight">Highlight</option>
+			<option value="filter">Full Filter</option>
+		</select>
+		<select id="theme_select" class="input_select">
+			<option value="/style.css">Main Theme</option>
+			<option value="/theme1.css">Red</option>
+			<option value="/tomorrow.css">Tomorrow</option>
+		</select>
+
+	</header>
 	<section class="chats">
 	</section>
 	<aside class="create shown">
@@ -21,7 +58,7 @@
 			<input id="image" class="input_button" name="image" type="file" style="max-width:50%;"/>
 			<input id="submit_button" class="input_button" type="button" value="Submit" onclick="submit_chat();"/>
 			<output id="cool_down"></output>
-			<input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label>
+			<!--<input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label>
 			<input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on Enter</label>
 			<input type="checkbox" id="autoimages" class="input_checkbox" checked value="checked"/> <label for="autoimages" style="font-size:14px" >Images</label>
 			<select id="convo_filter" class="input_select">
@@ -33,7 +70,7 @@
 				<option value="/style.css">Main</option>
 				<option value="/theme1.css">Red</option>
 				<option value="/tomorrow.css">Tomorrow</option>
-			</select>
+			</select>-->
 		</form>
 	</aside>
 	<iframe style="visibility:hidden;" id="miframe" name="miframe"></iframe>
