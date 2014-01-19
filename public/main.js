@@ -79,7 +79,7 @@ if (html5) {
         $("#name").val(localStorage.name);
         $("#convo").val(localStorage.convo);
         $("#theme_select").val(localStorage.theme);
-        if (!$("#theme_select").val().trim() || $("#theme_select").val() === "null") {
+        if (!$("#theme_select").val().replace(/^\s+|\s+$/gm, '') || $("#theme_select").val() === "null") {
             $("#theme_select").val("/style.css");
         }
         get_css($("#theme_select").val());
@@ -98,7 +98,7 @@ function get_cookie(cname) {
     var i = 0;
     var c = null;
     for (i = 0; i < ca.length; i++) {
-        c = ca[i].trim();
+        c = ca[i].replace(/^\s+|\s+$/gm, '');
         if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
@@ -114,14 +114,14 @@ function div_alert(message, add_button, div_id) {
     if (div_id === undefined) {
         div_id = "";
     }
-    var alert_div = document.createElement('div');
+    var alert_div = document.createElement('aside');
     alert_div.setAttribute('class', 'alert_div');
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
     if (!add_button) {
         button_html = "";
     }
-    alert_div.innerHTML = "<div class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</div>" + button_html;
+    alert_div.innerHTML = "<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>" + button_html;
     $(alert_div).css({
         position: 'fixed',
         background: 'white',
@@ -200,7 +200,7 @@ function submit_chat() {
             break;
         case "remtryp":
             if (param) {
-                var idx = contribs.indexOf(param);
+                var idx = $.inArray(param, contribs);
                 if (idx > -1) {
                     contribs.splice(idx, 1);
                     if (html5) {

@@ -1,5 +1,5 @@
 var chat = {};
-var future_ids = $("<span />");
+var future_ids = $("<output />");
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
@@ -24,17 +24,7 @@ function humanFileSize(bytes, si) {
 
 function escapeHTML(str) {
     "use strict";
-    var pre = document.createElement('pre');
-    var text = document.createTextNode( str );
-    pre.appendChild(text);
-    return pre.innerHTML;
-
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    return $('<aside/>').text(str).html();
 }
 
 function quote_click() {
@@ -68,7 +58,7 @@ function setup_quote_links(links) {
     "use strict";
     links.text(function () {
         var dest_id = parseInt($(this).data("dest"), 10);
-        return ">>" + dest_id + ((my_ids.indexOf(dest_id) > -1) ? " (You)" : "");
+        return ">>" + dest_id + (($.inArray(dest_id, my_ids) > -1) ? " (You)" : "");
     });
     links.click(quote_click);
     links.mouseover(quote_mouseover);
@@ -78,22 +68,25 @@ function setup_quote_links(links) {
 function generate_post(id) {
     "use strict";
     var post = $(
-        "<div class='chat' style='opacity:0'>" +
-            "<div class='chat_header'>" +
-                "<span class='chat_label'/>" +
-                "<span class='chat_name'><span class='name_part'/><span class='trip_code'/></span>" +
-                "<span class='chat_convo'/>" +
-                "<span class='chat_date'/>" +
-                "<span class='chat_number'/>" +
-                "<span class='chat_refs'/>" +
-            "</div><div class='chat_file'/><span class='chat_img_cont'/><span class='chat_body'/>" +
-        "</div>"
+        "<article class='chat' style='opacity:0'>" +
+            "<header class='chat_header'>" +
+                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
+                "<output class='chat_convo'/>" +
+                "<output class='chat_date'/>" +
+                "<output class='chat_number'/>" +
+                "<output class='chat_refs'/>" +
+            "</header><section class='chat_file'/><output class='chat_img_cont'/><output class='chat_body'/>" +
+        "</article>"
     );
     post.attr("id", "chat_" + id);
 
-    post.find(".chat_label").click(function() {
-        window.location.href = "/chat/" + chat[id].chat;
-    });
+    if (chat_id === "all") {
+        var label = $("<output class='chat_label'/>");
+        post.find(".chat_header").prepend(label);
+        label.click(function() {
+            window.location.href = "/chat/" + chat[id].chat;
+        });
+    }
 
     var convo = post.find(".chat_convo");
     convo.mouseover(quote_mouseover);
@@ -145,8 +138,8 @@ function update_chat(new_data, first_load) {
     }
     if (new_data.trip !== undefined) {
         post.find(".trip_code").text(data.trip);
-        var contrib = (contribs.indexOf(data.trip) > -1);
-        var admin = (admins.indexOf(data.trip) > -1);
+        var contrib = ($.inArray(data.trip, contribs) > -1);
+        var admin = ($.inArray(data.trip, admins) > -1);
         var name = post.find(".chat_name");
         name.toggleClass("contrib", contrib && !admin);
         name.toggleClass("admin", admin);
@@ -169,18 +162,17 @@ function update_chat(new_data, first_load) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
             var image_url = "/tmp/uploads/" + base_name;
 
-            file_info.html("File: <a class='file_link' target='_blank'/><span class='file_data'/>");
+            file_info.html("File: <a class='file_link' target='_blank'/><output class='file_data'/>");
             file_info.find(".file_link").attr("href", image_url).text(base_name);
 
-            img_container.html("<img height='100px' class='chat_img'>");
+            img_container.html("<a target='_blank'><img height='100px' class='chat_img'></a>");
             var image = img_container.find(".chat_img");
             image.attr("src", image_url);
+            image.attr("alt", "Image #" + data.count);
+            image.find("a").attr("href", image_url);
             if (!show_images()) {
                 image.css('display', 'none');
             }
-            image.click(function () {
-                window.open(image_url);
-            });
             image.thumbPopup({
                 imgSmallFlag: "",
                 imgLargeFlag: "",
@@ -218,11 +210,11 @@ function update_chat(new_data, first_load) {
         // Process body markup
         var body_text = data.body.replace(/>>([0-9]+)/g, "{$1}");
         var body_html = escapeHTML(body_text);
-        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<span class='greentext'>&gt;$1</span>");
+        body_html = body_html.replace(/^\&gt;(.*)$/gm, "<output class='greentext'>&gt;$1</output>");
         var ref_ids = [];
         body_html = body_html.replace(/\{([0-9]+)\}/g, function (match_full, ref_id_str) {
             var ref_id = parseInt(ref_id_str, 10);
-            if (ref_ids.indexOf(ref_id) === -1) {
+            if ($.inArray(ref_id, ref_ids) === -1) {
                 ref_ids.push(ref_id);
             }
             return "<a class='quote_link' href='#' data-src='" + id + "' data-dest='" + ref_id + "'/>";
