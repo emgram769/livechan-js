@@ -80,6 +80,7 @@ function generate_post(id) {
     var post = $(
         "<div class='chat' style='opacity:0'>" +
             "<div class='chat_header'>" +
+                "<span class='chat_label'/>" +
                 "<span class='chat_name'><span class='name_part'/><span class='trip_code'/></span>" +
                 "<span class='chat_convo'/>" +
                 "<span class='chat_date'/>" +
@@ -89,6 +90,10 @@ function generate_post(id) {
         "</div>"
     );
     post.attr("id", "chat_" + id);
+
+    post.find(".chat_label").click(function() {
+        window.location.href = "/chat/" + chat[id].chat;
+    });
 
     var convo = post.find(".chat_convo");
     convo.mouseover(quote_mouseover);
@@ -132,6 +137,9 @@ function update_chat(new_data, first_load) {
     }
 
     var data = chat[id];
+    if (new_data.chat !== undefined && chat_id === "all") {
+        post.find(".chat_label").text("/" + data.chat + "/");
+    }
     if (new_data.name !== undefined) {
         post.find(".name_part").text(data.name);
     }

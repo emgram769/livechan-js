@@ -10,6 +10,9 @@ var unread_chats = 0;
 
 var socket = io.connect('/');
 
+var path = window.location.pathname;
+var chat_id = path.slice(path.lastIndexOf('/') + 1);
+
 var html5 = false;
 try {
     html5 = (window.localStorage !== undefined && window.localStorage !== null);
@@ -368,8 +371,6 @@ function draw_chat(data) {
 
 window.onload = function () {
     "use strict";
-    var path = window.location.pathname;
-    var chat_id = path.slice(path.lastIndexOf('/') + 1);
     socket.on('request_location', function (data) {
         socket.emit('subscribe', chat_id);
     });

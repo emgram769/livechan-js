@@ -1,4 +1,5 @@
 var socket = io.connect('/');
+var chat_id = "all";
 
 function notifications(post_convo) {
     "use strict";
