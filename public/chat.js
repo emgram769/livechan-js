@@ -120,8 +120,8 @@ function generate_post(id) {
     
     var post = $(
         "<article class='chat'>" +
-            "<a class='chat_label' style='display: none;'/>" +
             "<header class='chat_header'>" +
+                "<a class='chat_label' style='display: none;'/>" +
                 "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
                 "<output class='chat_convo'/>" +
                 "<output class='chat_date'/>" +
@@ -272,8 +272,8 @@ function update_chat(new_data, first_load) {
                 .attr("alt", "Image #" + data.count)
                 .thumbPopup({popupCSS: {'max-height': '97%', 'max-width': '75%'}});
 
-            if (thumbnail_mode() === "static") img_container.find(".thumb_static").css("display", "inline");
-            if (thumbnail_mode() === "animated") img_container.find(".thumb_anim").css("display", "inline");
+            if (thumbnail_mode === "static") img_container.find(".thumb_static").css("display", "inline");
+            if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
         }
     }
     if (new_data.image !== undefined || new_data.image_filesize !== undefined || new_data.image_width !== undefined || new_data.image_height !== undefined || new_data.image_filename !== undefined) {

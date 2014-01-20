@@ -463,9 +463,10 @@ window.onload = function () {
             if (thumbnail_mode === "static") $('.thumb_static').hide('slow');
             if (thumbnail_mode === "animated") $('.thumb_anim').hide('slow');
         } else {
-            $('.thumb_static').css("display", (thumbnail_mode === "static") ? "inline" : "none");
-            $('.thumb_anim').css("display", (thumbnail_mode === "animated") ? "inline" : "none");
+            $('.thumb_static').css("display", (new_value === "static") ? "inline" : "none");
+            $('.thumb_anim').css("display", (new_value === "animated") ? "inline" : "none");
         }
+        thumbnail_mode = new_value;
     });
 
     var quote_hash = window.location.hash.match(/^#q(\d+)$/);
