@@ -329,6 +329,7 @@ function apply_filter(posts) {
             return (convo === chat[id].convo) ? '' : 'chat_hidden';
         }, true);
     }
+    
 }
 
 function show_images() {

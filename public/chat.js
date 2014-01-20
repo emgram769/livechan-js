@@ -2,6 +2,7 @@ var chat = {};
 var future_ids = {};
 var back_links = {};
 var loaded_callbacks = [];
+var convos = [];
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
@@ -60,8 +61,62 @@ function quote_link(dest) {
     return link;
 }
 
+function escapeHtml(str) {
+	var div = document.createElement('div');
+	div.appendChild(document.createTextNode(str));
+	return div.innerHTML;
+};
+
+function swap_to_convo(convo){
+	if(convo=="") {
+		$('#convo_filter').val('no-filter');
+		$("#convo").val('');
+
+	} else {
+		$("#convo").val(convo);
+		$('#convo_filter').val('filter');
+	}
+    apply_filter();
+    scroll();
+    return;
+}
+
+function draw_convos(){
+	$('.sidebar:first').html('');
+
+	for(i in convos){
+		var html = escapeHtml(convos[i]);
+		html = "<div onclick='swap_to_convo(\""+convos[i]+"\");' class='sidebar_convo'>"+html+"</div>";
+		$('.sidebar:first').prepend(html);
+		
+		
+	}
+	
+	html = "<div onclick='swap_to_convo(\"\");' class='sidebar_convo'>All</div>";
+	$('.sidebar:first').prepend(html);
+
+}
+
 function generate_post(id) {
     "use strict";
+    
+    var convo_index = $.inArray(chat[id].convo, convos);
+
+	
+    if (convo_index < 0) {
+	    convos.push(chat[id].convo);
+    } else {
+    	convos.splice(convo_index,1);
+	   	convos.push(chat[id].convo);
+    }
+    
+    if (convos.length > 20) {
+		convos.splice(0,1);
+	}
+	
+    
+    draw_convos();
+    
     var post = $(
         "<article class='chat'>" +
             "<header class='chat_header'>" +
