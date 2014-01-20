@@ -84,7 +84,7 @@ var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o'
 
 /* database fields to transmit */
 var all_fields = 'chat name body convo convo_id count date trip';
-var board_fields = 'chat name body convo convo_id count date image image_filename image_filesize image_width image_height trip';
+var board_fields = 'chat name body convo convo_id count date image image_filename image_filesize image_width image_height thumb trip';
 
 /* db schema */
 var chat_schema = new Schema({
@@ -108,6 +108,7 @@ var chat_schema = new Schema({
     image_filesize: Number,
     image_width: Number,
     image_height: Number,
+    thumb: String,
     trip: String
 });
 
@@ -165,6 +166,7 @@ function delete_posts(e, ds) {
     }
     ds.forEach(function(d) {
         if (d.image) fs.unlink(d.image);
+        if (d.thumb) fs.unlink(d.thumb);
         d.remove(function(e2) {console.log("chat removal error",e2);});
     });
 }
@@ -321,8 +323,8 @@ function format_image(req, res, next, callback) {
                 data.image_height = dimensions.height;
             }
 
-			console.log("formatting post...");
-			format_post(req, res, next, data, callback)
+			console.log("generating thumbnail...");
+			generate_thumbnail(req, res, next, data, callback)
 
         });
     }
@@ -335,17 +337,21 @@ function format_image(req, res, next, callback) {
 	calls format_post(req, res, next, data, callback) on completion
 */
 function generate_thumbnail(req, res, next, data, callback) {
-    var thumb_width = Math.min(data.image_width, 250);
-    var thumb_height = Math.min(data.image_height, 250);
+    var scale = Math.min(250/data.image_width, 250/data.image_height, 1);
+    var thumb_width = scale * data.image_width;
+    var thumb_height = scale * data.image_height;
     data.thumb = "public/tmp/thumb/" + data.image.match(/([\w\-]+)\.\w+$/)[1] + ".jpg";
 
-    gm(data.image).thumb(thumb_width, thumb_height, data.thumb, function(err) {
-        if (err) {
-            console.log("thumbnail creation error", err);
-            return;
-        }
-        format_post(req, res, next, data, callback);
-    }
+    gm(data.image)
+        .out("-delete", "1--1") // use first frame only; only needed for ImageMagick
+        .thumb(thumb_width, thumb_height, data.thumb, function(err) {
+            if (err) {
+                console.log("thumbnail creation error", err);
+                return;
+            }
+            console.log("formatting post...");
+            format_post(req, res, next, data, callback);
+        });
 }
 
 /* format_post:

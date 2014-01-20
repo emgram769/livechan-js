@@ -103,11 +103,19 @@ function generate_post(id) {
     return post;
 }
 
+function to_image_url(path) {
+    return "/tmp/uploads/" + path.match(/[\w\-\.]*$/)[0];
+}
+
+function to_thumb_url(path) {
+    return "/tmp/thumb/" + path.match(/[\w\-\.]*$/)[0];
+}
+
 function generate_image(data, post) {
     "use strict";
     var container = post.find(".chat_img_cont");
     container.html("<a target='_blank'><img class='chat_img'></a>");
-    container.find("a").attr("href", data.image);
+    container.find("a").attr("href", to_image_url(data.image));
     var image = container.find(".chat_img");
     image.attr("alt", "Image #" + data.count);
     image.thumbPopup({
@@ -123,10 +131,10 @@ function set_thumbnail(data, post) {
     "use strict";
     var thumb_url = null;
     if (data.image && thumbnail_mode() !== "links-only") {
-        var image_url = "/tmp/uploads/" + data.image.match(/[\w\-\.]*$/)[0];
+        var image_url = to_image_url(data.image);
         var extension = data.image.match(/\w*$/)[0];
         if (data.thumb) {
-            thumb_url = "/tmp/thumb/" + data.thumb.match(/[\w\-\.]*$/)[0];
+            thumb_url = to_thumb_url(data.thumb);
         } else if (extension !== "gif") {
             thumb_url = image_url;
         }
@@ -224,7 +232,7 @@ function update_chat(new_data, first_load) {
         var file_info = post.find(".chat_file");
         if (data.image) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
-            var image_url = "/tmp/uploads/" + base_name;
+            var image_url = to_image_url(data.image);
             file_info.html("File: <a class='file_link' target='_blank'/><output class='file_data'/>");
             file_info.find(".file_link").attr("href", image_url).text(base_name);
         } else {
