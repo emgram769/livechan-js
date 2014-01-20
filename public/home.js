@@ -14,11 +14,6 @@ function apply_filter(posts) {
     "use strict";
 }
 
-function thumbnail_mode() {
-    "use strict";
-    return "links-only";
-}
-
 function insert_post(post) {
     "use strict";
     $('.chats-home:first').prepend(post);
