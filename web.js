@@ -337,7 +337,7 @@ function format_image(req, res, next, callback) {
 	calls format_post(req, res, next, data, callback) on completion
 */
 function generate_thumbnail(req, res, next, data, callback) {
-    var scale = Math.min(250/data.image_width, 250/data.image_height, 1);
+    var scale = Math.min(250/data.image_width, 100/data.image_height, 1);
     var thumb_width = scale * data.image_width;
     var thumb_height = scale * data.image_height;
     data.thumb = "public/tmp/thumb/" + data.image.match(/([\w\-]+)\.\w+$/)[1] + ".jpg";
