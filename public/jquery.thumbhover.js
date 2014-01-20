@@ -7,8 +7,6 @@
 		settings = jQuery.extend({
 			popupId: "thumbPopup",
 			popupCSS: {'border': '1px solid #000000', 'background': '#FFFFFF'},
-			imgSmallFlag: "_t",
-			imgLargeFlag: "_l",
 			cursorTopOffset: 15,
 			cursorLeftOffset: 15,
 			loadingHtml: "<span style='padding: 5px;'>Loading</span>"
@@ -32,7 +30,7 @@
 		
 		function setPopup(event)
 		{
-			var fullImgURL = $(this).attr("src").replace(settings.imgSmallFlag, settings.imgLargeFlag);
+			var fullImgURL = $(this).parent().attr("href");
 			
 			$(this).data("hovered", true);
 			

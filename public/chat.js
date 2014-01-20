@@ -158,6 +158,60 @@ function generate_post(id) {
     return post;
 }
 
+function to_image_url(path) {
+    return "/tmp/uploads/" + path.match(/[\w\-\.]*$/)[0];
+}
+
+function to_thumb_url(path) {
+    return "/tmp/thumb/" + path.match(/[\w\-\.]*$/)[0];
+}
+
+function generate_image(data, post) {
+    "use strict";
+    var container = post.find(".chat_img_cont");
+    container.html("<a target='_blank'><img class='chat_img'></a>");
+    container.find("a").attr("href", to_image_url(data.image));
+    var image = container.find(".chat_img");
+    image.attr("alt", "Image #" + data.count);
+    image.thumbPopup({
+        popupCSS: {
+            'max-height': '97%',
+            'max-width': '75%'
+        }
+    });
+    return image;
+}
+
+function set_thumbnail(data, post) {
+    "use strict";
+    var thumb_url = null;
+    if (data.image && thumbnail_mode() !== "links-only") {
+        var image_url = to_image_url(data.image);
+        var extension = data.image.match(/\w*$/)[0];
+        if (data.thumb) {
+            thumb_url = to_thumb_url(data.thumb);
+        } else if (extension !== "gif") {
+            thumb_url = image_url;
+        }
+        if (thumbnail_mode() === "animated" && extension === "gif") {
+            thumb_url = image_url;
+        }
+    }
+    var image = post.find(".chat_img");
+    if (thumb_url === null) {
+        image.addClass("img_hide");
+        image.removeClass("img_show");
+    } else {
+        if (image.length === 0) {
+            image = generate_image(data, post);
+        }
+        image.attr("src", thumb_url);
+        image.addClass("img_show");
+        image.removeClass("img_hide");
+    }
+    return thumb_url;
+}
+
 function markup(text, rules) {
     "use strict";
     var output = [];
@@ -229,36 +283,19 @@ function update_chat(new_data, first_load) {
         date = (date == "NaN") ? data.date : date.toLocaleString();
         post.find(".chat_date").text(date);
     }
-    if (new_data.image !== undefined) {
+    if (new_data.image !== undefined || new_data.thumb !== undefined) {
         var file_info = post.find(".chat_file");
-        var img_container = post.find(".chat_img_cont");
         if (data.image) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
-            var image_url = "/tmp/uploads/" + base_name;
-
+            var image_url = to_image_url(data.image);
             file_info.html("File: <a class='file_link' target='_blank'/><output class='file_data'/>");
             file_info.find(".file_link").attr("href", image_url).text(base_name);
-
-            img_container.html("<a target='_blank'><img height='100px' class='chat_img'></a>");
-            img_container.find("a").attr("href", image_url);
-            var image = img_container.find(".chat_img");
-            image.attr("src", image_url);
-            image.attr("alt", "Image #" + data.count);
-            image.find("a").attr("href", image_url);
-            if (!show_images()) {
-                image.css('display', 'none');
-            }
-            image.thumbPopup({
-                imgSmallFlag: "",
-                imgLargeFlag: "",
-                popupCSS: {
-                    'max-height': '97%',
-                    'max-width': '75%'
-                }
-            });
         } else {
             file_info.empty();
-            img_container.empty();
+        }
+        var thumb_url = set_thumbnail(data, post);
+        if (thumb_url === null) {
+            post.find(".chat_img").css('display', 'none');
         }
     }
     if (new_data.image !== undefined || new_data.image_filesize !== undefined || new_data.image_width !== undefined || new_data.image_height !== undefined || new_data.image_filename !== undefined) {
@@ -307,6 +344,9 @@ function update_chat(new_data, first_load) {
             }],
             [/\r?\n/, function(m, o) {
                 o.push($("<br>"));
+            }],
+            [/\[code\]([\s\S]*?)\[\/code\]/, function(m, o) {
+                o.push($("<pre class='code'/>").text(m[1]));
             }]
         ];
         var body = markup(data.body, rules);
