@@ -331,9 +331,9 @@ function apply_filter(posts) {
     }
 }
 
-function show_images() {
+function thumbnail_mode() {
     "use strict";
-    return $("#autoimages").prop('checked');
+    return $("#thumbnail_mode").val();
 }
 
 function insert_post(post) {
@@ -457,12 +457,14 @@ window.onload = function () {
 		window.open('http://' + document.location.host + '/chat/' + board);
     });
 
-    $("#autoimages").change(function () {
-        if (!$("#autoimages").prop('checked')) {
-            $('.chat_img').hide('slow');
-        } else {
-            $('.chat_img').show('slow');
-        }
+    $("#thumbnail_mode").change(function () {
+        $.each(chat, function() {
+            if (this.image) {
+                set_thumbnail(this, $("#chat_" + this.count));
+            }
+        });
+        $('.chat_img.img_hide').hide('slow');
+        $('.chat_img.img_show').show('slow');
     });
 
     var quote_hash = window.location.hash.match(/^#q(\d+)$/);

@@ -14,9 +14,9 @@ function apply_filter(posts) {
     "use strict";
 }
 
-function show_images() {
+function thumbnail_mode() {
     "use strict";
-    return false;
+    return "links-only";
 }
 
 function insert_post(post) {

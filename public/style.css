@@ -108,7 +108,8 @@ body,html{
     padding:2px;
     padding-right:5px;
     vertical-align:text-top;
-    max-width:50%;
+    max-width:250px;
+    max-height:250px;
     border: 0;
 }
 

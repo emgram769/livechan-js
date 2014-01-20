@@ -35,7 +35,11 @@
 		</select>
 		<input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label>
 		<input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on Enter</label>
-		<input type="checkbox" id="autoimages" class="input_checkbox" checked value="checked"/> <label for="autoimages" style="font-size:14px" >Images</label>
+                <select id="thumbnail_mode" class="input_select">
+                        <option value="links-only">Image links only</option>
+                        <option value="static" selected>Static thumbnails</option>
+                        <option value="animated">Animated thumbnails</option>
+                </select>
 		<select id="convo_filter" class="input_select">
 			<option value="no-filter" >No Conversation Filter</option>
 			<option value="highlight">Highlight</option>
