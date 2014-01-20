@@ -61,12 +61,6 @@ function quote_link(dest) {
     return link;
 }
 
-function escapeHtml(str) {
-	var div = document.createElement('div');
-	div.appendChild(document.createTextNode(str));
-	return div.innerHTML;
-};
-
 function swap_to_convo(convo){
 	if(convo=="") {
 		$('#convo_filter').val('no-filter');
@@ -85,15 +79,21 @@ function draw_convos(){
 	$('.sidebar:first').html('');
 
 	for(i in convos){
-		var html = escapeHtml(convos[i]);
-		html = "<div onclick='swap_to_convo(\""+convos[i]+"\");' class='sidebar_convo'>"+html+"</div>";
-		$('.sidebar:first').prepend(html);
+		var div = $("<div class='sidebar_convo'/>");
+		div.text(convos[i]);
+		div.click(function() {
+			swap_to_convo($(this).text());
+		});
+		$('.sidebar:first').prepend(div);
 		
 		
 	}
 	
-	html = "<div onclick='swap_to_convo(\"\");' class='sidebar_convo'>All</div>";
-	$('.sidebar:first').prepend(html);
+	div = $("<div class='sidebar_convo'>All</div>");
+	div.click(function() {
+		swap_to_convo("");
+	});
+	$('.sidebar:first').prepend(div);
 
 }
 
