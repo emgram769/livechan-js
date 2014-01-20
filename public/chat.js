@@ -9,7 +9,6 @@ var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
 var contribs = default_contribs;
-var thumbnail_mode = "links-only";
 
 function humanFileSize(bytes, si) {
     "use strict";
@@ -121,48 +120,96 @@ function generate_post(id) {
     var post = $(
         "<article class='chat'>" +
             "<header class='chat_header'>" +
-                "<a class='chat_label' style='display: none;'/>" +
                 "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
                 "<output class='chat_convo'/>" +
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
                 "<output class='chat_refs'/>" +
-            "</header>" +
-            "<section class='chat_file' style='display: none;'>" +
-                "File: <a class='file_link' target='_blank'/>" +
-                "<output class='file_data'/>" +
-            "</section>" +
-            "<a target='_blank' class='chat_img_cont'/>" +
-            "<output class='chat_body'/>" +
+            "</header><section class='chat_file'/><output class='chat_img_cont'/><output class='chat_body'/>" +
         "</article>"
     );
     post.attr("id", "chat_" + id);
 
     if (chat_id === "all") {
-        post.find(".chat_label")
-            .css("display", "inline")
-            .attr("href", "/chat/" + chat[id].chat);
+        var label = $("<a class='chat_label'/>");
+        post.find(".chat_header").prepend(label);
+        label.attr("href", "/chat/" + chat[id].chat);
     }
 
-    post.find(".chat_convo")
-        .mouseover(quote_mouseover)
-        .mouseout(quote_mouseout)
-        .click(function () {
-            $("#convo").val(chat[id].convo);
-            apply_filter();
-        });
+    var convo = post.find(".chat_convo");
+    convo.mouseover(quote_mouseover);
+    convo.mouseout(quote_mouseout);
+    convo.click(function () {
+        $("#convo").val(chat[id].convo);
+        apply_filter();
+    });
 
-    post.find(".chat_number")
-        .text(id)
-        .click(function () {
-            quote(id);
-        });
+    var number = post.find(".chat_number");
+    number.text(id);
+    number.click(function () {
+        quote(id);
+    });
 
+    var chat_refs = post.find(".chat_refs");
     if (future_ids[id] !== undefined) {
-        post.find(".chat_refs").append(" ", future_ids[id].contents());
+        chat_refs.append(" ", future_ids[id].contents());
     }
 
     return post;
+}
+
+function to_image_url(path) {
+    return "/tmp/uploads/" + path.match(/[\w\-\.]*$/)[0];
+}
+
+function to_thumb_url(path) {
+    return "/tmp/thumb/" + path.match(/[\w\-\.]*$/)[0];
+}
+
+function generate_image(data, post) {
+    "use strict";
+    var container = post.find(".chat_img_cont");
+    container.html("<a target='_blank'><img class='chat_img'></a>");
+    container.find("a").attr("href", to_image_url(data.image));
+    var image = container.find(".chat_img");
+    image.attr("alt", "Image #" + data.count);
+    image.thumbPopup({
+        popupCSS: {
+            'max-height': '97%',
+            'max-width': '75%'
+        }
+    });
+    return image;
+}
+
+function set_thumbnail(data, post) {
+    "use strict";
+    var thumb_url = null;
+    if (data.image && thumbnail_mode() !== "links-only") {
+        var image_url = to_image_url(data.image);
+        var extension = data.image.match(/\w*$/)[0];
+        if (data.thumb) {
+            thumb_url = to_thumb_url(data.thumb);
+        } else if (extension !== "gif") {
+            thumb_url = image_url;
+        }
+        if (thumbnail_mode() === "animated" && extension === "gif") {
+            thumb_url = image_url;
+        }
+    }
+    var image = post.find(".chat_img");
+    if (thumb_url === null) {
+        image.addClass("img_hide");
+        image.removeClass("img_show");
+    } else {
+        if (image.length === 0) {
+            image = generate_image(data, post);
+        }
+        image.attr("src", thumb_url);
+        image.addClass("img_show");
+        image.removeClass("img_hide");
+    }
+    return thumb_url;
 }
 
 function markup(text, rules) {
@@ -220,9 +267,9 @@ function update_chat(new_data, first_load) {
         post.find(".trip_code").text(data.trip);
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
-        post.find(".chat_name")
-            .toggleClass("contrib", contrib && !admin)
-            .toggleClass("admin", admin);
+        var name = post.find(".chat_name");
+        name.toggleClass("contrib", contrib && !admin);
+        name.toggleClass("admin", admin);
     }
     if (new_data.convo !== undefined || new_data.convo_id !== undefined) {
         var is_op = (data.convo_id === data.count);
@@ -237,43 +284,18 @@ function update_chat(new_data, first_load) {
         post.find(".chat_date").text(date);
     }
     if (new_data.image !== undefined || new_data.thumb !== undefined) {
-        post.find(".chat_file").css("display", data.image ? "block" : "none");
-        var img_container = post.find(".chat_img_cont");
-        img_container.empty();
+        var file_info = post.find(".chat_file");
         if (data.image) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
-            var extension = base_name.match(/\w*$/)[0];
-            var url_image = "/tmp/uploads/" + base_name;
-
-            post.find(".file_link")
-                .attr("href", url_image)
-                .text(base_name);
-
-            var url_static = null;
-            if (data.thumb) {
-                url_static = "/tmp/thumb/" + data.thumb.match(/[\w\-\.]*$/)[0];
-            } else if (extension !== "gif") {
-                url_static = url_image;
-            }
-            var url_anim = url_static;
-            if (extension === "gif") {
-                url_anim = url_image;
-            }
-
-            img_container.attr("href", url_image);
-            if (url_static !== null) {
-                img_container.append($("<img class='chat_img thumb_static'>").attr("src", url_static));
-            }
-            if (url_anim !== null) {
-                img_container.append($("<img class='chat_img thumb_anim'>").attr("src", url_anim));
-            }
-            img_container.find(".chat_img")
-                .css("display", "none")
-                .attr("alt", "Image #" + data.count)
-                .thumbPopup({popupCSS: {'max-height': '97%', 'max-width': '75%'}});
-
-            if (thumbnail_mode === "static") img_container.find(".thumb_static").css("display", "inline");
-            if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
+            var image_url = to_image_url(data.image);
+            file_info.html("File: <a class='file_link' target='_blank'/><output class='file_data'/>");
+            file_info.find(".file_link").attr("href", image_url).text(base_name);
+        } else {
+            file_info.empty();
+        }
+        var thumb_url = set_thumbnail(data, post);
+        if (thumb_url === null) {
+            post.find(".chat_img").css('display', 'none');
         }
     }
     if (new_data.image !== undefined || new_data.image_filesize !== undefined || new_data.image_width !== undefined || new_data.image_height !== undefined || new_data.image_filename !== undefined) {

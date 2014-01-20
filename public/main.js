@@ -80,6 +80,9 @@ if (html5) {
         $("#name").val(localStorage.name);
         $("#convo").val(localStorage.convo);
         $("#theme_select").val(localStorage.theme);
+        cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
+        if (cool_down_timer>0)
+        	init_cool_down();
         if (!$("#theme_select").val().replace(/^\s+|\s+$/gm, '') || $("#theme_select").val() === "null") {
             $("#theme_select").val("/style.css");
         }
@@ -144,6 +147,9 @@ function clear_fields() {
 
 function cool_down() {
     "use strict";
+    if (html5) {
+    	localStorage.cool_down_timer = cool_down_timer;
+	}
     if (cool_down_timer <= 0) {
         clearInterval(cool_down_interval);
         $("#cool_down").text("");
@@ -158,8 +164,19 @@ function cool_down() {
     }
 }
 
+function init_cool_down(){
+	    $("#submit_button").prop("disabled", true);
+        clearInterval(cool_down_timer);
+        cool_down();
+        cool_down_interval = setInterval(cool_down, 1000);
+}
+
 function submit_chat() {
     "use strict";
+	
+	if($.inArray($("#convo").val(), convos) < 0 && $("#convo").val() != "")
+		cool_down_timer+=43;
+	
     last_post = $("#body").val();
     if (get_cookie("password_livechan") === '') {
         div_alert(captcha_div(), false, "captcha");
@@ -245,16 +262,17 @@ function submit_chat() {
     }
     $("#comment-form").submit();
 
+    clear_fields();
+
     if (!admin_mode) {
-        $("#submit_button").prop("disabled", true);
-        clear_fields();
         cool_down_timer += 7;
-        clearInterval(cool_down_timer);
-        cool_down();
-        cool_down_interval = setInterval(cool_down, 1000);
-    } else {
-        clear_fields();
+		init_cool_down();
     }
+    
+    if (html5) {
+        localStorage.cool_down_timer = cool_down_timer;
+    }
+    
     return false;
 }
 
@@ -294,7 +312,7 @@ function notifications(post_convo) {
             if (!blink) {
                 window.document.title = '(' + unread_chats + ') unread chats';
             } else {
-                window.document.title = 'LiveChan';
+                window.document.title = 'LiveChan - /'+chat_id+'/';
             }
             blink = !blink;
 
@@ -332,6 +350,11 @@ function apply_filter(posts) {
     
 }
 
+function thumbnail_mode() {
+    "use strict";
+    return $("#thumbnail_mode").val();
+}
+
 function insert_post(post) {
     "use strict";
     $(".chats:first").append(post);
@@ -346,7 +369,7 @@ window.onload = function () {
     socket.on('request_location', function (data) {
         socket.emit('subscribe', chat_id);
     });
-    var title = 'LiveChan';
+    var title = 'LiveChan - /'+chat_id+'/';
     window.document.title = title;
 	
     $(window).focus(function () {
@@ -453,20 +476,14 @@ window.onload = function () {
 		window.open('http://' + document.location.host + '/chat/' + board);
     });
 
-    thumbnail_mode = $("#thumbnail_mode").val();
     $("#thumbnail_mode").change(function () {
-        var new_value = $(this).val();
-        if (thumbnail_mode === "links-only") {
-            if (new_value === "static") $('.thumb_static').show('slow');
-            if (new_value === "animated") $('.thumb_anim').show('slow');
-        } else if (new_value === "links-only") {
-            if (thumbnail_mode === "static") $('.thumb_static').hide('slow');
-            if (thumbnail_mode === "animated") $('.thumb_anim').hide('slow');
-        } else {
-            $('.thumb_static').css("display", (new_value === "static") ? "inline" : "none");
-            $('.thumb_anim').css("display", (new_value === "animated") ? "inline" : "none");
-        }
-        thumbnail_mode = new_value;
+        $.each(chat, function() {
+            if (this.image) {
+                set_thumbnail(this, $("#chat_" + this.count));
+            }
+        });
+        $('.chat_img.img_hide').hide('slow');
+        $('.chat_img.img_show').show('slow');
     });
 
     var quote_hash = window.location.hash.match(/^#q(\d+)$/);

@@ -25,6 +25,7 @@ body,html{
 	top:30px;
 	bottom:160px;
 	overflow: auto;
+	word-wrap: break-word;
 }
 
 .sidebar_convo {

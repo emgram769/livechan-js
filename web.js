@@ -423,6 +423,7 @@ function format_post(req, res, next, data, callback) {
             if (!convo_ent) {
                 data.is_convo_op = true;
                 data.convo_id = data.count;
+                /* cool down increase */
             } else {
                 data.is_convo_op = false;
                 data.convo_id = convo_ent.count;
@@ -533,11 +534,12 @@ app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
         fields = all_fields;
     } else {
         search.chat = req.params.id;
-        limit = 100;
+        limit = 50;
         fields = board_fields;
     }
     if (req.params.ops === "_convo") {
         search.is_convo_op = true;
+        limit = 20;
     }
     chat_db.find(search)
         .sort({
