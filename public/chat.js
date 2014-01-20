@@ -68,6 +68,7 @@ function escapeHtml(str) {
 };
 
 function swap_to_convo(convo){
+	convo = decodeURI(convo);
 	if(convo=="") {
 		$('#convo_filter').val('no-filter');
 		$("#convo").val('');
@@ -86,9 +87,8 @@ function draw_convos(){
 
 	for(i in convos){
 		var html = escapeHtml(convos[i]);
-		html = "<div onclick='swap_to_convo(\""+convos[i]+"\");' class='sidebar_convo'>"+html+"</div>";
+		html = "<div onclick='swap_to_convo(\""+encodeURI(html)+"\");' class='sidebar_convo'>"+html+"</div>";
 		$('.sidebar:first').prepend(html);
-		
 		
 	}
 	
