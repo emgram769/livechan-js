@@ -38,12 +38,31 @@ body,html{
 }
 
 @media (max-width: 650px) {
-  .sidebar {
-    display: none;
-  }
-  .chats {
-	  width:100%;
-  }
+	.sidebar {
+		display: none;
+	}
+	.chats {
+		width:100%;
+	}
+	.comment{
+		padding:5px;
+		margin:0;
+		width:100%;
+	}
+	
+	.name{
+		padding:0;
+		margin:0;
+		width:68%;
+		float:left;
+	}
+	
+	.convo{
+		padding:0;
+		margin:0;
+		width:28%;
+		float:right;
+	}
 }
 
 .left_float{
@@ -57,16 +76,17 @@ body,html{
 .create{
     position:fixed;
     bottom:0;
-    width:99%;
-    right:.5%;
+    padding:0;
+    margin:0;
+    width:100%;
     background:rgb(153, 136, 238);
-    border:1px solid black;
     font-size:16px;
     min-width:300px;
-    height:160px;
+    height:155px;
     font-size:14px;
     text-align:center;
     overflow:auto;
+    overflow-x: hidden;
 }
 
 .shown{
@@ -83,15 +103,24 @@ body,html{
 }
 
 .comment{
-    width:99%;
+    padding:0;
+    margin:0;
+    width:100%;
+    max-width:100%;
 }
 
 .name{
+    padding:0;
+    margin:0;
     width:68%;
+    float:left;
 }
 
 .convo{
-    width:30%;
+    padding:0;
+    margin:0;
+    width:28%;
+    float:right;
 }
 
 .greentext {
@@ -106,7 +135,7 @@ body,html{
     position:absolute;
     overflow:auto;
     top:30px;
-    bottom:160px;
+    bottom:155px;
     right:250px;
     left:0px;
 }

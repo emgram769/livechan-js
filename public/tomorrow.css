@@ -88,7 +88,7 @@ input{
 /* raw positioning stuff */
 
 .chats {
-  bottom: 176px;
+  bottom: 166px;
 }
 
 .chat {
@@ -110,23 +110,24 @@ input{
   padding: 4px 8px 8px 0px;
 }
 
-.create {
+.create {/*
   width: auto;
   padding: 8px 8px 0 8px;
   left: 8px;
   right: 0;
 
-  overflow: auto;
+  overflow: auto;*/
+  
 }
 
   .create .name {
     float: left;
-    width: 69%;
+    width: 68%;
   }
 
   .create .convo {
-    float: left;
-    width: 29%;
+    float: right;
+    width: 28%;
   }
 
 .chat_name .trip_code {
