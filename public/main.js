@@ -350,11 +350,6 @@ function apply_filter(posts) {
     
 }
 
-function thumbnail_mode() {
-    "use strict";
-    return $("#thumbnail_mode").val();
-}
-
 function insert_post(post) {
     "use strict";
     $(".chats:first").append(post);
@@ -476,14 +471,20 @@ window.onload = function () {
 		window.open('http://' + document.location.host + '/chat/' + board);
     });
 
+    thumbnail_mode = $("#thumbnail_mode").val();
     $("#thumbnail_mode").change(function () {
-        $.each(chat, function() {
-            if (this.image) {
-                set_thumbnail(this, $("#chat_" + this.count));
-            }
-        });
-        $('.chat_img.img_hide').hide('slow');
-        $('.chat_img.img_show').show('slow');
+        var new_value = $(this).val();
+        if (thumbnail_mode === "links-only") {
+            if (new_value === "static") $('.thumb_static').show('slow');
+            if (new_value === "animated") $('.thumb_anim').show('slow');
+        } else if (new_value === "links-only") {
+            if (thumbnail_mode === "static") $('.thumb_static').hide('slow');
+            if (thumbnail_mode === "animated") $('.thumb_anim').hide('slow');
+        } else {
+            $('.thumb_static').css("display", (new_value === "static") ? "inline" : "none");
+            $('.thumb_anim').css("display", (new_value === "animated") ? "inline" : "none");
+        }
+        thumbnail_mode = new_value;
     });
 
     var quote_hash = window.location.hash.match(/^#q(\d+)$/);
