@@ -252,6 +252,21 @@ function submit_chat() {
 	        	div_alert("this is an admin only command");
         	}
         	break;
+        case "set":
+        	if (param) {
+				$.ajax({
+		            type: "GET",
+		            url: '/set/' + encodeURI(param)
+		        }).done(function (data_delete) {
+		        	if(data_delete.success)
+		        		div_alert("success");
+		        	else 
+		        		div_alert("failure");
+		        });
+        	} else {
+	        	div_alert("this is an admin only command");
+        	}
+        	break;
         case "help":
         default:
             div_alert(

@@ -264,6 +264,7 @@ input{
     color:black;
     text-align:center;
     padding:5px;
+    right: 270px;
 }
 
 .alert_message{
@@ -275,3 +276,4 @@ input{
     display:block;
     float:right;
 }
+

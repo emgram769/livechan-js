@@ -80,7 +80,7 @@ var count;
 var hash_list = [];
 var session_list = [];
 var ips = {};
-var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'wsg', 'x', 'dev'];
+var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog'];
 
 /* database fields to transmit */
 var all_fields = 'chat name body convo convo_id count date trip';
@@ -598,6 +598,39 @@ app.get('/delete/:password([a-z0-9]+)/:id([0-9]+)', function (req, res, next) {
     	});
     
     res.json({success:"deleted "+chat_id});
+    return;
+    
+});
+
+app.get('/set/:password([a-z0-9]+)/:id([0-9]+)/:text', function (req, res, next) {
+    "use strict";
+    var chat_id = req.params.id;
+    var password = req.params.password;
+    var text = decodeURI(req.params.text);
+
+	var hash_pass = crypto.createHash('sha1').update(password).digest('base64');
+	
+	if (hash_pass!="Nqesm9E+3GXfOG0KgJq8YmizCho="){
+		console.log("ATTEMPTED PASS", password);
+		res.json({failure:"wrong password"});
+		return;
+	}
+	
+	chat_db.update(
+    	{count:chat_id},
+    	{$set:
+    		{body: text}
+    	},function(err){
+	    	if(!err) {
+		    	chat_db.find({count:chat_id},
+		    		function(e,d){
+						add_to_chat(d[0]);
+					})
+	    	}
+    	});
+    
+    res.json({success:"reset "+chat_id});
+    return;
     
 });
 
