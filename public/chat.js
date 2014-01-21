@@ -309,7 +309,7 @@ function update_chat(new_data, first_load) {
             [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
                 var ref_id = parseInt(m[2] ? m[2] : m[3], 10);
-                ref_ids.push(ref_id);
+                if ($.inArray(ref_id, ref_ids) === -1) ref_ids.push(ref_id);
                 o.push(quote_link(ref_id));
             }],
             [/https?:\/\/\S+/, function(m, o) {
