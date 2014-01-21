@@ -507,7 +507,7 @@ app.post('/login', function (req, res) {
 
 app.get('/', function (req, res) {
     "use strict";
-    res.sendfile('home.html');
+    res.sendfile('pages/home.html');
 });
 
 app.get('/chat/:id([a-z0-9]+)', function (req, res) {
@@ -516,7 +516,7 @@ app.get('/chat/:id([a-z0-9]+)', function (req, res) {
         res.send("Does not exist :(");
         return;
     }
-    res.sendfile('index.html');
+    res.sendfile('pages/index.html');
     return;
 });
 
@@ -643,7 +643,7 @@ app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
 
 /* 404 */
 app.get('*', function(req, res){
-  res.send('Cannot find the page you are looking for.', 404);
+    res.status(404).sendfile('pages/404.html');
 });
 
 /* join a chat room */
