@@ -87,8 +87,9 @@ input{
 
 /* raw positioning stuff */
 
-.chats {
+.chats_connected {
   bottom: 166px;
+  right: 250px;
 }
 
 .chat {
