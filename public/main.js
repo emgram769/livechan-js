@@ -471,8 +471,9 @@ window.onload = function () {
             if (html5) {
                 localStorage.my_ids = JSON.stringify(my_ids);
             }
-            var links = $([$("body")[0], future_ids[0]]).find(".quote_link, .back_link").filter("[data-dest='" + resp.id + "']");
-            setup_quote_links(links);
+            $.each(quote_links_to[resp.id], function() {
+                this.text(this.text() + " (You)");
+            });
         } else if (resp.success === "captcha") {
             $("#submit_button").prop("disabled", false);
             $("#alert_div_captcha").remove();

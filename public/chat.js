@@ -1,6 +1,6 @@
 var chat = {};
 var future_ids = {};
-var back_links = {};
+var quote_links_to = {};
 var loaded_callbacks = [];
 var convos = [];
 
@@ -60,6 +60,8 @@ function quote_link(dest) {
     link.click(quote_click);
     link.mouseover(quote_mouseover);
     link.mouseout(quote_mouseout);
+    if (quote_links_to[dest] === undefined) quote_links_to[dest] = [];
+    quote_links_to[dest].push(link);
     return link;
 }
 
@@ -275,11 +277,10 @@ function update_chat(new_data, first_load) {
     }
     if (new_data.body !== undefined) {
         // Remove any old backlinks to this post
-        if (back_links[id] !== undefined) {
-            $.each(back_links[id], function() {
-                this.remove();
+        if (quote_links_to[id] !== undefined) {
+            $.each(quote_links_to[id], function() {
+                if (this.hasClass("back_link")) this.remove();
             });
-            delete back_links[id];
         }
 
         // Process body markup
@@ -311,9 +312,9 @@ function update_chat(new_data, first_load) {
         post.find(".chat_body").empty().append(body);
 
         // Create new backlinks
-        back_links[id] = [];
         $(ref_ids).each(function () {
             var link = quote_link(id);
+            link.addClass("back_link");
             var their_refs = $("#chat_" + this + " .chat_refs");
             if (their_refs.length === 0) {
                 if (future_ids[this] === undefined) future_ids[this] = $("<output />");
@@ -321,7 +322,6 @@ function update_chat(new_data, first_load) {
             } else {
                 their_refs.append(" ", link);
             }
-            back_links[id].push(link);
         });
     }
     if (new_post) {
