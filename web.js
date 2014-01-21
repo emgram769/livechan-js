@@ -656,5 +656,5 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on('unsubscribe', function (data) {
     	socket.leave(data);
-    }
+    });
 });
