@@ -20,13 +20,15 @@ body,html{
 .sidebar{
 	margin:0;
 	position: absolute;
-	right:0px;
-	width:250px;
+	right:2px;
+	width:240px;
 	top:30px;
-	bottom:160px;
+	bottom:1px;
 	overflow: auto;
 	word-wrap: break-word;
 	display: none;
+	border-style:solid;
+	border-color:rgb(40, 42, 46);
 }
 
 .sidebar_convo {
@@ -47,22 +49,22 @@ body,html{
 	}
 	.comment{
 		padding:5px;
-		margin:0;
-		width:100%;
+		margin:1;
+		width:99%;
 	}
 	
 	.name{
 		padding:0;
 		margin:0;
-		width:68%;
+		width:59%;
 		float:left;
 	}
 	
 	.convo{
 		padding:0;
 		margin:0;
-		width:28%;
-		float:right;
+		width:49%;
+		float:left;
 	}
 }
 
@@ -106,15 +108,15 @@ body,html{
 .name{
     padding:0;
     margin:0;
-    width:68%;
+    width:50%;
     float:left;
 }
 
 .convo{
     padding:0;
     margin:0;
-    width:28%;
-    float:right;
+    width:49%;
+    float:left;
 }
 
 .greentext {
