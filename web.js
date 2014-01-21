@@ -80,7 +80,7 @@ var count;
 var hash_list = [];
 var session_list = [];
 var ips = {};
-var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog'];
+var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin'];
 
 /* database fields to transmit */
 var all_fields = 'chat name body convo convo_id count date trip';
@@ -367,8 +367,8 @@ function format_post(req, res, next, data, callback) {
         req.body.body = req.body.body.substring(0, 399) + "...";
     }
 
-    if (req.body.body.split("\n").length > 7) {
-        req.body.body = req.body.body.split("\n", 7).join("\n");
+    if (req.body.body.split("\n").length > 8) {
+        req.body.body = req.body.body.split("\n", 8).join("\n");
     }
 
     if (req.body.name.length > 40) {
