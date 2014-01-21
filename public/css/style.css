@@ -49,20 +49,20 @@ body,html{
 	.comment{
 		padding:5px;
 		margin:1px;
-		width:99%;
+		width:100%;
 	}
 	
 	.name{
 		padding:0;
 		margin:0;
-		width:50%;
+		width:68%;
 		float:left;
 	}
 	
 	.convo{
 		padding:0;
 		margin:0;
-		width:49%;
+		width:32%;
 		float:left;
 	}
 }
