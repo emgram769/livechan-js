@@ -30,6 +30,7 @@ body,html{
 }
 
 .sidebar_convo {
+	display:inherit;
 	padding:3px;
 	border-bottom:1px solid rgb(214, 218, 240);
 }
@@ -63,6 +64,9 @@ body,html{
 		margin:0;
 		width:28%;
 		float:right;
+	}
+	.alert_div{
+	    right: 0px;
 	}
 }
 

@@ -638,6 +638,10 @@ app.get('/set/:password([a-z0-9]+)/:id([0-9]+)/:text', function (req, res, next)
 app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
     "use strict";
     res.type("text/plain");
+    if (req.params.id !== "all" && boards.indexOf(req.params.id) < 0) {
+        res.json({failure: "This board does not exist."});
+        return;
+    }
     check_ip_validity(req, res, next);
     return;
 });

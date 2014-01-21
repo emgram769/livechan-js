@@ -205,8 +205,11 @@ function submit_chat() {
         auto_post = true;
         return false;
     }
+    
     $("#submit_button").prop("value", "Submit");
+    
     auto_post = false;
+    
     if (html5) {
         localStorage.name = $("#name").val();
         localStorage.theme = $("#theme_select").val();
@@ -256,6 +259,13 @@ function submit_chat() {
                 div_alert("usage: /join /channel");
             }
             break;
+        case "switch":
+            if (param) {
+                change_channel(param.replace('/', ''))
+            } else {
+                div_alert("usage: /switch /channel");
+            }
+            break;      
         case "delete":
         	if (param) {
 				$.ajax({
@@ -292,6 +302,7 @@ function submit_chat() {
                 "/addtryp !tripcode: add emphasis to tripcode\n" +
                 "/remtryp !tripcode: remove emphasis from tripcode\n" +
                 "/join /channel: join channel\n" +
+                "/switch /channel: switch to channel in same window\n" +
                 "/help: display this text\n\n" +
                 "CONVERSATIONS\n" +
                 "==============\n" +
@@ -306,6 +317,7 @@ function submit_chat() {
         }
         return;
     }
+    
     $("#comment-form").submit();
 
     clear_fields();
@@ -443,7 +455,9 @@ window.onload = function () {
 
     $("#body").keydown(function (e) {
         if (!e.shiftKey && e.keyCode === 13) {
-            if ($("#autosubmit").prop('checked') && cool_down_timer <= 0 && !$("#submit_button").prop("disabled")) {
+        	var msg = $("#body").val();
+            if ($("#autosubmit").prop('checked') && cool_down_timer <= 0 && !$("#submit_button").prop("disabled")
+            	|| msg.indexOf('//') !== 0 && msg.indexOf('/') === 0) { /* no delay if command */
                 submit_chat();
             } else {
                 auto_post = true;
@@ -500,8 +514,6 @@ window.onload = function () {
     
     $('.chats').scroll(function() {
         var scrolled = $(this).height() + $(this).scrollTop();
-        console.log("scrolled: " + scrolled);
-        console.log("height: " + $(this)[0].scrollHeight);
         if(scrolled < $(this)[0].scrollHeight - 5) {
             $('#autoscroll').prop("checked", false);
         } else {
@@ -541,6 +553,7 @@ window.onload = function () {
     });
     $('.chats').toggleClass('shown', true);
 };
+
 function change_channel(board)
 {
     var new_chat = board.replace('/', '');
@@ -557,6 +570,7 @@ function change_channel(board)
 
     start_chat();
 }
+
 function start_chat() {
     $('.chat').remove();
     $('.chats').toggleClass('chats_connected', chat_id !== 'all');
