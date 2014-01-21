@@ -641,6 +641,11 @@ app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
     return;
 });
 
+/* 404 */
+app.get('*', function(req, res){
+  res.send('Cannot find the page you are looking for.', 404);
+});
+
 /* join a chat room */
 io.sockets.on('connection', function (socket) {
     "use strict";
