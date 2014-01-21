@@ -324,8 +324,10 @@ function quote(id) {
     }
 
     // set conversation
-    $("#convo").val(chat[id].convo);
-    apply_filter();
+    if ($.inArray(get_convo(), convos) > -1) {
+        $("#convo").val(chat[id].convo);
+        apply_filter();
+    }
 }
 
 function notifications(post_convo) {

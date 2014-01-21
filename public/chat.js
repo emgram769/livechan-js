@@ -78,24 +78,22 @@ function swap_to_convo(convo){
 }
 
 function draw_convos(){
-	$('.sidebar:first').html('');
+    $('.sidebar:first').empty();
 
-	for(i in convos){
-		
-	    var div = $("<div class='sidebar_convo'/>");
-		div.text(convos[i]);
-		div.click(function() {
-		swap_to_convo($(this).text());
-		});
-		$('.sidebar:first').prepend(div);
-	}
-		
-	div = $("<div class='sidebar_convo'>All</div>");
-	div.click(function() {
-		swap_to_convo("");
-	});
-	$('.sidebar:first').prepend(div);
+    var div = $("<div class='sidebar_convo'>All</div>");
+    div.click(function() {
+        swap_to_convo("");
+    });
+    $('.sidebar:first').append(div);
 
+    for (var i = 0; i < convos.length && i < 20; i++) {
+        div = $("<div class='sidebar_convo'/>");
+        div.text(convos[convos.length - 1 - i]);
+        div.click(function() {
+            swap_to_convo($(this).text());
+        });
+        $('.sidebar:first').append(div);
+    }
 }
 
 function generate_post(id) {
@@ -333,9 +331,6 @@ function update_chat(new_data, first_load) {
         } else {
             convos.splice(convo_index,1);
             convos.push(data.convo);
-        }
-        if (convos.length > 20) {
-            convos.splice(0,1);
         }
         if (!first_load) draw_convos();
         notifications(data.convo);
