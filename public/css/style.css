@@ -26,6 +26,7 @@ body,html{
 	bottom:160px;
 	overflow: auto;
 	word-wrap: break-word;
+	display: none;
 }
 
 .sidebar_convo {
@@ -87,14 +88,7 @@ body,html{
     text-align:center;
     overflow:auto;
     overflow-x: hidden;
-}
-
-.shown{
-    display:block;
-}
-
-.hidden{
-    display:none;
+    display: none;
 }
 
 .half-height{
@@ -135,9 +129,15 @@ body,html{
     position:absolute;
     overflow:auto;
     top:30px;
+    left:0px;
+    bottom:0px;
+    right:0px;
+    display:none;
+}
+
+.chats_connected{
     bottom:155px;
     right:250px;
-    left:0px;
 }
 
 .chats-home{
@@ -265,6 +265,7 @@ input{
     text-align:center;
     padding:5px;
     right: 270px;
+    display:none;
 }
 
 .alert_message{
@@ -277,3 +278,10 @@ input{
     float:right;
 }
 
+.shown{
+    display:block;
+}
+
+.hidden{
+    display:none;
+}
