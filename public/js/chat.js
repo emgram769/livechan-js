@@ -174,6 +174,9 @@ function markup(text, rules) {
 function update_chat(new_data, first_load) {
     "use strict";
     var id = new_data.count;
+    if (id === undefined) {
+    	return;
+    }
     var new_post = (chat[id] === undefined);
     var post = null;
     if (new_post) {
