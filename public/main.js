@@ -237,8 +237,20 @@ function submit_chat() {
                 div_alert("usage: /join /channel");
             }
             break;
-        case "settings":
-        	$('.hidden_settings').show();
+        case "delete":
+        	if (param) {
+				$.ajax({
+		            type: "GET",
+		            url: '/delete/' + param
+		        }).done(function (data_delete) {
+		        	if(data_delete.success)
+		        		div_alert("success");
+		        	else 
+		        		div_alert("failure");
+		        });
+        	} else {
+	        	div_alert("this is an admin only command");
+        	}
         	break;
         case "help":
         default:
@@ -254,8 +266,8 @@ function submit_chat() {
                 "Setting a conversation allows you filter posts to it by using the dropdown box in the lower right\n\n" +
                 "SESSIONS\n" +
                 "==============\n" +
-                "After logging in by entering a CAPTCHA your session will last for 15 minutes\n" +
-                "Once your session expires posts won't show for other users until you re-login"
+                "After logging in by entering a CAPTCHA your session will last for at least 15 minutes\n" +
+                "Once your session expires you will be prompted with a new CAPTCHA"
             );
         }
         return;

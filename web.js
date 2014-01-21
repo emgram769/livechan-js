@@ -534,7 +534,7 @@ app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
         fields = all_fields;
     } else {
         search.chat = req.params.id;
-        limit = 50;
+        limit = 100;
         fields = board_fields;
     }
     if (req.params.ops === "_convo") {
@@ -560,17 +560,45 @@ app.post('/ban/:id([a-z0-9]+)', function (req, res, next) {
     "use strict";
     var board = req.params.id;
     var ip = req.query.ip;
-    var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64').slice(0, 10);
+    var hash = crypto.createHash('sha1').update(req.body.name.substr(req.query.password)).digest('base64').slice(0, 10);
 });
 
-app.get('/delete/:id([a-z0-9]+)', function (req, res, next) {
+app.get('/delete/:password([a-z0-9]+)/:id([0-9]+)', function (req, res, next) {
     "use strict";
-    var board = req.params.id;
-    var ip = req.query.ip;
-    var hash = crypto.createHash('md5').update(req.body.name.substr(req.query.password)).digest('base64');
-    if (hash === '8lnTmt7BmowWekVPb9wLog==') {
-        console.log('works');
-    }
+    var chat_id = req.params.id;
+    var password = req.params.password;
+
+	var hash_pass = crypto.createHash('sha1').update(password).digest('base64');
+	
+	if (hash_pass!="Nqesm9E+3GXfOG0KgJq8YmizCho="){
+		console.log("ATTEMPTED PASS", password);
+		res.json({failure:"wrong password"});
+		return;
+	}
+	
+	chat_db.update(
+    	{count:chat_id},
+    	{$set:
+    		{body:"deleted",
+    		convo:"General",
+    		name:"deleted",
+    		image_filename:""}
+    	},function(err){
+	    	if(!err) {
+		    	chat_db.find({count:chat_id},
+		    		function(e,d){
+			    		if(d[0] && d[0].image) {
+				    		fs.unlink(d[0].image);
+				    		fs.unlink(d[0].thumb);
+			    		}
+			    		d[0].image = "";
+						add_to_chat(d[0]);
+					})
+	    	}
+    	});
+    
+    res.json({success:"deleted "+chat_id});
+    
 });
 
 app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {

@@ -1,0 +1,2 @@
+sudo kill $(pgrep -f "sudo PORT=80 node web.js");
+nohup sudo PORT=80 node web.js &
