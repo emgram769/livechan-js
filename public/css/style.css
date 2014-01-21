@@ -20,17 +20,17 @@ body,html{
 .sidebar{
 	margin:0;
 	position: absolute;
-	right:0px;
-	width:250px;
+	right:2px;
+	width:240px;
 	top:30px;
-	bottom:160px;
+	bottom:1px;
 	overflow: auto;
 	word-wrap: break-word;
-	display: none;
+	border-style: solid;
+	border-color: rgb(40, 42, 46)
 }
 
 .sidebar_convo {
-	display:inherit;
 	padding:3px;
 	border-bottom:1px solid rgb(214, 218, 240);
 }
@@ -48,7 +48,7 @@ body,html{
 	}
 	.comment{
 		padding:5px;
-		margin:0;
+		margin:1px;
 		width:100%;
 	}
 	
@@ -62,11 +62,8 @@ body,html{
 	.convo{
 		padding:0;
 		margin:0;
-		width:28%;
-		float:right;
-	}
-	.alert_div{
-	    right: 0px;
+		width:32%;
+		float:left;
 	}
 }
 
@@ -83,7 +80,7 @@ body,html{
     bottom:0;
     padding:0;
     margin:0;
-    width:100%;
+    width:79%;
     background:rgb(153, 136, 238);
     font-size:16px;
     min-width:300px;
@@ -92,7 +89,14 @@ body,html{
     text-align:center;
     overflow:auto;
     overflow-x: hidden;
-    display: none;
+}
+
+.shown{
+    display:block;
+}
+
+.hidden{
+    display:none;
 }
 
 .half-height{
@@ -101,24 +105,26 @@ body,html{
 }
 
 .comment{
-    padding:0;
-    margin:0;
+    padding:0px;
+    margin:1px;
     width:100%;
     max-width:100%;
+	float: left;
+
 }
 
 .name{
     padding:0;
     margin:0;
-    width:68%;
+    width:50%;
     float:left;
 }
 
 .convo{
     padding:0;
     margin:0;
-    width:28%;
-    float:right;
+    width:49%;
+    float:left;
 }
 
 .greentext {
@@ -133,15 +139,9 @@ body,html{
     position:absolute;
     overflow:auto;
     top:30px;
-    left:0px;
-    bottom:0px;
-    right:0px;
-    display:none;
-}
-
-.chats_connected{
     bottom:155px;
     right:250px;
+    left:0px;
 }
 
 .chats-home{
@@ -269,7 +269,6 @@ input{
     text-align:center;
     padding:5px;
     right: 270px;
-    display:none;
 }
 
 .alert_message{
@@ -282,10 +281,3 @@ input{
     float:right;
 }
 
-.shown{
-    display:block;
-}
-
-.hidden{
-    display:none;
-}
