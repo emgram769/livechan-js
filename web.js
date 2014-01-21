@@ -289,7 +289,8 @@ function format_image(req, res, next, callback) {
 
 	/* no image uploaded */
 	
-	if (req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
+	if (req.files && req.files.image &&
+		req.files.image.size === 0 || invalid_extension(req.files.image.path)) {
 	
         fs.unlink(req.files.image.path); /* delete blank file */
         
