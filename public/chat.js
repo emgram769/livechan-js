@@ -34,6 +34,7 @@ function quote_mouseover() {
     var display = $("#chat_" + $(this).data("dest")).clone();
     display.toggleClass("to_die", true);
     display.css({
+        display: 'inline',
         position: 'absolute',
         top: $(this).offset().top + 10,
         left: $(this).offset().left + 10,
@@ -63,7 +64,6 @@ function quote_link(dest) {
 }
 
 function swap_to_convo(convo){
-	convo = decodeURI(convo);
 	if(convo=="") {
 		$('#convo_filter').val('no-filter');
 		$("#convo").val('');
@@ -100,24 +100,6 @@ function draw_convos(){
 
 function generate_post(id) {
     "use strict";
-    
-    var convo_index = $.inArray(chat[id].convo, convos);
-
-	
-    if (convo_index < 0) {
-	    convos.push(chat[id].convo);
-    } else {
-    	convos.splice(convo_index,1);
-	   	convos.push(chat[id].convo);
-    }
-    
-    if (convos.length > 20) {
-		convos.splice(0,1);
-	}
-	
-    
-    draw_convos();
-    
     var post = $(
         "<article class='chat'>" +
             "<header class='chat_header'>" +
@@ -278,14 +260,14 @@ function update_chat(new_data, first_load) {
     }
     if (new_data.image !== undefined || new_data.image_filesize !== undefined || new_data.image_width !== undefined || new_data.image_height !== undefined || new_data.image_filename !== undefined) {
         var data_items = [];
-        if (new_data.image_filesize !== undefined) {
-            data_items.push(humanFileSize(new_data.image_filesize, false));
+        if (data.image_filesize !== undefined) {
+            data_items.push(humanFileSize(data.image_filesize, false));
         }
-        if (new_data.image_width !== undefined && new_data.image_height !== undefined) {
-            data_items.push(new_data.image_width + "x" + new_data.image_height);
+        if (data.image_width !== undefined && data.image_height !== undefined) {
+            data_items.push(data.image_width + "x" + data.image_height);
         }
-        if (new_data.image_filename !== undefined) {
-            data_items.push(new_data.image_filename);
+        if (data.image_filename !== undefined) {
+            data_items.push(data.image_filename);
         }
         if (data_items.length > 0) {
             post.find(".file_data").text("-(" + data_items.join(", ") + ")");
@@ -345,6 +327,17 @@ function update_chat(new_data, first_load) {
         });
     }
     if (new_post) {
+        var convo_index = $.inArray(data.convo, convos);
+        if (convo_index < 0) {
+            convos.push(data.convo);
+        } else {
+            convos.splice(convo_index,1);
+            convos.push(data.convo);
+        }
+        if (convos.length > 20) {
+            convos.splice(0,1);
+        }
+        if (!first_load) draw_convos();
         notifications(data.convo);
         apply_filter(post);
         if (first_load) {
@@ -376,6 +369,7 @@ function draw_chat(data) {
     for (i = data.length - 1; i >= 0; i--) {
         update_chat(data[i], true);
     }
+    draw_convos();
     if (!data[0])
     	return;
     var max_chat = data[0].count;
