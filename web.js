@@ -80,7 +80,7 @@ var count;
 var hash_list = [];
 var session_list = [];
 var ips = {};
-var boards = ['a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin'];
+var boards = ['all', 'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin'];
 
 /* database fields to transmit */
 var all_fields = 'chat name body convo convo_id count date trip';
@@ -508,7 +508,7 @@ app.post('/login', function (req, res) {
 
 app.get('/', function (req, res) {
     "use strict";
-    res.sendfile('pages/home.html');
+    res.redirect('/chat/all');
 });
 
 app.get('/chat/:id([a-z0-9]+)', function (req, res) {
@@ -654,4 +654,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('subscribe', function (data) {
         socket.join(data);
     });
+    socket.on('unsubscribe', function (data) {
+    	socket.leave(data);
+    }
 });
