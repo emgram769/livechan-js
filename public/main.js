@@ -324,10 +324,8 @@ function quote(id) {
     }
 
     // set conversation
-    if (get_convo() === "General" && chat[id].convo && chat[id].convo !== "General" && chat[id].convo !== '') {
-        $("#convo").val(chat[id].convo);
-        apply_filter();
-    }
+    $("#convo").val(chat[id].convo);
+    apply_filter();
 }
 
 function notifications(post_convo) {
