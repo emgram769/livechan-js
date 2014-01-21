@@ -324,7 +324,7 @@ function quote(id) {
     }
 
     // set conversation
-    if (get_convo() === "General" && chat[id].convo && chat[id].convo !== "General" && chat[id].convo !== '') {
+    if ($.inArray(get_convo(), convos) > -1) {
         $("#convo").val(chat[id].convo);
         apply_filter();
     }
