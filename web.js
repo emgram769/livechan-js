@@ -519,13 +519,13 @@ app.post('/login', function (req, res) {
 
 app.get('/', function (req, res) {
     "use strict";
-    res.redirect('/chat/all');
+    res.redirect('/chat/home');
 });
 
 app.get('/chat/:id([a-z0-9]+)', function (req, res) {
     "use strict";
-    if (boards.indexOf(req.params.id) < 0) {
-        res.send("Does not exist :(");
+    if (boards.indexOf(req.params.id) < 0 && req.params.id !== "home") {
+        res.send("Board doesn't exist :(");
         return;
     }
     res.sendfile('pages/index.html');
