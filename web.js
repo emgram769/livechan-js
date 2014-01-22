@@ -519,7 +519,7 @@ app.post('/login', function (req, res) {
 
 app.get('/', function (req, res) {
     "use strict";
-    res.redirect('/chat/all');
+    res.redirect('/chat/home');
 });
 
 app.get('/chat/:id([a-z0-9]+)', function (req, res) {
