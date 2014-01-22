@@ -146,6 +146,7 @@ function generate_post(id) {
 
     post.find(".chat_img_cont")
         .mouseover(function(event) {
+            if (!chat[id].image || chat[id].image_width === undefined || chat[id].image_height === undefined) return;
             var maxLeft = $(this).offset().left + $(this).width() + 10;
             var maxWidth = $(window).width() - maxLeft;
             if (maxWidth <= 0) return;
@@ -153,8 +154,8 @@ function generate_post(id) {
             var scale = Math.min(maxWidth/chat[id].image_width, maxHeight/chat[id].image_height, 1);
             var width = Math.round(chat[id].image_width * scale);
             var height = Math.round(chat[id].image_height * scale);
-            var left = Math.min(event.screenX + 10, maxLeft);
-            var top = Math.round((maxHeight - height) * event.screenY / maxHeight);
+            var left = Math.min(event.clientX + 10, maxLeft);
+            var top = Math.round((maxHeight - height) * event.clientY / maxHeight);
 
             var display = $("<img>");
             display.attr("src", "/tmp/uploads/" + chat[id].image.match(/[\w\-\.]*$/)[0]);
@@ -174,8 +175,8 @@ function generate_post(id) {
             if (display.length == 0) return;
             var maxLeft = $(this).offset().left + $(this).width() + 10;
             var maxHeight = $(window).height();
-            var left = Math.min(event.screenX + 10, maxLeft);
-            var top = Math.round((maxHeight - display.height()) * event.screenY / maxHeight);
+            var left = Math.min(event.clientX + 10, maxLeft);
+            var top = Math.round((maxHeight - display.height()) * event.clientY / maxHeight);
             $(".to_die").css({
                 left: left,
                 top: top,
