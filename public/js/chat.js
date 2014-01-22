@@ -309,6 +309,9 @@ function update_chat(new_data, first_load) {
             }],
             [/\[code\]([\s\S]*?)\[\/code\]/, function(m, o) {
                 o.push($("<pre class='code'/>").text(m[1]));
+            }],
+            [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
+                o.push($("<span class='spoiler'/>").text(m[1]));
             }]
         ];
         var body = markup(data.body, rules);

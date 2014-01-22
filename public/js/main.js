@@ -160,7 +160,8 @@ function clear_fields() {
     $("#image").val('');
     $("#body").val('');
     $("#sum").val('');
-    if($("#clearconvo").prop("checked")) {
+    if($("#clearconvo").prop("checked")
+       && $('#convo_filter').val() !== 'filter') {
     	$("#convo").val('');
     }
 }
@@ -252,6 +253,7 @@ function submit_chat() {
                 div_alert("usage: /remtryp !tripcode");
             }
             break;
+        case "j":
         case "join":
             if (param) {
                 window.open('http://' + document.location.host + '/chat/' + param.replace('/', ''));
@@ -259,6 +261,7 @@ function submit_chat() {
                 div_alert("usage: /join /channel");
             }
             break;
+        case "s":
         case "switch":
             if (param) {
                 change_channel(param.replace('/', ''))
@@ -473,7 +476,12 @@ window.onload = function () {
     }
 
     $('iframe#miframe').load(function () {
-        var resp = JSON.parse($("#miframe").contents()[0].body.childNodes[0].innerHTML);
+    	var resp;
+    	try {
+        	resp = JSON.parse($("#miframe").contents()[0].body.childNodes[0].innerHTML);
+        } catch (e) {
+	    	resp =  {failure:$("#miframe").contents()[0].body.childNodes[0].innerHTML};
+        }
         if (resp.failure && resp.failure === "session_expiry") {
         	$("#body").val(last_post);
 			div_alert(captcha_div(), false, "captcha");

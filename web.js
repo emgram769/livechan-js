@@ -80,7 +80,7 @@ var count;
 var hash_list = [];
 var session_list = [];
 var ips = {};
-var boards = ['all', 'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin'];
+var boards = ['all', 'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin', 'coin'];
 
 /* database fields to transmit */
 var all_fields = 'chat name body convo convo_id count date trip';
@@ -557,11 +557,24 @@ app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
         });
 });
 
-app.post('/ban/:id([a-z0-9]+)', function (req, res, next) {
+app.post('/ban/:password([a-z0-9]+)/:id([0-9]+)/:type/:board', function (req, res, next) {
     "use strict";
-    var board = req.params.id;
-    var ip = req.query.ip;
-    var hash = crypto.createHash('sha1').update(req.body.name.substr(req.query.password)).digest('base64').slice(0, 10);
+    var chat_id = req.params.id;
+    var password = req.params.password;
+    var type = req.params.text;
+    var board = req.params.board;
+
+	var hash_pass = crypto.createHash('sha1').update(password).digest('base64');
+	
+	if (hash_pass!="Nqesm9E+3GXfOG0KgJq8YmizCho="){
+		console.log("ATTEMPTED PASS", password);
+		res.json({failure:"wrong password"});
+		return;
+	}
+	
+	res.json({success:"right password"});
+	return;
+
 });
 
 app.get('/delete/:password([a-z0-9]+)/:id([0-9]+)', function (req, res, next) {
