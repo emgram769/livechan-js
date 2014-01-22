@@ -530,11 +530,6 @@ window.onload = function () {
         get_css($(this).val());
         localStorage.theme = $(this).val().replace("null", "/style.css");
     });
-    
-    
-    setTimeout(function(){
-    	$(".spoiler").toggleClass("spoiled", !$('#spoilers').prop("checked"));
-    	},500); // hacky I know
 
     $('#spoilers').change(function () {
         localStorage.spoilers = $(this).prop("checked");

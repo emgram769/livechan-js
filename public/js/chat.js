@@ -405,6 +405,8 @@ function update_chat(new_data, first_load) {
             });
         }
     }
+    $(".spoiler").toggleClass("spoiled", !$('#spoilers').prop("checked"));
+
 }
 
 function draw_chat(data) {

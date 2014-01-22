@@ -56,7 +56,7 @@ input{
 }
  
 .chat a, span.link, .chat .chat_header .chat_number {
-  color: #efdcbc;
+  color: #dcdccc;
 }
  
 .chat a:hover, span.link:hover, .chat .chat_header .chat_number:hover {
@@ -64,11 +64,11 @@ input{
 }
  
 .chat_name {
-  color: inherit;
+  color: #c0bed1;
 }
  
 .chat_name .trip_code {
-  color: inherit;        
+ color: #c0bed1;      
 }
  
 .chat_name.contrib {
