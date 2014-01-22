@@ -200,7 +200,7 @@ function update_chat(new_data, first_load) {
 
     var data = chat[id];
     if (new_data.chat !== undefined && chat_id === "all") {
-        post.find(".chat_label").text("/" + data.chat + "/");
+        post.find(".chat_label").text("/" + data.chat);
     }
     if (new_data.name !== undefined) {
         post.find(".name_part").text(data.name);

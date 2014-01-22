@@ -193,6 +193,13 @@ function init_cool_down(){
         cool_down_interval = setInterval(cool_down, 1000);
 }
 
+function submit_captcha(){
+        div_alert(captcha_div(), false, "captcha");
+        $("#submit_button").prop("disabled", true);
+        $("#submit_button").prop("value", "Submit (Auto)");
+        auto_post = true;
+}
+
 function submit_chat() {
     "use strict";
 	
@@ -201,10 +208,7 @@ function submit_chat() {
 	
     last_post = $("#body").val();
     if (get_cookie("password_livechan") === '') {
-        div_alert(captcha_div(), false, "captcha");
-        $("#submit_button").prop("disabled", true);
-        $("#submit_button").prop("value", "Submit (Auto)");
-        auto_post = true;
+		submit_captcha();
         return false;
     }
     
@@ -571,6 +575,12 @@ window.onload = function () {
     var quote_hash = window.location.hash.match(/^#q(\d+)$/);
     if (quote_hash) {
         quote(parseInt(quote_hash[1], 10));
+    }
+    
+    $('.chats').toggleClass('shown', true);
+    if (get_cookie("password_livechan") === '') {
+		submit_captcha();
+        return false;
     }
 
     window.addEventListener('popstate', function(event) {
