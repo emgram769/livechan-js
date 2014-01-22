@@ -148,6 +148,46 @@ function generate_post(id) {
         post.find(".chat_refs").append(" ", future_ids[id].contents());
     }
 
+    post.find(".chat_img_cont")
+        .mouseover(function(event) {
+            if (!chat[id].image || chat[id].image_width === undefined || chat[id].image_height === undefined) return;
+            var maxLeft = $(this).offset().left + $(this).width() + 10;
+            var maxWidth = $(window).width() - maxLeft;
+            if (maxWidth <= 0) return;
+            var maxHeight = $(window).height();
+            var scale = Math.min(maxWidth/chat[id].image_width, maxHeight/chat[id].image_height, 1);
+            var width = Math.round(chat[id].image_width * scale);
+            var height = Math.round(chat[id].image_height * scale);
+            var left = Math.min(event.clientX + 10, maxLeft);
+            var top = Math.round((maxHeight - height) * event.clientY / maxHeight);
+
+            var display = $("<img>");
+            display.attr("src", "/tmp/uploads/" + chat[id].image.match(/[\w\-\.]*$/)[0]);
+            display.toggleClass("to_die", true);
+            display.css({
+                position: 'fixed',
+                left: left,
+                top: top,
+                width: width,
+                height: height,
+                zIndex: 1000
+            });
+            $('body').append(display);
+        })
+        .mousemove(function(event) {
+            var display = $(".to_die");
+            if (display.length == 0) return;
+            var maxLeft = $(this).offset().left + $(this).width() + 10;
+            var maxHeight = $(window).height();
+            var left = Math.min(event.clientX + 10, maxLeft);
+            var top = Math.round((maxHeight - display.height()) * event.clientY / maxHeight);
+            $(".to_die").css({
+                left: left,
+                top: top,
+            });
+        })
+        .mouseout(quote_mouseout);
+
     return post;
 }
 
@@ -258,8 +298,7 @@ function update_chat(new_data, first_load) {
             }
             img_container.find(".chat_img")
                 .css("display", "none")
-                .attr("alt", "Image #" + data.count)
-                .thumbPopup({popupCSS: {'max-height': '97%', 'max-width': '75%'}});
+                .attr("alt", "Image #" + data.count);
 
             if (thumbnail_mode === "static") img_container.find(".thumb_static").css("display", "inline");
             if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
