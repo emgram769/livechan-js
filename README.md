@@ -50,7 +50,8 @@ Nginx proxy config
 ====
 Requires nginx 1.3+:
 
-```# the IP(s) on which your node server is running. I chose port 3000.
+```nginx
+# the IP(s) on which your node server is running. I chose port 8083.
 upstream app_livechan {
     server 127.0.0.1:8083;
 }
@@ -74,7 +75,8 @@ server {
       proxy_pass http://app_livechan/;
       proxy_redirect off;
     }
-}```
+}
+```
 
 Relevant links
 ====
