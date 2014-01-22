@@ -330,8 +330,6 @@ function submit_chat() {
     
     $("#comment-form").submit();
 
-    clear_fields();
-
     if (!admin_mode) {
         cool_down_timer += 7;
 		init_cool_down();
@@ -494,6 +492,7 @@ window.onload = function () {
         } else if (resp.failure) {
             div_alert(resp.failure);
         } else if (resp.id) {
+            clear_fields();
             my_ids.push(resp.id);
             if (html5) {
                 localStorage.my_ids = JSON.stringify(my_ids);
