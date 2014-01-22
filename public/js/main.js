@@ -483,7 +483,7 @@ window.onload = function () {
         }
         if (resp.failure && resp.failure === "session_expiry") {
         	$("#body").val(last_post);
-			div_alert(captcha_div(), false, "captcha");
+		submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
         } else if (resp.id) {
@@ -580,7 +580,6 @@ window.onload = function () {
     
     if (get_cookie("password_livechan") === '') {
 	submit_captcha();
-        return false;
     }
 };
 
