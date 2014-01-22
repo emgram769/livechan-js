@@ -49,6 +49,10 @@ function quote_mouseout() {
     $('.to_die').remove();
 }
 
+function toggle_sidebar(){
+	$('.sidebar').hide('slow');
+}
+
 function quote_link(dest) {
     "use strict";
     var link = $("<a class='quote_link'/>");
@@ -382,6 +386,7 @@ function draw_chat(data) {
             $.each(loaded_callbacks, function() {
                 this();
             });
+            scroll();
         } else {
             if (counter++ > too_long) {
                 clearInterval(wait_for_last);

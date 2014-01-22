@@ -628,7 +628,6 @@ function start_chat() {
                         } return -1;
                 });
             draw_chat(draw_data);
-            scroll();
             socket.on('chat', function (d) {
                 update_chat(d);
                 if ($("#autoscroll").prop('checked')) {
