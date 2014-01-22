@@ -166,8 +166,6 @@ function generate_post(id) {
                 height: height,
                 zIndex: 1000
             });
-            display.attr("width", width);
-            display.attr("height", height);
             $('body').append(display);
         })
         .mouseout(quote_mouseout);
