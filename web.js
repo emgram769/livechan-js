@@ -524,7 +524,7 @@ app.get('/', function (req, res) {
 
 app.get('/chat/:id([a-z0-9]+)', function (req, res) {
     "use strict";
-    if (boards.indexOf(req.params.id) <  && req.params.id !== "home") {
+    if (boards.indexOf(req.params.id) < 0 && req.params.id !== "home") {
         res.send("Board doesn't exist :(");
         return;
     }
