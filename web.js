@@ -237,16 +237,16 @@ function session_exists(session) {
 function check_ip_validity(req, res, next) {
 
 	/* get IP */
-	
-	var ip_addr = req.headers["x-forwarded-for"];
+    var user_ip = req.connection.remoteAddress;
+    var ip_addr = req.headers["x-forwarded-for"];
     if (ip_addr) {
         var list = ip_addr.split(",");
-        req.connection.remoteAddress = list[list.length - 1];
+        user_ip = list[list.length - 1];
     }
     
     /* lookup IP */
     
-    user_db.find({ip:req.connection.remoteAddress})
+    user_db.find({ip:user_ip})
     	   .sort({last_post:-1})
     	   .exec(function (e, d) {
     	   		console.log(d);
@@ -428,7 +428,13 @@ function format_post(req, res, next, data, callback) {
 	data.body = req.body.body;
     data.name = req.body.name || "Anonymous";
     data.date = (new Date()).toString();
-    data.ip = req.connection.remoteAddress;
+    var user_ip = req.connection.remoteAddress;
+    var ip_addr = req.headers["x-forwarded-for"];
+    if (ip_addr) {
+        var list = ip_addr.split(",");
+        user_ip = list[list.length - 1];
+    }
+    data.ip = user_ip;
     data.chat = req.params.id;
     
     
@@ -482,15 +488,16 @@ app.get('/login', function (req, res) {
 app.post('/login', function (req, res) {
     "use strict";
     res.type("text/plain");
+    var user_ip = req.connection.remoteAddress;
     var ip_addr = req.headers["x-forwarded-for"];
     if (ip_addr) {
         var list = ip_addr.split(",");
-        req.connection.remoteAddress = list[list.length - 1];
+        user_ip = list[list.length - 1];
     }
 
     if (req.body.digits === req.session.captcha) {
         var key = (Math.random() * 1e17).toString(36);
-        var info = req.headers['user-agent'] + req.connection.remoteAddress + key;
+        var info = req.headers['user-agent'] + user_ip + key;
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
         res.cookie('password_livechan', password, {
@@ -510,7 +517,7 @@ app.post('/login', function (req, res) {
 
         var data = {
             session_key: password,
-            ip: req.connection.remoteAddress,
+            ip: user_ip,
             last_post: now.setTime(now.getTime() - 6000)
         };
 
@@ -533,13 +540,13 @@ app.post('/login', function (req, res) {
 
 app.get('/', function (req, res) {
     "use strict";
-    res.redirect('/chat/all');
+    res.redirect('/chat/home');
 });
 
 app.get('/chat/:id([a-z0-9]+)', function (req, res) {
     "use strict";
-    if (boards.indexOf(req.params.id) < 0) {
-        res.send("Does not exist :(");
+    if (boards.indexOf(req.params.id) < 0 && req.params.id !== "home") {
+        res.send("Board doesn't exist :(");
         return;
     }
     res.sendfile('pages/index.html');

@@ -95,7 +95,7 @@ if (html5) {
             $("#theme_select").val("/style.css");
         }
         get_css($("#theme_select").val());
-        if(localStorage.autoStart === "true") {
+        if(localStorage.autoStart === "true" && chat_id !== "home") {
             start_chat();
         } else {
 	    $('.chats').toggleClass('shown', true);
@@ -330,8 +330,6 @@ function submit_chat() {
     
     $("#comment-form").submit();
 
-    clear_fields();
-
     if (!admin_mode) {
         cool_down_timer += 7;
 		init_cool_down();
@@ -494,6 +492,7 @@ window.onload = function () {
         } else if (resp.failure) {
             div_alert(resp.failure);
         } else if (resp.id) {
+            clear_fields();
             my_ids.push(resp.id);
             if (html5) {
                 localStorage.my_ids = JSON.stringify(my_ids);
@@ -599,8 +598,14 @@ function change_channel(board)
 {
     var new_chat = board.replace('/', '');
     $('#comment-form').get(0).setAttribute('action', '/chat/' + new_chat);
-    socket.emit('unsubscribe', chat_id);
+    if(chat_id !== "home") {
+        socket.emit('unsubscribe', chat_id);
+    }
     chat_id = new_chat;
+    if(chat_id === "home") {
+        window.location.href = "/chat/home";
+        return;
+    }
     socket.emit('subscribe', chat_id);
     $('#board_select').val(board);
 
@@ -613,6 +618,10 @@ function change_channel(board)
 }
 
 function start_chat() {
+    if(chat_id === "home") {
+        change_channel('all');
+        return;
+    }
     $('.chat').remove();
     $('.chats').toggleClass('chats_connected', chat_id !== 'all');
     $('.create').toggleClass('shown', chat_id !== 'all');
