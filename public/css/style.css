@@ -67,7 +67,7 @@ ul {
 
 @media (max-width: 650px) {
         .sidebar {
-            display: none;
+            display: none !important;
         }
         .sidebar_convo {
         	display: none;
@@ -98,7 +98,8 @@ ul {
                 float:right;
         }
         .alert_div{
-            right: 0px;
+            	right: 0px;
+            	float:right;
         }
 }
 
@@ -176,7 +177,7 @@ ul {
 }
 
 .chats_connected{
-    bottom:155px;
+    bottom:168px;
     right:250px;
 }
 

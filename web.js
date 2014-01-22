@@ -2,6 +2,7 @@
 var express = require("express");
 var logfmt = require("logfmt");
 var http = require('http');
+var https = require('https');
 var crypto = require('crypto');
 var ipfilter = require('ipfilter');
 var captcha = require('captcha');
@@ -25,13 +26,26 @@ fs.readFile('salt.txt', 'utf8', function (err, data) {
 /* initialize app */
 var app = express();
 var port = process.env.PORT || 5000;
+var secure_port = 443;
 
 /* listen now */
 var server = http.createServer(app).listen(port, function () {
     "use strict";
     console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
-var io = require('socket.io').listen(server);
+
+var options = {
+  ca:   fs.readFileSync('sub.class1.server.ca.pem'),
+  key:  fs.readFileSync('ssl.key'),
+  cert: fs.readFileSync('ssl.crt')
+};
+
+var secure_server = https.createServer(options, app).listen(secure_port, function () {
+    "use strict";
+    console.log('Express secure_server listening on port %d in %s mode', secure_server.address().port, app.settings.env);
+});
+
+var io = require('socket.io').listen(secure_server);
 
 /* set up db */
 mongoose.connect('mongodb://localhost/livechan_db');
@@ -70,8 +84,8 @@ app.use(express.cookieSession({
 /* captcha security */
 app.use(captcha({
     url: '/captcha.jpg',
-    color: '#0064cd',
-    background: 'rgb(20,30,200)'
+    color: '#465e67',
+    background: '#800000'
 }));
 
 /* stored data in memory */
@@ -453,6 +467,13 @@ function format_post(req, res, next, data, callback) {
 
 /* REQUESTS */
 
+app.all('*',function(req,res,next){
+  if(!req.connection.encrypted)
+    res.redirect('https://livechan.net'+req.url);
+  else
+    next();
+});
+
 app.get('/login', function (req, res) {
     "use strict";
     res.send('<html><head><meta name="viewport" content="width=device-width,user-scalable=no"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="center container"><div>Please prove you aren\'t a robot</div><br/><img src="/captcha.jpg"/><form action="/login" method="post"><br/><input type="text" name="digits"/><input type="hidden" name="page" value="' + req.query.page + '"/></form></div></body></html>');
@@ -665,6 +686,11 @@ app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
 
 /* 404 */
 app.get('*', function(req, res){
+    res.status(404).sendfile('pages/404.html');
+});
+
+/* 404 */
+app.post('*', function(req, res){
     res.status(404).sendfile('pages/404.html');
 });
 

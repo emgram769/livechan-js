@@ -8,4 +8,8 @@ public/chats.json
 nohup.out
 *.swp
 *.swo
-
+ca.pem
+ssl.crt
+ssl.key
+ssl.csr
+sub.class1.server.ca.pem
