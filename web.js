@@ -80,7 +80,7 @@ var count;
 var hash_list = [];
 var session_list = [];
 var ips = {};
-var boards = ['all', 'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin', 'coin'];
+var boards = ['all', 'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k', 'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i', 'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp', 'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit', 'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy', 'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog','dogecoin','fedoracoin', 'coin', 'q'];
 
 /* database fields to transmit */
 var all_fields = 'chat name body convo convo_id count date trip';
@@ -531,16 +531,16 @@ app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
     var limit = 0;
     var fields = "";
     if (req.params.id === "all") {
-        limit = 20;
+        limit = 30;
         fields = all_fields;
     } else {
         search.chat = req.params.id;
-        limit = 100;
+        limit = 150;
         fields = board_fields;
     }
     if (req.params.ops === "_convo") {
         search.is_convo_op = true;
-        limit = 20;
+        limit = 30;
     }
     chat_db.find(search)
         .sort({

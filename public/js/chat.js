@@ -88,7 +88,7 @@ function draw_convos(){
     });
     $('.sidebar:first').append(div);
 
-    for (var i = 0; i < convos.length && i < 20; i++) {
+    for (var i = 0; i < convos.length && i < 30; i++) {
         div = $("<div class='sidebar_convo'/>");
         div.text(convos[convos.length - 1 - i]);
         div.click(function() {

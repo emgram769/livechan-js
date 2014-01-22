@@ -50,7 +50,7 @@ function get_css(file) {
     link.href = '/css'+file;
     link.media = 'all';
     $('head').append(link);
-    scroll();
+    setTimeout(scroll, 300);
 }
 
 if (html5) {
@@ -408,7 +408,6 @@ function apply_filter(posts) {
             return (convo === chat[id].convo) ? '' : 'chat_hidden';
         }, true);
     }
-    
 }
 
 function insert_post(post) {
@@ -503,6 +502,19 @@ window.onload = function () {
             }
         }
     });
+    
+    $(document).bind('click', function(e){
+	   	$('.settings_nav:first').hide('slow');
+    });
+    
+    $('#settings_button').bind('click', function(e){
+    	e.stopPropagation();
+	    $('.settings_nav:first').toggle('slow');
+	    $('.settings_nav').bind('click', function(e2){
+	    	 e2.stopPropagation();
+		});
+
+    });
 
     $('#convo, #convo_filter').change(function () {
         apply_filter();
@@ -583,7 +595,7 @@ function start_chat() {
     $('.chat').remove();
     $('.chats').toggleClass('chats_connected', chat_id !== 'all');
     $('.create').toggleClass('shown', chat_id !== 'all');
-    $('.sidebar').toggleClass('shown', chat_id !== 'all');
+    //$('.sidebar').toggleClass('shown', chat_id !== 'all');
     title = 'LiveChan - /'+chat_id;
     window.document.title = title;
     if(history.pushState && push_state) history.pushState({id: chat_id}, document.title, chat_path + chat_id);

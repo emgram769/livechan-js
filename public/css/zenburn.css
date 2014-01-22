@@ -1,0 +1,152 @@
+
+
+/* live-zenburn.css */
+ 
+body,html {
+  background: none repeat scroll 0% 0% #424242;
+  color: #DCDCCC;
+}
+
+
+.settings_nav{
+  background: none repeat scroll 0% 0% #424242;
+}
+
+.create {
+  /* the input box */
+  background: #3F3F3F;
+  border: none;
+}
+ 
+textarea{
+	background: #C5C8C6;
+	color: #282A2E;
+	border:1px solid #1D1F21;
+}
+ 
+input{
+   background: #C5C8C6;
+  color: #282A2E;
+  border:1px solid #1D1F21;
+}
+ 
+/* is this even css
+ 
+.input_button::-webkit-file-upload-button {
+  // visibility: hidden;
+}
+ 
+*/
+ 
+.input_button {
+ 
+}
+ 
+.input_select {
+ 
+}
+ 
+.input_checkbox {
+ 
+}
+ 
+.chat {
+  background: #575757;
+  border: 1px solid #3F3F3F;
+}
+ 
+.chat a, span.link, .chat .chat_header .chat_number {
+  color: #efdcbc;
+}
+ 
+.chat a:hover, span.link:hover, .chat .chat_header .chat_number:hover {
+  color: #f9f6be;
+}
+ 
+.chat_name {
+  color: inherit;
+}
+ 
+.chat_name .trip_code {
+  color: inherit;        
+}
+ 
+.chat_name.contrib {
+  color: #97bbe0;
+}
+ 
+.chat_name.admin .trip_code {
+  color:rgb(221, 0, 0);
+}
+ 
+.chat_name.admin {
+  color:rgb(221, 0, 0);
+}
+ 
+.chat_name.contrib .trip_code {
+}
+ 
+.chat_header {
+  background: transparent;
+  width:100%;
+}
+ 
+.greentext {
+  color: #60b48a;
+}
+ 
+/* raw positioning stuff */
+ 
+.chats_connected {
+  bottom: 166px;
+  right: 250px;
+}
+ 
+.chat {
+  margin: 8px 8px 0 8px;
+  padding: 6px 8px 8px 8px;
+ 
+  clear: both;
+  overflow: hidden;
+}
+ 
+.chat .chat_header {
+  margin-bottom: 4px;
+}
+ 
+.chat .chat_img {
+  float: left;
+  clear: left;
+ 
+  padding: 4px 8px 8px 0px;
+}
+ 
+.create {/*
+  width: auto;
+  padding: 8px 8px 0 8px;
+  left: 8px;
+  right: 0;
+ 
+  overflow: auto;*/
+ 
+}
+ 
+  .create .name {
+
+  }
+ 
+  .create .convo {
+
+  }
+ 
+.chat_name .trip_code {
+  padding-left: 3px;
+}
+ 
+ 
+.sidebar_convo {
+        padding:3px;
+        border-bottom:1px solid rgba(255,255,255,0.56);
+}
+
+

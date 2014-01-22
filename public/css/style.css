@@ -8,27 +8,49 @@ body,html{
 
 .header{
         position:fixed;
-        z-index: 100;
+        z-index: 1;
         background: rgba(255,255,255,0.78);
         color: black;
-        width:100%;
+        left:0;
+        right:0;
         text-align: right;
         font-size: 14px;
         padding:3px;
+}
+
+.settings_list{
+	display:block;
+}
+
+ul {
+	list-style-type:none;
+	padding:0;
+	margin:0;
+}
+
+.settings_nav{
+	position:fixed;
+	z-index: 2;
+	top:27px;
+	right:0px;
+	padding:10px;
+	background: rgb(238, 242, 255);
+	border-bottom: 1px solid rgb(214, 218, 240);
+	border-left: 1px solid rgb(214, 218, 240);
+
+
 }
 
 .sidebar{
         margin:0;
         position: absolute;
         right:0px;
-        width:240px;
+        width:250px;
         top:30px;
-        bottom:1px;
+        bottom:0px;
         overflow: auto;
         word-wrap: break-word;
-        border-style:solid;
-        border-color:rgb(40, 42, 46)
-        display: none;
+        border-left: 1px solid rgb(214, 218, 240);
 }
 
 .sidebar_convo {
@@ -43,8 +65,14 @@ body,html{
 
 @media (max-width: 650px) {
         .sidebar {
-                display: none;
+            display: none;
         }
+        .sidebar_convo {
+        	display: none;
+		}
+		.create{
+			right:0 !important;
+		}
         .chats {
                 width:100%;
         }
@@ -57,19 +85,18 @@ body,html{
         .name{
                 padding:0;
                 margin:0;
-                width:50%;
+                width:68%;
                 float:left;
         }
         
         .convo{
                 padding:0;
                 margin:0;
-                width:50%;
+                width:28%;
                 float:right;
         }
-		
         .alert_div{
-         right: 0px;
+            right: 0px;
         }
 }
 
@@ -86,16 +113,17 @@ body,html{
     bottom:0;
     padding:0;
     margin:0;
-    width:79%;
+    width:auto;
+    left:0px;
+	right:255px;
     background:rgb(153, 136, 238);
     font-size:16px;
     min-width:300px;
     height:155px;
     font-size:14px;
     text-align:center;
-    overflow:auto;
-    overflow-x: hidden;
-    display: none;
+    overflow:hidden;
+    padding:7px;
 }
 
 .half-height{
@@ -113,15 +141,17 @@ body,html{
 .name{
     padding:0;
     margin:0;
-    width:50%;
+    width:70%;
     float:left;
 }
 
 .convo{
     padding:0;
     margin:0;
-    width:49%;
-    float:left;
+    margin-right:-2px;
+    margin-left:-2px;
+    width:30%;
+    float:right;
 }
 
 .greentext {
@@ -137,14 +167,12 @@ body,html{
     overflow:auto;
     top:30px;
     left:0px;
-    bottom:0px;
+    bottom:170px;
     right:250px;
     display:none;
 }
 
 .chats_connected{
-    bottom:155px;
-    right:250px;
 }
 
 .chats-home{
@@ -251,20 +279,24 @@ textarea{
     resize: none;
     font-family: arial,helvetica,sans-serif;
     font-size:14px;
+    border:1px solid rgb(153, 136, 238);
+
 }
 
 input{
     font-family: arial,helvetica,sans-serif;
     font-size:14px;
+    border:1px solid rgb(153, 136, 238);
+
 }
 
 /* code tag */
 pre {
-        white-space: pre-wrap; /* css-3 */
-        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-        white-space: -pre-wrap; /* Opera 4-6 */
-        white-space: -o-pre-wrap; /* Opera 7 */
-        word-wrap: break-word; /* Internet Explorer 5.5+ */
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
 .admin{

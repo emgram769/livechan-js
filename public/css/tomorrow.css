@@ -5,18 +5,30 @@ body,html {
   color: #C5C8C6;
 }
 
+.settings_nav{
+	color: #C5C8C6;
+	background: none repeat scroll 0% 0% #1D1F21;
+}
+
 .create {
   /* the input box */
   background: #282A2E;
+  background: none repeat scroll 0% 0% #1D1F21;
   border: none;
 }
 
 textarea{
 
+  background: #C5C8C6;
+  color: #282A2E;
+  border:1px solid #1D1F21;
+
 }
 
 input{
-
+  background: #C5C8C6;
+  color: #282A2E;
+  border:1px solid #1D1F21;
 }
 
 /* is this even css
@@ -122,13 +134,11 @@ input{
 }
 
   .create .name {
-    float: left;
-    width: 68%;
+
   }
 
   .create .convo {
-    float: right;
-    width: 28%;
+
   }
 
 .chat_name .trip_code {
@@ -138,5 +148,5 @@ input{
 
 .sidebar_convo {
 	padding:3px;
-	border-bottom:1px solid rgba(255,255,255,0.56);
+	border-bottom:1px solid #C5C8C6;
 }
