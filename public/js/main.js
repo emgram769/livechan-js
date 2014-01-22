@@ -616,7 +616,7 @@ function start_chat() {
     $('.chat').remove();
     $('.chats').toggleClass('chats_connected', chat_id !== 'all');
     $('.create').toggleClass('shown', chat_id !== 'all');
-    //$('.sidebar').toggleClass('shown', chat_id !== 'all');
+    $('.sidebar').toggleClass('shown', chat_id !== 'all');
     title = 'LiveChan - /'+chat_id;
     window.document.title = title;
     if(history.pushState && push_state) history.pushState({id: chat_id}, document.title, chat_path + chat_id);

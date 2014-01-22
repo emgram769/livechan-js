@@ -51,6 +51,7 @@ ul {
         overflow: auto;
         word-wrap: break-word;
         border-left: 1px solid rgb(214, 218, 240);
+	display: none;
 }
 
 .sidebar_convo {
@@ -125,6 +126,7 @@ ul {
     text-align:center;
     overflow:hidden;
     padding:7px;
+    display:none;
 }
 
 .half-height{
@@ -168,12 +170,14 @@ ul {
     overflow:auto;
     top:30px;
     left:0px;
-    bottom:170px;
-    right:250px;
+    bottom:0px;
+    right:0px;
     display:none;
 }
 
 .chats_connected{
+    bottom:155px;
+    right:250px;
 }
 
 .chats-home{
@@ -327,14 +331,6 @@ pre {
     float:right;
 }
 
-.shown{
-    display:block;
-}
-
-.hidden{
-    display:none;
-}
-
 .spoiler{
         background:black;
         color:black;
@@ -347,3 +343,12 @@ pre {
 .spoiler:hover{
         background:none;
 }
+
+.shown{
+    display:block;
+}
+
+.hidden{
+    display:none;
+}
+
