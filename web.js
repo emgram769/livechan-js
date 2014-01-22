@@ -9,9 +9,8 @@ var tripcode = require('tripcode');
 var fs = require('fs');
 var format = require('util').format;
 var mongoose = require('mongoose');
-var gm = require('gm').subClass({
-    imageMagick: true // Necessary for hosted version, remove if you're using graphicmagick
-});
+
+var useImageMagick = true;
 
 /* salt */
 var securetrip_salt = "AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL";
@@ -310,6 +309,9 @@ function format_image(req, res, next, callback) {
     /* image uploaded */
     
     else {
+    	var gm = require('gm').subClass({
+	    imageMagick: useImageMagick // Necessary for hosted version, remove if you're using graphicmagick
+	});
         gm(req.files.image.path).size(function (err, dimensions) {
             if (err) {
                 console.log("gm size error", err);
@@ -342,7 +344,9 @@ function generate_thumbnail(req, res, next, data, callback) {
     var thumb_width = scale * data.image_width;
     var thumb_height = scale * data.image_height;
     data.thumb = "public/tmp/thumb/" + data.image.match(/([\w\-]+)\.\w+$/)[1] + ".jpg";
-
+    var gm = require('gm').subClass({
+        imageMagick: useImageMagick // Necessary for hosted version, remove if you're using graphicmagick
+    });
     gm(data.image)
         .out("-delete", "1--1") // use first frame only; only needed for ImageMagick
         .thumb(thumb_width, thumb_height, data.thumb, function(err) {

@@ -97,6 +97,8 @@ if (html5) {
         get_css($("#theme_select").val());
         if(localStorage.autoStart === "true") {
             start_chat();
+        } else {
+	    $('.chats').toggleClass('shown', true);
         }
     });
 }
@@ -577,9 +579,8 @@ window.onload = function () {
         quote(parseInt(quote_hash[1], 10));
     }
     
-    $('.chats').toggleClass('shown', true);
     if (get_cookie("password_livechan") === '') {
-		submit_captcha();
+	submit_captcha();
         return false;
     }
 
@@ -592,7 +593,6 @@ window.onload = function () {
         change_channel(event.state.id);
         push_state = true;
     });
-    $('.chats').toggleClass('shown', true);
 };
 
 function change_channel(board)
@@ -616,7 +616,7 @@ function start_chat() {
     $('.chat').remove();
     $('.chats').toggleClass('chats_connected', chat_id !== 'all');
     $('.create').toggleClass('shown', chat_id !== 'all');
-    //$('.sidebar').toggleClass('shown', chat_id !== 'all');
+    $('.sidebar').toggleClass('shown', chat_id !== 'all');
     title = 'LiveChan - /'+chat_id;
     window.document.title = title;
     if(history.pushState && push_state) history.pushState({id: chat_id}, document.title, chat_path + chat_id);
@@ -638,6 +638,7 @@ function start_chat() {
                         } return -1;
                 });
             draw_chat(draw_data);
+            $('.chats').toggleClass('shown', true);
             socket.on('chat', function (d) {
                 update_chat(d);
                 if ($("#autoscroll").prop('checked')) {
