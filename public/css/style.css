@@ -7,75 +7,78 @@ body,html{
 }
 
 .header{
-	position:fixed;
-	z-index: 100;
-	background: rgba(255,255,255,0.78);
-	color: black;
-	width:100%;
-	text-align: right;
-	font-size: 14px;
-	padding:3px;
+        position:fixed;
+        z-index: 100;
+        background: rgba(255,255,255,0.78);
+        color: black;
+        width:100%;
+        text-align: right;
+        font-size: 14px;
+        padding:3px;
 }
 
 .sidebar{
-	margin:0;
-	position: absolute;
-	right:0px;
-	width:250px;
-	top:30px;
-	bottom:160px;
-	overflow: auto;
-	word-wrap: break-word;
-	display: none;
+        margin:0;
+        position: absolute;
+        right:0px;
+        width:240px;
+        top:30px;
+        bottom:1px;
+        overflow: auto;
+        word-wrap: break-word;
+        border-style:solid;
+        border-color:rgb(40, 42, 46)
+        display: none;
 }
 
 .sidebar_convo {
-	display:inherit;
-	padding:3px;
-	border-bottom:1px solid rgb(214, 218, 240);
+        display:inherit;
+        padding:3px;
+        border-bottom:1px solid rgb(214, 218, 240);
 }
 
 .sidebar_convo:hover{
-	cursor:pointer;
+        cursor:pointer;
 }
 
 @media (max-width: 650px) {
-	.sidebar {
-		display: none;
-	}
-	.chats {
-		width:100%;
-	}
-	.comment{
-		padding:5px;
-		margin:0;
-		width:100%;
-	}
-	
-	.name{
-		padding:0;
-		margin:0;
-		width:68%;
-		float:left;
-	}
-	
-	.convo{
-		padding:0;
-		margin:0;
-		width:28%;
-		float:right;
-	}
-	.alert_div{
-	    right: 0px;
-	}
+        .sidebar {
+                display: none;
+        }
+        .chats {
+                width:100%;
+        }
+        .comment{
+                padding:5px;
+                margin:0;
+                width:100%;
+        }
+        
+        .name{
+                padding:0;
+                margin:0;
+                width:50%;
+                float:left;
+        }
+        
+        .convo{
+                padding:0;
+                margin:0;
+                width:50%;
+                float:right;
+        }
+		
+        .alert_div{
+         right: 0px;
+        }
 }
 
 .left_float{
-	float:left;
+        float:left;
 }
 
 .right_float{
-	float:right;
+        float:right;
 }
 
 .create{
@@ -83,7 +86,7 @@ body,html{
     bottom:0;
     padding:0;
     margin:0;
-    width:100%;
+    width:79%;
     background:rgb(153, 136, 238);
     font-size:16px;
     min-width:300px;
@@ -110,15 +113,15 @@ body,html{
 .name{
     padding:0;
     margin:0;
-    width:68%;
+    width:50%;
     float:left;
 }
 
 .convo{
     padding:0;
     margin:0;
-    width:28%;
-    float:right;
+    width:49%;
+    float:left;
 }
 
 .greentext {
@@ -135,7 +138,7 @@ body,html{
     top:30px;
     left:0px;
     bottom:0px;
-    right:0px;
+    right:250px;
     display:none;
 }
 
@@ -257,11 +260,11 @@ input{
 
 /* code tag */
 pre {
-	white-space: pre-wrap;       /* css-3 */
-	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-	white-space: -pre-wrap;      /* Opera 4-6 */
-	white-space: -o-pre-wrap;    /* Opera 7 */
-	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        white-space: pre-wrap; /* css-3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 .admin{
@@ -300,10 +303,10 @@ pre {
 }
 
 .spoiler{
-	/*background:black;*/
-	color:black;
+        /*background:black;*/
+        color:black;
 }
 
 .spoiler:hover{
-	background:none;
+        background:none;
 }
