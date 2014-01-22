@@ -144,6 +144,34 @@ function generate_post(id) {
         post.find(".chat_refs").append(" ", future_ids[id].contents());
     }
 
+    post.find(".chat_img_cont")
+        .mouseover(function(event) {
+            var left = $(this).offset().left + $(this).width() + 10;
+            var maxWidth = $(window).width() - left;
+            if (maxWidth <= 0) return;
+            var maxHeight = $(window).height();
+            var scale = Math.min(maxWidth/chat[id].image_width, maxHeight/chat[id].image_height, 1);
+            var width = Math.round(chat[id].image_width * scale);
+            var height = Math.round(chat[id].image_height * scale);
+            var top = Math.round((maxHeight - height) * $(this).offset().top / maxHeight);
+
+            var display = $("<img>");
+            display.attr("src", "/tmp/uploads/" + chat[id].image.match(/[\w\-\.]*$/)[0]);
+            display.toggleClass("to_die", true);
+            display.css({
+                position: 'absolute',
+                left: left,
+                top: top,
+                width: width,
+                height: height,
+                zIndex: 1000
+            });
+            display.attr("width", width);
+            display.attr("height", height);
+            $('body').append(display);
+        })
+        .mouseout(quote_mouseout);
+
     return post;
 }
 
@@ -254,8 +282,7 @@ function update_chat(new_data, first_load) {
             }
             img_container.find(".chat_img")
                 .css("display", "none")
-                .attr("alt", "Image #" + data.count)
-                .thumbPopup({popupCSS: {'max-height': '97%', 'max-width': '75%'}});
+                .attr("alt", "Image #" + data.count);
 
             if (thumbnail_mode === "static") img_container.find(".thumb_static").css("display", "inline");
             if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
