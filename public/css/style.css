@@ -335,8 +335,12 @@ pre {
 }
 
 .spoiler{
-        /*background:black;*/
+        background:black;
         color:black;
+}
+
+.spoiled{
+	background:none;
 }
 
 .spoiler:hover{

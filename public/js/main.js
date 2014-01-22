@@ -85,6 +85,7 @@ if (html5) {
     $(document).ready(function () {
         "use strict";
         $("#name").val(localStorage.name);
+        $("#spoilers").prop("checked", localStorage.spoilers === "true");
         $("#theme_select").val(localStorage.theme);
         $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
@@ -523,6 +524,16 @@ window.onload = function () {
     $('#theme_select').change(function () {
         get_css($(this).val());
         localStorage.theme = $(this).val().replace("null", "/style.css");
+    });
+    
+    
+    setTimeout(function(){
+    	$(".spoiler").toggleClass("spoiled", !$('#spoilers').prop("checked"));
+    	},500); // hacky I know
+
+    $('#spoilers').change(function () {
+        localStorage.spoilers = $(this).prop("checked");
+		$('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
     });
     
     $('#board_select').change(function () {
