@@ -146,20 +146,21 @@ function generate_post(id) {
 
     post.find(".chat_img_cont")
         .mouseover(function(event) {
-            var left = $(this).offset().left + $(this).width() + 10;
-            var maxWidth = $(window).width() - left;
+            var maxLeft = $(this).offset().left + $(this).width() + 10;
+            var maxWidth = $(window).width() - maxLeft;
             if (maxWidth <= 0) return;
             var maxHeight = $(window).height();
             var scale = Math.min(maxWidth/chat[id].image_width, maxHeight/chat[id].image_height, 1);
             var width = Math.round(chat[id].image_width * scale);
             var height = Math.round(chat[id].image_height * scale);
-            var top = Math.round((maxHeight - height) * $(this).offset().top / maxHeight);
+            var left = Math.min(event.screenX + 10, maxLeft);
+            var top = Math.round((maxHeight - height) * event.screenY / maxHeight);
 
             var display = $("<img>");
             display.attr("src", "/tmp/uploads/" + chat[id].image.match(/[\w\-\.]*$/)[0]);
             display.toggleClass("to_die", true);
             display.css({
-                position: 'absolute',
+                position: 'fixed',
                 left: left,
                 top: top,
                 width: width,
@@ -167,6 +168,18 @@ function generate_post(id) {
                 zIndex: 1000
             });
             $('body').append(display);
+        })
+        .mousemove(function(event) {
+            var display = $(".to_die");
+            if (display.length == 0) return;
+            var maxLeft = $(this).offset().left + $(this).width() + 10;
+            var maxHeight = $(window).height();
+            var left = Math.min(event.screenX + 10, maxLeft);
+            var top = Math.round((maxHeight - display.height()) * event.screenY / maxHeight);
+            $(".to_die").css({
+                left: left,
+                top: top,
+            });
         })
         .mouseout(quote_mouseout);
 
