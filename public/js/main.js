@@ -625,6 +625,7 @@ window.onload = function () {
 
 function change_channel(board)
 {
+	$('.chats_container').toggleClass('chats_container_home',false);
     var new_chat = board.replace('/', '');
     $('#comment-form').get(0).setAttribute('action', '/chat/' + new_chat);
     if(chat_id !== "home") {
