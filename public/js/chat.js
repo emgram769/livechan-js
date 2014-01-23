@@ -37,8 +37,8 @@ function quote_mouseover() {
     display.css({
         display: 'inline',
         position: 'absolute',
-        top: $(this).offset().top + 10,
-        left: $(this).offset().left + 10,
+        top: $(this).offset().top - $(this).height()/2,
+        left: $(this).offset().left + $(this).width(),
         border: '1px black solid',
         zIndex: 1000
     });
