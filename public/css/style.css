@@ -174,6 +174,11 @@ ul {
 	left:0px
 }
 
+.chats_container_home{
+	bottom:0px;
+	right:0px;
+}
+
 .chats{
     position:absolute;
     overflow:auto;

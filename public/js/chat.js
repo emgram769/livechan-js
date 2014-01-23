@@ -485,8 +485,6 @@ function draw_chat(data) {
             $.each(loaded_callbacks, function() {
                 this();
             });
-            if (window.location.pathname != '/chat/home')
-	            scroll();
         } else {
             if (counter++ > too_long) {
                 clearInterval(wait_for_last);

@@ -46,6 +46,7 @@ try {
 
 function scroll() {
     "use strict";
+    if (chat_id=="home") return;
     var scr = $('.chats:first')[0].scrollHeight;
     scr += 10;
     $(".chats:first").animate({
@@ -117,7 +118,8 @@ if (html5) {
         if(localStorage.autoStart === "true" && chat_id !== "home") {
             start_chat();
         } else {
-	    $('.chats').toggleClass('shown', true);
+	    	$('.chats').toggleClass('shown', true);
+			$('.chats_container').toggleClass('chats_container_home', true);
         }
     });
 }
