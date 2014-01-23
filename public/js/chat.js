@@ -53,6 +53,15 @@ function toggle_sidebar(){
 	$('.sidebar').hide('slow');
 }
 
+
+function board_link(dest){
+    var link = $("<a class='board_link'/>");
+    link.text(">>>"+dest);
+    link.css("text-decoration", "underline");
+    link.click(function(){change_channel(dest);});
+	return link;
+}
+
 function quote_link(dest) {
     "use strict";
     var link = $("<a class='quote_link'/>");
@@ -215,6 +224,8 @@ function markup(text, rules) {
     return output;
 }
 
+
+
 function update_chat(new_data, first_load) {
     "use strict";
     var id = new_data.count;
@@ -333,6 +344,14 @@ function update_chat(new_data, first_load) {
         var ref_ids = [];
         var quote_links = [];
         var rules = [
+        	[/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+))/, function(m, o) {
+                /*if (m[1]) o.push($("<br>"));
+                var ref_id = parseInt(m[2] ? m[2] : m[3], 10);
+                if ($.inArray(ref_id, ref_ids) === -1) ref_ids.push(ref_id);
+                o.push(quote_link(ref_id));*/
+                o.push(board_link(m[3]));
+                console.log(m,o);
+            }],
             [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
                 var ref_id = parseInt(m[2] ? m[2] : m[3], 10);
