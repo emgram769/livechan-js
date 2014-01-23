@@ -307,6 +307,21 @@ function submit_chat() {
 	        	div_alert("this is an admin only command");
         	}
         	break;
+        case "ban":
+	    	if (param) {
+				$.ajax({
+		            type: "GET",
+		            url: '/ban/' + encodeURI(param)
+		        }).done(function (data_delete) {
+		        	if(data_delete.success)
+		        		div_alert(data_delete.success);
+		        	else 
+		        		div_alert("failure", data_delete.failure);
+		        });
+	    	} else {
+	        	div_alert("this is an admin only command");
+	    	}
+	    	break;
         case "help":
         default:
             div_alert(

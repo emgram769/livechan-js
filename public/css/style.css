@@ -51,7 +51,7 @@ ul {
         overflow: auto;
         word-wrap: break-word;
         border-left: 1px solid rgb(214, 218, 240);
-	display: none;
+		display: none;
 }
 
 .sidebar_convo {
@@ -98,8 +98,7 @@ ul {
                 float:right;
         }
         .alert_div{
-            	right: 0px;
-            	float:right;
+            	right:0px !important;
         }
 }
 
@@ -318,7 +317,7 @@ pre {
     color:black;
     text-align:center;
     padding:5px;
-    right: 270px;
+    right:270px;
     display:none;
 }
 

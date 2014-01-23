@@ -28,6 +28,7 @@ fs.readFile('salt.txt', 'utf8', function (err, data) {
 var app = express();
 var port = process.env.PORT || 5000;
 var secure_port = 443;
+if (port != 80) secure_port = 5443;
 
 /* listen now */
 var server = http.createServer(app).listen(port, function () {
@@ -363,7 +364,7 @@ function format_image(req, res, next, callback) {
             }
         });
     }
-
+	
     /* image uploaded */
     
     else {
@@ -559,7 +560,7 @@ app.post('/login', function (req, res) {
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
         console.log("password", password);
         res.cookie('password_livechan', password, {
-            maxAge: 9000000,
+            maxAge: 86400000,
             httpOnly: false
         });
 
@@ -647,7 +648,7 @@ app.get('/data:ops((?:_convo)?)/:id([a-z0-9]+)', function (req, res) {
         });
 });
 
-app.post('/ban/:password([a-z0-9]+)/:id([0-9]+)/:type/:board', function (req, res, next) {
+app.get('/ban/:password([a-z0-9]+)/:id([0-9]+)/:board', function (req, res, next) {
     "use strict";
     var chat_id = req.params.id;
     var password = req.params.password;
@@ -661,8 +662,25 @@ app.post('/ban/:password([a-z0-9]+)/:id([0-9]+)/:type/:board', function (req, re
 		res.json({failure:"wrong password"});
 		return;
 	}
-	
-	res.json({success:"right password"});
+		
+	chat_db.find({count:chat_id},
+		function(e,d){
+			if(d[0] && d[0].ip) {
+				user_db.update({ip:d[0].ip},{
+					$push:{
+						banned_rooms:board
+					}
+				}, {multi:true}, function(err){
+					if(!err) {
+						res.json({success:"banned "+d[0].ip+" from "+board});
+					} else {
+						res.json({failure:"couldn't ban "+d[0].ip+" from "+board});
+					}
+				});
+			} else {
+				res.json({failure:"couldn't find ip"});
+			}
+		});
 	return;
 
 });

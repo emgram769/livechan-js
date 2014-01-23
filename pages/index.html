@@ -16,24 +16,11 @@
 		<select id="board_select" class="input_select left_float">
 			<option value="home">Home</option>
 			<option value="all">All</option>
-			<option value="a">/a</option>
-			<option value="b">/b</option>
-			<option value="g">/g</option>
-			<option value="gif">/gif</option>
-			<option value="v">/v</option>
-			<option value="r9k">/r9k</option>
-			<option value="s4s">/s4s</option>
-			<option value="diy">/diy</option>
-			<option value="tv">/tv</option>
-			<option value="fit">/fit</option>
-			<option value="gd">/gd</option>
-			<option value="mlp">/mlp</option>
-			<option value="mu">/mu</option>
-			<option value="n">/n</option>
-			<option value="pol">/pol</option>
-			<option value="sci">/sci</option>
-			<option value="soc">/soc</option>
-			<option value="sp">/sp</option>
+			<option value="g">/g - (general)</option>
+			<option value="t">/t - (tech)</option>
+			<option value="a">/a - (anime)</option>
+			<option value="r">/r - (random)</option>
+			<option value="int">/int - (internat.)</option>
 		</select>
 		<button id="settings_button" class="right_float">Settings</button>
 	</header>
@@ -64,41 +51,24 @@
 		</ul>
 	</nav>
 	<section class="chats">
-	    <article class="chat" id="chat_welcome" style="opacity: 1;">
-	        <section class="chat_file" style="display: none;">File:
-	            <a class="file_link" target="_blank"></a>
-	            <output class="file_data"></output>
-	        </section>
-	        <a target="_blank" class="chat_img_cont"></a>
-	        <output class="chat_body" style="text-align: center;display: block">
-	            <h1>Welcome!</h1>Welcome to LiveChan! We're a small growing community that uses our own open-source <a href="https://github.com/emgram769/live4chan">node.js server</a> to post images and chats to each other over different channels and "conversations".
-	            <br>
-	            <br>The server is open to contributions from anyone willing to help out.
-	            <br>
-	            <br>New conversations (the LiveChan version of threads) can be made by setting the second field (General by default), or you can join an existing conversation by choosing one from the list on the right once you've joined a board.
-	            <br>
-	            <br>
-	            <a href="#" onclick="start_chat();">Hide this message</a> to join the "All" channel and watch chat messages posted in realtime, or choose a channel from the dropdown box on the top left to start chatting.
-	            <br>
-	            <br>
-	            <b>Please note there is a strict 7 second cool down time shared through all boards for new chat messages. New conversations have a 50 second cool down time to help prevent spamming.</b>
-	        </output>
-	    </article>
 	
-	    <article class="chat" id="chat_boards" style="opacity: 1;">
+		<article class="chat" id="chat_boards" style="opacity: 1;">
 	        <section class="chat_file" style="display: none;">File:
 	            <a class="file_link" target="_blank"></a>
 	            <output class="file_data"></output>
 	        </section>
 	        <a target="_blank" class="chat_img_cont"></a>
 	        <output class="chat_body" style="text-align: center;display: block">
-	            The current list of (popular) boards are:
-	            <br>
+	        	            <br>
+
+	         <h1>Welcome to LiveChan!</h1>
 	        <nav class="container" style="text-align:center;">
-	         
-	                           <a class="link" href="#" onclick="change_channel('a')">/a/</a>
+	         	               <a class="link" href="#" onclick="change_channel('g')">general - /g </a>
+	         	               <a class="link" href="#" onclick="change_channel('t')">technology - /t</a><br>
+	         	               <a class="link" href="#" onclick="start_chat()">all (passive) - /all </a>
+
+	                           <!--<a class="link" href="#" onclick="change_channel('a')">/a/</a>
 	                           <a class="link" href="#" onclick="change_channel('b')">/b/</a>
-	                           <a class="link" href="#" onclick="change_channel('g')">/g/</a>
 	                           <a class="link" href="#" onclick="change_channel('gif')">/gif/</a>
 	                           <a class="link" href="#" onclick="change_channel('v')">/v/</a>
 	                           <a class="link" href="#" onclick="change_channel('r9k')">/r9k/</a>
@@ -113,10 +83,34 @@
 	                           <a class="link" href="#" onclick="change_channel('pol')">/pol/</a>
 	                           <a class="link" href="#" onclick="change_channel('sci')">/sci/</a>
 	                           <a class="link" href="#" onclick="change_channel('soc')">/soc/</a>
-	                           <a class="link" href="#" onclick="change_channel('sp')">/sp/</a>
+	                           <a class="link" href="#" onclick="change_channel('sp')">/sp/</a>-->
 	                  </nav>
+	              <br>
 	        </output>
 	    </article>
+	    
+	    <article class="chat" id="chat_welcome" style="opacity: 1;">
+	        <section class="chat_file" style="display: none;">File:
+	            <a class="file_link" target="_blank"></a>
+	            <output class="file_data"></output>
+	        </section>
+	        <a target="_blank" class="chat_img_cont"></a>
+	    	<output class="chat_body" style="text-align: center;display: block;padding:50px;">
+	             We're a small growing community that uses our own open-source <a href="https://github.com/emgram769/live4chan">node.js server</a> to post images and chats to each other over different channels and "conversations".
+	            <br>
+	            <br>The server is open to contributions from anyone willing to help out.
+	            <br>
+	            <br>New conversations (the LiveChan version of threads) can be made by setting the second field (General by default), or you can join an existing conversation by choosing one from the list on the right once you've joined a board.
+	            <br>
+	            <br>
+	            <a href="#" onclick="start_chat();">Hide this message</a> to join the "All" channel and watch chat messages posted in realtime, or choose a channel from the dropdown box on the top left to start chatting.
+	            <br>
+	            <br>
+	            <b>Please note there is a strict 7 second cool down time shared through all boards for new chat messages. New conversations have a 50 second cool down time to help prevent spamming.</b>
+	        </output>
+	    </article>
+	
+	    
 	
 	    <article class="chat" id="chat_shill" style="opacity: 1;">
 	        <section class="chat_file" style="display: none;">File:
