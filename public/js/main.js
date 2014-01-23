@@ -198,8 +198,6 @@ function init_cool_down(){
 function submit_captcha(){
         div_alert(captcha_div(), false, "captcha");
         $("#submit_button").prop("disabled", true);
-        $("#submit_button").prop("value", "Submit (Auto)");
-        auto_post = true;
 }
 
 function submit_chat() {
@@ -210,7 +208,9 @@ function submit_chat() {
 	
     last_post = $("#body").val();
     if (get_cookie("password_livechan") === '') {
-		submit_captcha();
+	submit_captcha();
+        $("#submit_button").prop("value", "Submit (Auto)");
+        auto_post = true;
         return false;
     }
     
@@ -474,11 +474,6 @@ window.onload = function () {
         }
     });
 
-    if (get_cookie("password_livechan") === '') {
-        div_alert(captcha_div(), false, "captcha");
-        $("#submit_button").prop("disabled", true);
-    }
-
     $('iframe#miframe').load(function () {
     	var resp;
     	try {
@@ -488,7 +483,7 @@ window.onload = function () {
         }
         if (resp.failure && resp.failure === "session_expiry") {
         	$("#body").val(last_post);
-			div_alert(captcha_div(), false, "captcha");
+		submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
         } else if (resp.id) {
@@ -572,11 +567,6 @@ window.onload = function () {
     if (quote_hash) {
         quote(parseInt(quote_hash[1], 10));
     }
-    
-    if (get_cookie("password_livechan") === '') {
-	submit_captcha();
-        return false;
-    }
 
     window.addEventListener('popstate', function(event) {
         if(!event.state || !event.state.id) {
@@ -587,6 +577,10 @@ window.onload = function () {
         change_channel(event.state.id);
         push_state = true;
     });
+    
+    if (get_cookie("password_livechan") === '') {
+	submit_captcha();
+    }
 };
 
 function change_channel(board)
