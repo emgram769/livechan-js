@@ -99,10 +99,6 @@ input{
 
 /* raw positioning stuff */
 
-.chats_connected {
-  bottom: 166px;
-  right: 250px;
-}
 
 .chat {
   margin: 8px 8px 0 8px;

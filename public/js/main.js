@@ -1,3 +1,21 @@
+/*
+	LiveChan is a live imageboard web application.
+    Copyright (C) 2014 LiveChan Team
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+*/
+
 var auto_post = false;
 var last_post = "";
 var cool_down_timer = 0;
@@ -624,6 +642,10 @@ function change_channel(board)
     convos = [];
 
     start_chat();
+}
+
+function split_channel(board){
+	$('.chats_connected').toggleClass('chats_half',true);
 }
 
 function start_chat() {

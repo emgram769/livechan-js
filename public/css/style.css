@@ -75,9 +75,10 @@ ul {
 		.create{
 			right:0 !important;
 		}
-        .chats {
-                width:100%;
-        }
+        .chats_container{
+			width:100%;
+		}
+
         .comment{
                 padding:5px;
                 margin:0;
@@ -165,19 +166,30 @@ ul {
     color:rgb(221, 0, 0);
 }
 
+.chats_container{
+	position:absolute;
+    top:30px;
+	bottom:168px;
+	right:250px;
+	left:0px
+}
+
 .chats{
     position:absolute;
     overflow:auto;
-    top:30px;
+    top:0px;
     left:0px;
     bottom:0px;
     right:0px;
     display:none;
 }
 
+.chats_half{
+	width:50% !important;
+}
+
 .chats_connected{
-    bottom:168px;
-    right:250px;
+    width:100%;
 }
 
 .chats-home{
