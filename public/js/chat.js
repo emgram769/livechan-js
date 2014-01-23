@@ -303,6 +303,8 @@ function update_chat(new_data, first_load) {
         post.find(".chat_file").css("display", data.image ? "block" : "none");
         var img_container = post.find(".chat_img_cont");
         img_container.empty();
+        img_container.css("height",104);
+
         if (data.image) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
             var extension = base_name.match(/\w*$/)[0];
@@ -337,7 +339,7 @@ function update_chat(new_data, first_load) {
             if (thumbnail_mode === "static") img_container.find(".thumb_static").css("display", "inline");
             if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
         }
-    }
+    } 
     if (new_data.image !== undefined || new_data.image_filesize !== undefined || new_data.image_width !== undefined || new_data.image_height !== undefined || new_data.image_filename !== undefined) {
         var data_items = [];
         if (data.image_filesize !== undefined) {

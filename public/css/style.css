@@ -212,6 +212,10 @@ ul {
     border: 0;
 }
 
+.chat_img_cont {
+	display:inline-block;
+}
+
 .chat_img:hover{
     cursor:pointer;
 }
