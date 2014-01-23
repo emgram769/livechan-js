@@ -625,7 +625,11 @@ window.onload = function () {
 
 function change_channel(board)
 {
-	$('.chats_container').toggleClass('chats_container_home',false);
+	if(board!='all')
+		$('.chats_container').toggleClass('chats_container_home',false);
+	else
+		$('.chats_container').toggleClass('chats_container_home',true);
+	$("#autoscroll").prop('checked', true);
     var new_chat = board.replace('/', '');
     $('#comment-form').get(0).setAttribute('action', '/chat/' + new_chat);
     if(chat_id !== "home") {
