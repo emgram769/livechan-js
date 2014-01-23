@@ -3,6 +3,7 @@ var future_ids = {};
 var quote_links_to = {};
 var loaded_callbacks = [];
 var convos = [];
+var videos = {};
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
@@ -44,8 +45,14 @@ function quote_mouseover() {
     $('body').append(display);
 }
 
-function quote_mouseout() {
+function kill_excess() {
     "use strict";
+    $('video.to_die')
+        .removeClass("to_die")
+        .each(function() {
+            this.pause();
+        })
+        .css("display", "none");
     $('.to_die').remove();
 }
 
@@ -72,7 +79,7 @@ function quote_link(dest) {
     });
     link.click(quote_click);
     link.mouseover(quote_mouseover);
-    link.mouseout(quote_mouseout);
+    link.mouseout(kill_excess);
     if (quote_links_to[dest] === undefined) quote_links_to[dest] = [];
     quote_links_to[dest].push(link);
     return link;
@@ -141,7 +148,7 @@ function generate_post(id) {
 
     post.find(".chat_convo")
         .mouseover(quote_mouseover)
-        .mouseout(quote_mouseout)
+        .mouseout(kill_excess)
         .click(function () {
             $("#convo").val(chat[id].convo);
             apply_filter();
@@ -170,18 +177,33 @@ function generate_post(id) {
             var left = Math.min(event.clientX + 10, maxLeft);
             var top = Math.round((maxHeight - height) * event.clientY / maxHeight);
 
-            var display = $("<img>");
-            display.attr("src", "/tmp/uploads/" + chat[id].image.match(/[\w\-\.]*$/)[0]);
+            var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
+            var extension = base_name.match(/\w*$/)[0];
+            if ($.inArray(extension, ["ogv", "webm"]) > -1) {
+                var display = videos[id];
+                if (display === undefined) {
+                    display = $("<video/>");
+                    videos[id] = display;
+                }
+                display[0].loop = true;
+                display[0].muted = (localStorage.hoversound !== "true");
+            } else {
+                var display = $("<img>");
+            }
+            display.attr("src", "/tmp/uploads/" + base_name);
             display.toggleClass("to_die", true);
             display.css({
+                display: 'inline',
                 position: 'fixed',
                 left: left,
                 top: top,
                 width: width,
                 height: height,
-                zIndex: 1000
+                zIndex: 1000,
+                'pointer-events': 'none'
             });
-            $('body').append(display);
+            if (!display.parent().is("body")) $('body').append(display);
+            if (display.is("video")) display[0].play();
         })
         .mousemove(function(event) {
             var display = $(".to_die");
@@ -195,7 +217,7 @@ function generate_post(id) {
                 top: top,
             });
         })
-        .mouseout(quote_mouseout);
+        .mouseout(kill_excess);
 
     return post;
 }
@@ -292,7 +314,7 @@ function update_chat(new_data, first_load) {
             var url_static = null;
             if (data.thumb) {
                 url_static = "/tmp/thumb/" + data.thumb.match(/[\w\-\.]*$/)[0];
-            } else if (extension !== "gif") {
+            } else if ($.inArray(extension, ["gif", "ogv", "webm"]) === -1) {
                 url_static = url_image;
             }
             var url_anim = url_static;

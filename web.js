@@ -10,6 +10,7 @@ var tripcode = require('tripcode');
 var fs = require('fs');
 var format = require('util').format;
 var mongoose = require('mongoose');
+var exec = require('child_process').exec;
 
 var useImageMagick = true;
 
@@ -164,11 +165,16 @@ function get_extension(filename) {
 
 function invalid_extension(filename) {
     "use strict";
-    var test = ['jpg', 'jpeg', 'png', 'gif'].indexOf(get_extension(filename));
+    var test = ['jpg', 'jpeg', 'png', 'gif', 'ogv', 'webm'].indexOf(get_extension(filename));
     if (test > -1) {
         return false;
     }
     return true;
+}
+
+function is_video(filename) {
+    "use strict";
+    return (['ogv', 'webm'].indexOf(get_extension(filename)) > -1);
 }
 
 function delete_posts(e, ds) {
@@ -293,7 +299,7 @@ function check_ip_validity(req, res, next) {
 
 /* format_image
 	- checks for image and sets data accordingly
-	calls generate_thumbnail(req, res, next, data, callback) in case of image
+	calls generate_thumbnail(req, res, next, data, callback) in case of image/video
 	skips to format_post(req, res, next, data, callback) otherwise
 */	
 function format_image(req, res, next, callback) {
@@ -320,6 +326,44 @@ function format_image(req, res, next, callback) {
         }
     }
     
+    /* video uploaded */
+    
+    else if (is_video(req.files.image.path)) {
+        var command = "ffprobe -print_format json -show_streams " + req.files.image.path;
+        console.log("executing", command);
+        exec(command, function(err, stdout, stderr) {
+            if (err) {
+                console.log("ffmpeg size error", err);
+                return;
+            }
+            try {
+                var stream_data = JSON.parse(stdout);
+            } catch(e) {
+                console.log("ffmpeg size error", stderr);
+                return;
+            }
+            var video_stream = null;
+            for (var i in stream_data.streams) {
+                if (stream_data.streams[i].codec_type === "video") {
+                    video_stream = stream_data.streams[i];
+                    break;
+                }
+            }
+            if (video_stream !== null && video_stream.width && video_stream.height) {
+                data.image = req.files.image.path;
+                data.image_filename = req.files.image.originalFilename;
+                data.image_filesize = fs.statSync(data.image).size;
+                data.image_width = video_stream.width;
+                data.image_height = video_stream.height;
+                console.log("generating thumbnail...");
+                generate_thumbnail(req, res, next, data, callback)
+            } else {
+                console.log("ffmpeg could not find video stream", stderr);
+                return;
+            }
+        });
+    }
+
     /* image uploaded */
     
     else {
@@ -355,15 +399,14 @@ function format_image(req, res, next, callback) {
 */
 function generate_thumbnail(req, res, next, data, callback) {
     var scale = Math.min(250/data.image_width, 100/data.image_height, 1);
-    var thumb_width = scale * data.image_width;
-    var thumb_height = scale * data.image_height;
+    var thumb_width = Math.round(scale * data.image_width);
+    var thumb_height = Math.round(scale * data.image_height);
     data.thumb = "public/tmp/thumb/" + data.image.match(/([\w\-]+)\.\w+$/)[1] + ".jpg";
-    var gm = require('gm').subClass({
-        imageMagick: useImageMagick // Necessary for hosted version, remove if you're using graphicmagick
-    });
-    gm(data.image)
-        .out("-delete", "1--1") // use first frame only; only needed for ImageMagick
-        .thumb(thumb_width, thumb_height, data.thumb, function(err) {
+
+    if (is_video) {
+        var command = "ffmpeg -i "+req.files.image.path+" -s "+thumb_width+"x"+thumb_height+" -vframes 1 "+data.thumb;
+        console.log("executing", command);
+        exec(command, function(err, stdout, stderr) {
             if (err) {
                 console.log("thumbnail creation error", err);
                 return;
@@ -371,6 +414,21 @@ function generate_thumbnail(req, res, next, data, callback) {
             console.log("formatting post...");
             format_post(req, res, next, data, callback);
         });
+    } else {
+        var gm = require('gm').subClass({
+            imageMagick: useImageMagick // Necessary for hosted version, remove if you're using graphicmagick
+        });
+        gm(data.image)
+            .out("-delete", "1--1") // use first frame only; only needed for ImageMagick
+            .thumb(thumb_width, thumb_height, data.thumb, function(err) {
+                if (err) {
+                    console.log("thumbnail creation error", err);
+                    return;
+                }
+                console.log("formatting post...");
+                format_post(req, res, next, data, callback);
+            });
+    }
 }
 
 /* format_post:

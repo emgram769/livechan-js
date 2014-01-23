@@ -88,6 +88,7 @@ if (html5) {
         $("#spoilers").prop("checked", localStorage.spoilers === "true");
         $("#theme_select").val(localStorage.theme);
         $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
+        $("#hoversound").prop("checked", localStorage.hoversound === "true");
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
         if (cool_down_timer>0)
         	init_cool_down();
@@ -529,6 +530,10 @@ window.onload = function () {
     $('#spoilers').change(function () {
         localStorage.spoilers = $(this).prop("checked");
 		$('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
+    });
+
+    $('#hoversound').change(function () {
+        localStorage.hoversound = $(this).prop("checked");
     });
     
     $('#board_select').change(function () {
