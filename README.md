@@ -30,19 +30,23 @@ This commands below are based on a Ubuntu Server 12.04 installation, other distr
 
 > sudo apt-get install graphicsmagick
 
-5) Clone the git repo
+5) Install ffmpeg (if video support desired)
+
+> sudo apt-get install ffmpeg
+
+6) Clone the git repo
 
 > git clone https://github.com/emgram769/live4chan.git
 
-6) Install the dependencies with npm install
+7) Install the dependencies with npm install
 
 > cd live4chan; npm install
 
-7) Make sure the public/tmp/uploads folder is writable
+8) Make sure the public/tmp/uploads folder is writable
 
 > mkdir public; mkdir public/tmp; mkdir public/tmp/uploads; chmod 777 public/tmp/uploads
 
-8) Run LiveChan
+9) Run LiveChan
 
 > node web.js
 
