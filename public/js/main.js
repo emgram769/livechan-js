@@ -44,16 +44,24 @@ try {
     html5 = false;
 }
 
-function scroll() {
+function scroll(channel) {
     "use strict";
     if (chat_id=="home") return;
-    var scr = $('.chats:first')[0].scrollHeight;
-    scr += 10;
-    $(".chats:first").animate({
-        scrollTop: scr
-    }, 200, 'swing', function () {
+	if (channel) {
+		scr = $(".chats[data-channel='"+channel+"'")[0].scrollHeight;
+		return;
+    }
+    var i;
+    for (i = 0; i < $('.chats').length; i++) {
+	    var scr = $('.chats')[i].scrollHeight;
+	    scr += 10;
+	    $('.chats').eq(i).animate({
+	        scrollTop: scr
+	    }, 200, 'swing', function () {
+		});
+    }
 
-    });
+    
 }
 
 function get_css(file) {
@@ -296,7 +304,14 @@ function submit_chat() {
             } else {
                 div_alert("usage: /switch /channel");
             }
-            break;      
+            break;    
+       case "split":
+            if (param) {
+                split_channel(param.replace('/', ''))
+            } else {
+                div_alert("usage: /split /channel");
+            }
+            break;
         case "delete":
         	if (param) {
 				$.ajax({
@@ -441,19 +456,27 @@ function apply_filter(posts) {
     if (value === "highlight"){
         posts.toggleClass(function () {
             var id = parseInt(this.id.match(/\d+/)[0], 10);
-            return (convo === chat[id].convo) ? '' : 'chat_dim';
+            //return (convo === chat[id].convo) ? '' : 'chat_dim';
+            return ($.inArray(chat[id].convo,highlighted_convos) > -1) ? '' : 'chat_dim';
         }, true);
     } else if (value === "filter"){
         posts.toggleClass(function () {
             var id = parseInt(this.id.match(/\d+/)[0], 10);
-            return (convo === chat[id].convo) ? '' : 'chat_hidden';
+            //return (convo === chat[id].convo) ? '' : 'chat_hidden';
+            return ($.inArray(chat[id].convo,highlighted_convos) > -1) ? '' : 'chat_hidden';
         }, true);
     }
 }
 
-function insert_post(post) {
+function insert_post(post, channel) {
     "use strict";
-    $(".chats:first").append(post);
+    if ($('.chats').length == 1) {
+    	$(".chats:first").append(post);
+    }
+    else {
+    	$(".chats[data-channel='"+channel+"']").append(post);
+    }
+    return;
 }
 
 loaded_callbacks.push(function() {
@@ -591,9 +614,13 @@ window.onload = function () {
     $("#thumbnail_mode").change(function () {
         var new_value = $(this).val();
         if (thumbnail_mode === "links-only") {
+            $('.chat_img_cont').show('slow', function(){
+	            scroll();
+            });
             if (new_value === "static") $('.thumb_static').show('slow');
             if (new_value === "animated") $('.thumb_anim').show('slow');
         } else if (new_value === "links-only") {
+            $('.chat_img_cont').hide('slow');
             if (thumbnail_mode === "static") $('.thumb_static').hide('slow');
             if (thumbnail_mode === "animated") $('.thumb_anim').hide('slow');
         } else {
@@ -651,8 +678,46 @@ function change_channel(board)
     start_chat();
 }
 
-function split_channel(board){
+function split_channel(channel){
+	if ($('.chats').length == 2) return;
 	$('.chats_connected').toggleClass('chats_half',true);
+	$('.chats:first').attr('data-channel', chat_id);
+	var new_chats = $('.chats:first').clone();
+	new_chats.empty();
+	new_chats.css('left','50%');
+	new_chats.attr('data-channel', channel);
+	$('.chats_container').append(new_chats);
+	get_chat_data(channel);
+	socket.emit('subscribe', channel);
+}
+
+function get_chat_data(channel, first_load){
+	$.ajax({
+        type: "GET",
+        url: "/data_convo/" + channel
+    }).done(function (data_convo) {
+        $.ajax({
+            type: "GET",
+            url: "/data/" + channel
+        }).done(function (data_chat) {
+                var draw_data = data_convo.concat(data_chat);
+                draw_data.sort(function(a,b){
+                        if(a.count && b.count){
+                                return b.count - a.count;
+                        } return -1;
+                });
+            draw_chat(draw_data);
+            $('.chats').toggleClass('shown', true);
+            if(first_load){ /* set up the socket on the first load */
+	            socket.on('chat', function (d) {
+	                update_chat(d);
+	                if ($("#autoscroll").prop('checked')) {
+	                    scroll();
+	                }
+	            });
+            }
+        });
+    });
 }
 
 function start_chat() {
@@ -670,28 +735,5 @@ function start_chat() {
     connected = true;
     $('.alert_div').toggleClass('shown', chat_id !== 'all');
     localStorage.autoStart = "true";
-        $.ajax({
-        type: "GET",
-        url: "/data_convo/" + chat_id
-    }).done(function (data_convo) {
-        $.ajax({
-            type: "GET",
-            url: "/data/" + chat_id
-        }).done(function (data_chat) {
-                var draw_data = data_convo.concat(data_chat);
-                draw_data.sort(function(a,b){
-                        if(a.count && b.count){
-                                return b.count - a.count;
-                        } return -1;
-                });
-            draw_chat(draw_data);
-            $('.chats').toggleClass('shown', true);
-            socket.on('chat', function (d) {
-                update_chat(d);
-                if ($("#autoscroll").prop('checked')) {
-                    scroll();
-                }
-            });
-        });
-    });
+    get_chat_data(chat_id, true);
 }

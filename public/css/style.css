@@ -54,11 +54,16 @@ ul {
 		display: none;
 }
 
+.sidebar_convo_dim {
+	background:none !important;
+}
+
 .sidebar_convo {
         display:inherit;
         padding:3px;
         padding-left:8px;
-        border-bottom:1px solid rgb(214, 218, 240);
+        background:rgb(214, 218, 240);
+        margin-bottom: 3px;
 }
 
 .sidebar_convo:hover{

@@ -60,10 +60,17 @@ var options = {
   cert: fs.readFileSync('ssl.crt')
 };
 
-var secure_server = https.createServer(options, app).listen(secure_port, function () {
-    "use strict";
-    console.log('Express secure_server listening on port %d in %s mode', secure_server.address().port, app.settings.env);
-});
+var secure_server;
+try {
+	secure_server = https.createServer(options, app).listen(secure_port, function () {
+	    "use strict";
+	    console.log('Express secure_server listening on port %d in %s mode', secure_server.address().port, app.settings.env);
+	});
+} catch (e) {
+	console.log(e);
+	console.log("Running with insecure server");
+	secure_server = server;
+}
 
 var io = require('socket.io').listen(secure_server);
 
@@ -551,7 +558,7 @@ function format_post(req, res, next, data, callback) {
 /* REQUESTS */
 
 app.all('*',function(req,res,next){
-  if(!req.connection.encrypted)
+  if(!req.connection.encrypted && secure_server != server)
     res.redirect('https://livechan.net'+req.url);
   else
     next();

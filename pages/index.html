@@ -16,8 +16,8 @@
 		<select id="board_select" class="input_select left_float">
 			<option value="home">Home</option>
 			<option value="all">All</option>
-			<option value="g">/g - (general)</option>
 			<option value="t">/t - (tech)</option>
+			<option value="g">/g - (general)</option>
 			<option value="a">/a - (anime)</option>
 			<option value="r">/r - (random)</option>
 			<option value="int">/int - (internat.)</option>
@@ -64,8 +64,13 @@
 
 	         <h1>Welcome to LiveChan!</h1>
 	        <nav class="container" style="text-align:center;">
+	        	         	   <a class="link" href="#" onclick="change_channel('t')">technology - /t</a>
 	         	               <a class="link" href="#" onclick="change_channel('g')">general - /g </a>
-	         	               <a class="link" href="#" onclick="change_channel('t')">technology - /t</a><br>
+	         	               <a class="link" href="#" onclick="change_channel('a')">anime - /a </a>
+	         	               <a class="link" href="#" onclick="change_channel('r')">random - /r </a>
+	         	               <a class="link" href="#" onclick="change_channel('int')">international - /int </a>
+
+	         	               <br>
 	         	               <a class="link" href="#" onclick="start_chat()">all (passive) - /all </a>
 
 	                           <!--<a class="link" href="#" onclick="change_channel('a')">/a/</a>

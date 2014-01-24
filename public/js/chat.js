@@ -21,6 +21,10 @@ var future_ids = {};
 var quote_links_to = {};
 var loaded_callbacks = [];
 var convos = [];
+var highlighted_convos = [];
+var start_press; // for long press detection
+var longpress = 1000;
+
 var videos = {};
 
 var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
@@ -108,8 +112,14 @@ function swap_to_convo(convo){
 	if(convo=="") {
 		$('#convo_filter').val('no-filter');
 		$("#convo").val('');
-
+		highlighted_convos = convos.slice(0);
+		$(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
 	} else {
+		$(".sidebar_convo").toggleClass("sidebar_convo_dim",true);
+		$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
+
+		highlighted_convos = [convo];
+
 		$("#convo").val(convo);
 		$('#convo_filter').val('filter');
 	}
@@ -118,21 +128,82 @@ function swap_to_convo(convo){
     return;
 }
 
+function add_to_convos(convo){
+	console.log(highlighted_convos,convo);
+	$('#convo_filter').val("filter");
+	if(convo=="") {
+		highlighted_convos = convos.slice(0);
+		$(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
+	} else {
+		var convo_index = $.inArray(convo,highlighted_convos);
+		if (convo_index > -1){
+			highlighted_convos.splice(convo_index,1);
+			$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",true);
+		} else {
+			highlighted_convos.push(convo);
+			$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
+
+		}
+	}
+    apply_filter();
+    scroll();
+    return;
+}
+
 function draw_convos(){
     $('.sidebar:first').empty();
-
+	
     var div = $("<div class='sidebar_convo'>All</div>");
-    div.click(function() {
-        swap_to_convo("");
+    div.attr("data-convo","All");
+    div.on( 'mousedown', function( e ) {
+        start = new Date().getTime();
+    });
+
+    div.on( 'mouseleave', function( e ) {
+        start = 0;
+    });
+
+	div.on( 'mouseup', function( e ) {
+        if ( new Date().getTime() >= ( start + longpress )  ) {
+            swap_to_convo("");
+            //alert('long press');
+        } else {
+            swap_to_convo("");
+            //add_to_convos("");
+        }
     });
     $('.sidebar:first').append(div);
 
     for (var i = 0; i < convos.length && i < 30; i++) {
         div = $("<div class='sidebar_convo'/>");
+
         div.text(convos[convos.length - 1 - i]);
-        div.click(function() {
-            swap_to_convo($(this).text());
+        div.attr("data-convo",div.text());
+
+        if($.inArray(div.text(),highlighted_convos)>-1){
+	        //div.css("background","blue");
+        } else {
+	      	//div.css("background","none");
+        }
+        
+        div.on( 'mousedown', function( e ) {
+	        start = new Date().getTime();
+	    });
+
+	    div.on( 'mouseleave', function( e ) {
+	        start = 0;
+	    });
+
+		div.on( 'mouseup', function( e ) {
+	        if ( new Date().getTime() >= ( start + longpress )  ) {
+	            swap_to_convo($(this).text());
+	            //alert('long press');
+	        } else {
+	        	//add_to_convos($(this).text());
+	            swap_to_convo($(this).text());
+	        }
         });
+        
         $('.sidebar:first').append(div);
     }
 }
@@ -266,7 +337,10 @@ function markup(text, rules) {
 }
 
 
-
+/*
+pass in a new chat and this function will draw it on the screen
+first_load will disable animation.
+*/
 function update_chat(new_data, first_load) {
     "use strict";
     var id = new_data.count;
@@ -435,10 +509,12 @@ function update_chat(new_data, first_load) {
         var convo_index = $.inArray(data.convo, convos);
         if (convo_index < 0) {
             convos.push(data.convo);
+            highlighted_convos.push(data.convo);
         } else {
             convos.splice(convo_index,1);
             convos.push(data.convo);
         }
+
         if (!first_load) draw_convos();
         notifications(data.convo);
         apply_filter(post);
@@ -455,7 +531,7 @@ function update_chat(new_data, first_load) {
         } else {
             post.css('opacity', '0');
         }
-        insert_post(post);
+        insert_post(post, new_data.chat);
         if (!first_load) {
             post.animate({
                 opacity: 1
@@ -473,6 +549,7 @@ function draw_chat(data) {
     for (i = data.length - 1; i >= 0; i--) {
         update_chat(data[i], true);
     }
+	highlighted_convos = convos.slice(0);
     draw_convos();
     if (!data[0])
     	return;
