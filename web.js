@@ -474,18 +474,6 @@ function format_post(req, res, next, data, callback) {
         req.body.body = req.body.body.split("\n", 8).join("\n");
     }
 
-    if (req.body.name.length > 40) {
-        req.body.name = req.body.name.substring(0, 39) + "...";
-    }
-
-    if (req.body.convo) {
-        if (req.body.convo.length > 40) {
-            req.body.convo = req.body.convo.substring(0, 39) + "...";
-        }
-    } else {
-        req.body.convo = 'General'; /* default conversation */
-    }
-
 	/* generate tripcode */
 	
     var trip_index = req.body.name.indexOf("#");
@@ -502,6 +490,22 @@ function format_post(req, res, next, data, callback) {
         data.trip = (secure ? "!!" : "!") + tripcode(trip);
         req.body.name = req.body.name.slice(0, trip_index);
     }
+    
+    /* truncate name */
+
+    if (req.body.name.length > 40) {
+        req.body.name = req.body.name.substring(0, 39) + "...";
+    }
+
+    if (req.body.convo) {
+        if (req.body.convo.length > 40) {
+            req.body.convo = req.body.convo.substring(0, 39) + "...";
+        }
+    } else {
+        req.body.convo = 'General'; /* default conversation */
+    }
+
+
     
     /* everything looks good, we can safely add this chat */
     
