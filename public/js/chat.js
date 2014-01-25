@@ -83,12 +83,14 @@ function toggle_sidebar(){
 }
 
 
-function board_link(dest){
+function board_link(dest,linked_chat){
     var link = $("<a class='board_link'/>");
     dest = dest.replace(/\//g,"");
-    link.text(">>>/"+dest);
+    if(!linked_chat) linked_chat = "";
+    linked_chat = linked_chat.replace(/\//g,"");
+    link.text(">>>/"+dest+"/"+linked_chat);
     link.css("text-decoration", "underline");
-    link.click(function(){change_channel(dest);});
+    link.click(function(){change_channel(dest, linked_chat);});
 	return link;
 }
 
@@ -467,9 +469,9 @@ function update_chat(new_data, first_load) {
         var ref_ids = [];
         var quote_links = [];
         var rules = [
-        	[/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+))/, function(m, o) {
+        	[/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+)(\/[0-9]+))/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
-                o.push(board_link(m[3]));
+                o.push(board_link(m[3],m[4]));
             }],
             [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
@@ -488,8 +490,8 @@ function update_chat(new_data, first_load) {
             [/\r?\n/, function(m, o) {
                 o.push($("<br>"));
             }],
-            [/\[code\]([\s\S]*?)\[\/code\]/, function(m, o) {
-                o.push($("<pre class='code'/>").html($("<code/>").text(m[1]).each(function(i, e) {hljs.highlightBlock(e)})));
+            [/\[code\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
+                o.push($("<pre class='code'/>").html($("<code/>").text(m[2]).each(function(i, e) {hljs.highlightBlock(e)})));
             }],
             [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
                 o.push($("<span class='spoiler'/>").text(m[1]));

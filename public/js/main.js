@@ -660,8 +660,10 @@ window.onload = function () {
     }
 };
 
-function change_channel(board)
+function change_channel(board, linked_chat)
 {
+	if (!linked_chat)
+		linked_chat = "";
 	if(board!='all')
 		$('.chats_container').toggleClass('chats_container_home',false);
 	else
@@ -684,8 +686,9 @@ function change_channel(board)
     $('#convo').val('');
     chat = {};
     convos = [];
+	
+    start_chat(linked_chat);
 
-    start_chat();
 }
 
 function split_channel(channel){
@@ -730,7 +733,7 @@ function get_chat_data(channel, first_load){
     });
 }
 
-function start_chat() {
+function start_chat(linked_chat) {
     if(chat_id === "home") {
         change_channel('all');
         return;
@@ -747,4 +750,21 @@ function start_chat() {
     connected = true;
     $('.alert_div').toggleClass('shown', chat_id !== 'all');
     get_chat_data(chat_id, true);
+    var max_attempt = 100;
+    function scroll_to_chat(linked_chat, attempt){
+    	$("#autoscroll").prop('checked',false);
+	   	try {
+	   		if (attempt > max_attempt)
+	   			return;
+		    $("#chat_"+linked_chat).get(0).scrollIntoView();
+		    return;
+	    } catch(e) {
+		    setTimeout(function(){
+			    scroll_to_chat(linked_chat, attempt+1);
+		    },200);
+	    }
+    }
+    if (linked_chat) {
+		scroll_to_chat(linked_chat, 0);
+    }
 }
