@@ -724,6 +724,8 @@ function start_chat() {
     if(chat_id === "home") {
         change_channel('all');
         return;
+    } else if (chat_id === "all") {
+		$('.chats_container').toggleClass('chats_container_home',true);
     }
     $('.chat').remove();
     $('.chats').toggleClass('chats_connected', chat_id !== 'all');
