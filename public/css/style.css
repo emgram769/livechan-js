@@ -212,9 +212,11 @@ ul {
 
 .chat{
     background:rgb(214, 218, 240);
-    padding:5px;
     margin:5px;
     word-wrap:break-word;
+	padding: 6px 8px 8px 8px;
+	clear: both;
+	overflow: hidden;
 }
 
 .chat_dim{
@@ -236,6 +238,7 @@ ul {
 
 .chat_img_cont {
 	display:inline-block;
+	float:left;
 }
 
 .chat_img:hover{

@@ -327,7 +327,13 @@ function markup(text, rules) {
                 f = this[1];
             }
         });
-        output.push(document.createTextNode(text.substr(0, pos)));
+        var unmatched_text = text.substr(0, pos); // text that didn't hit a rule
+        var bbcode = XBBCODE.process({ // may be bbcode
+		    text: unmatched_text,
+		    removeMisalignedTags: false,
+		    addInLineBreaks: false
+		});
+        output.push(bbcode.html); // well processed html
         if (match !== null) {
             f(match, output);
             text = text.substr(pos + match[0].length);
@@ -490,6 +496,7 @@ function update_chat(new_data, first_load) {
             }]
         ];
         var body = markup(data.body, rules);
+
         post.find(".chat_body").empty().append(body);
 
         // Create new backlinks

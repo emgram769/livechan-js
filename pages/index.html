@@ -10,8 +10,11 @@
         <!--[if lt IE 9]>
         <script src="/html5shiv.js"></script>
         <![endif]-->
-        <link rel="stylesheet" href="/css/code_highlight/default.css">
-		<script src="/js/highlight.min.js"></script>
+        <link rel="stylesheet" href="/plugins/code_highlight/css/default.css">
+		<script src="/plugins/code_highlight/highlight.min.js"></script>
+		<link rel="stylesheet" href="/plugins/xbbcode/xbbcode.css">
+		<script src="/plugins/xbbcode/xbbcode.js"></script>
+
 </head>
 <body>
 	<header class="header">
@@ -23,6 +26,8 @@
 			<option value="a">/a - (anime)</option>
 			<option value="r">/r - (random)</option>
 			<option value="int">/int - (internat.)</option>
+			<option value="coin">/coin - (cryptocoin)</option>
+
 		</select>
 		<button id="settings_button" class="right_float">Settings</button>
 	</header>
@@ -69,7 +74,8 @@
 	        	         	   <a class="link" href="#" onclick="change_channel('t')">technology - /t</a>
 	         	               <a class="link" href="#" onclick="change_channel('g')">general - /g </a>
 	         	               <a class="link" href="#" onclick="change_channel('a')">anime - /a </a>
-	         	               <a class="link" href="#" onclick="change_channel('r')">random - /r </a>
+	         	               <a class="link" href="#" onclick="change_channel('r')">random (nsfw) - /r </a>
+	         	               <a class="link" href="#" onclick="change_channel('coin')">cryptocoins - /coin </a>
 	         	               <a class="link" href="#" onclick="change_channel('int')">international - /int </a>
 
 	         	               <br>

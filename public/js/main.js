@@ -85,7 +85,7 @@ function get_css(file) {
     link.id = 'css_highlight_new';
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = '/css/code_highlight'+file;
+    link.href = '/plugins/code_highlight/css'+file;
     link.media = 'all';
     $('head').append(link);
     setTimeout(scroll, 300);
@@ -98,7 +98,6 @@ if (html5) {
         localStorage.contribs = "[\"0\"]";
         localStorage.name = "";
         localStorage.theme = "/style.css";
-        localStorage.autoStart = "false";
         localStorage.clearConvo = "false";
         localStorage.reset = "false";
     }
@@ -134,7 +133,7 @@ if (html5) {
             $("#theme_select").val("/style.css");
         }
         get_css($("#theme_select").val());
-        if(localStorage.autoStart === "true" && chat_id !== "home") {
+        if(chat_id !== "home") {
             start_chat();
         } else {
 	    	$('.chats').toggleClass('shown', true);
@@ -747,6 +746,5 @@ function start_chat() {
     if(history.pushState && push_state) history.pushState({id: chat_id}, document.title, chat_path + chat_id);
     connected = true;
     $('.alert_div').toggleClass('shown', chat_id !== 'all');
-    localStorage.autoStart = "true";
     get_chat_data(chat_id, true);
 }
