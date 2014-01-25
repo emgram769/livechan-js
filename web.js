@@ -789,6 +789,8 @@ app.post('/chat/:id([a-z0-9]+)', function (req, res, next) {
     "use strict";
     res.type("text/plain");
     if (req.params.id !== "all" && boards.indexOf(req.params.id) < 0) {
+    	if (req.files && req.files.image && req.files.image.path)
+    		fs.unlink(req.files.image.path); /* delete blank file */
         res.json({failure: "This board does not exist."});
         return;
     }
