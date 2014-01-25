@@ -330,6 +330,10 @@ pre {
         word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+.code {
+	display:inline;
+}
+
 .admin{
     color:rgb(221, 0, 0);
 }

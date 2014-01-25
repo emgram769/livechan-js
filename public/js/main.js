@@ -77,6 +77,17 @@ function get_css(file) {
     link.href = '/css'+file;
     link.media = 'all';
     $('head').append(link);
+    if ($('#css_highlight_new')) {
+        $('#css_highlight_new').remove();
+    }
+    var head = document.getElementsByTagName('head')[0];
+    var link = document.createElement('link');
+    link.id = 'css_highlight_new';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = '/css/code_highlight'+file;
+    link.media = 'all';
+    $('head').append(link);
     setTimeout(scroll, 300);
 }
 

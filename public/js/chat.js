@@ -483,7 +483,7 @@ function update_chat(new_data, first_load) {
                 o.push($("<br>"));
             }],
             [/\[code\]([\s\S]*?)\[\/code\]/, function(m, o) {
-                o.push($("<pre class='code'/>").text(m[1]));
+                o.push($("<pre class='code'/>").html($("<code/>").text(m[1]).each(function(i, e) {hljs.highlightBlock(e)})));
             }],
             [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
                 o.push($("<span class='spoiler'/>").text(m[1]));
