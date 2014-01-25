@@ -46,7 +46,7 @@ ul {
         position: absolute;
         right:0px;
         width:250px;
-        top:30px;
+        top:32px;
         bottom:0px;
         overflow: auto;
         word-wrap: break-word;
@@ -123,7 +123,7 @@ ul {
     margin:0;
     width:auto;
     left:0px;
-	right:255px;
+	right:250px;
     background:rgb(153, 136, 238);
     font-size:16px;
     min-width:300px;
@@ -187,7 +187,7 @@ ul {
 .chats{
     position:absolute;
     overflow:auto;
-    top:0px;
+    top:2px;
     left:0px;
     bottom:0px;
     right:0px;
