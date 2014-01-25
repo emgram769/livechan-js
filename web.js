@@ -296,11 +296,15 @@ function check_ip_validity(req, res, next) {
 								{ _id: d[0]._id },
 								{ $set: {last_post: now.setTime(now.getTime() + 10000)}},
 								function(){
+							    	if (req.files && req.files.image && req.files.image.path)
+										fs.unlink(req.files.image.path); /* delete file */
 									res.json({ failure: "countdown_violation" });
 									return;
 								});						
 						return;
 					} else if (d[0].banned_rooms.indexOf(req.params.id) > -1) {
+				    	if (req.files && req.files.image && req.files.image.path)
+							fs.unlink(req.files.image.path); /* delete file */
 						res.json({ failure: "ban_violation" });
 						return;
 	                } else {
@@ -309,14 +313,12 @@ function check_ip_validity(req, res, next) {
 							{ _id: d[0]._id },
 							{ $set: {last_post: now}},
 							function(){
-							
-								console.log("formatting image...");
 								format_image(req, res, next, add_to_chat);
-								
 							});
-	                	/* update cool down here */
 	                }
                 } else {
+					if (req.files && req.files.image && req.files.image.path)
+						fs.unlink(req.files.image.path); /* delete file */
 	                res.json({ failure: "session_expiry" });
 	    	   		return;
                 }
