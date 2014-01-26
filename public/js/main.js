@@ -782,9 +782,7 @@ function get_chat_data(channel, first_load){
             if(first_load){ /* set up the socket on the first load */
 	            socket.on('chat', function (d) {
 	                update_chat(d);
-	                if (channel)
-	                	scroll(channel); /* scroll on load, regardless */
-	                else
+	                if($("#autoscroll").prop('checked'))
 	                	scroll();
 	            });
             }

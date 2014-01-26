@@ -98,8 +98,9 @@ fs.readFile('tor_list.txt', 'utf8', function (err, data) {
     app.use(ipfilter(tor_list));
 });
 
-/* logging */
-app.use(logfmt.requestLogger());
+/* logging only during development */
+if (port!=80)
+	app.use(logfmt.requestLogger());
 
 /* serve public data (/public/*) and get cookies */
 app.use(express.static(__dirname + '/public'));
@@ -281,7 +282,6 @@ function check_ip_validity(req, res, next) {
     user_db.find({ip:user_ip})
     	   .sort({last_post:-1})
     	   .exec(function (e, d) {
-    	   		console.log(d);
     	   		if(e) {
 	    	   		res.json({ failure: "session_expiry" });
 	    	   		return;
@@ -347,10 +347,7 @@ function format_image(req, res, next, callback) {
             return;
             
         } else {
-        
-	       	console.log("formatting post...");
-			format_post(req, res, next, data, callback)
-
+        	format_post(req, res, next, data, callback)
         }
     }
     
@@ -358,7 +355,6 @@ function format_image(req, res, next, callback) {
     
     else if (is_video(req.files.image.path)) {
         var command = "ffprobe -print_format json -show_streams " + req.files.image.path;
-        console.log("executing", command);
         exec(command, function(err, stdout, stderr) {
             if (err) {
                 console.log("ffmpeg size error", err);
@@ -383,7 +379,6 @@ function format_image(req, res, next, callback) {
                 data.image_filesize = fs.statSync(data.image).size;
                 data.image_width = video_stream.width;
                 data.image_height = video_stream.height;
-                console.log("generating thumbnail...");
                 generate_thumbnail(req, res, next, data, callback)
             } else {
                 console.log("ffmpeg could not find video stream", stderr);
@@ -411,8 +406,6 @@ function format_image(req, res, next, callback) {
                 data.image_width = dimensions.width;
                 data.image_height = dimensions.height;
             }
-
-			console.log("generating thumbnail...");
 			generate_thumbnail(req, res, next, data, callback)
 
         });
@@ -433,13 +426,11 @@ function generate_thumbnail(req, res, next, data, callback) {
 
     if (is_video) {
         var command = "ffmpeg -i "+req.files.image.path+" -s "+thumb_width+"x"+thumb_height+" -vframes 1 "+data.thumb;
-        console.log("executing", command);
         exec(command, function(err, stdout, stderr) {
             if (err) {
                 console.log("thumbnail creation error", err);
                 return;
             }
-            console.log("formatting post...");
             format_post(req, res, next, data, callback);
         });
     } else {
@@ -453,7 +444,6 @@ function generate_thumbnail(req, res, next, data, callback) {
                     console.log("thumbnail creation error", err);
                     return;
                 }
-                console.log("formatting post...");
                 format_post(req, res, next, data, callback);
             });
     }
@@ -467,8 +457,14 @@ function generate_thumbnail(req, res, next, data, callback) {
 function format_post(req, res, next, data, callback) {	
 	    
     /* length checks */
+    if (!req.body) {
+	   if (req.files && req.files.image && req.files.image.path)
+    		fs.unlink(req.files.image.path); /* delete blank file */
+		res.json({failure: "illegitimate_request"});
+        return;
+    }
     
-    if (req.body.body.length > 2000) {
+    if (req.body.body && req.body.body.length > 2000) {
         req.body.body = req.body.body.substring(0, 1999) + "...";
     }
 
@@ -549,8 +545,6 @@ function format_post(req, res, next, data, callback) {
         callback(data);
     }
 
-	console.log("everything done.");
-
 
 	/* give the client information about the post */
     res.json({
@@ -589,7 +583,6 @@ app.post('/login', function (req, res) {
         var key = (Math.random() * 1e17).toString(36);
         var info = req.headers['user-agent'] + user_ip + key;
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
-        console.log("password", password);
         res.cookie('password_livechan', password, {
             maxAge: 86400000,
             httpOnly: false
@@ -809,6 +802,10 @@ app.get('*', function(req, res){
 app.post('*', function(req, res){
     res.status(404).sendfile('pages/404.html');
 });
+
+/* reduce logging during production runs */
+if (port==80)
+	io.set('log level', 1);
 
 /* join a chat room */
 io.sockets.on('connection', function (socket) {
