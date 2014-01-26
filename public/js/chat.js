@@ -479,9 +479,6 @@ function update_chat(new_data, first_load) {
                 if ($.inArray(ref_id, ref_ids) === -1) ref_ids.push(ref_id);
                 o.push(quote_link(ref_id));
             }],
-            [/https?:\/\/\S+/, function(m, o) {
-                o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
-            }],
             [/(^|\r?\n)(>+)([^\r\n]*)/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
                 var line = markup(m[3], rules);
@@ -490,11 +487,23 @@ function update_chat(new_data, first_load) {
             [/\r?\n/, function(m, o) {
                 o.push($("<br>"));
             }],
-            [/\[code\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
-                o.push($("<pre class='code'/>").html($("<code/>").text(m[2]).each(function(i, e) {hljs.highlightBlock(e)})));
+            [/\[code (language=[a-z]+)?\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
+            	if (m[2]) {
+            		var lang = m[2].replace("language=","");
+            		try {
+            			o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(lang,m[3]).value)));
+            		} catch(e) {
+						o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
+            		}
+            		return;
+            	}
+                o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
             }],
             [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
                 o.push($("<span class='spoiler'/>").text(m[1]));
+            }],
+            [/https?:\/\/\S+/, function(m, o) {
+                o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
             }]
         ];
         var body = markup(data.body, rules);
