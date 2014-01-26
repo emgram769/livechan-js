@@ -331,7 +331,7 @@ function check_ip_validity(req, res, next) {
 	skips to format_post(req, res, next, data, callback) otherwise
 */	
 function format_image(req, res, next, callback) {
-
+  try { /* TODO: remove this try catch */
 	var data = {}; /* to be stored in db and passed to clients */
 
 	/* no image uploaded */
@@ -411,7 +411,12 @@ function format_image(req, res, next, callback) {
         });
     }
 
-	
+  } catch(e) {
+	  	if (req.files && req.files.image && req.files.image.path)
+			fs.unlink(req.files.image.path); /* delete blank file */
+		res.json({failure: "illegitimate_request"});
+        return;
+  }
 }
 
 /* generate_thumbnail
@@ -419,6 +424,7 @@ function format_image(req, res, next, callback) {
 	calls format_post(req, res, next, data, callback) on completion
 */
 function generate_thumbnail(req, res, next, data, callback) {
+  try { /* TODO: remove this try catch */
     var scale = Math.min(250/data.image_width, 100/data.image_height, 1);
     var thumb_width = Math.round(scale * data.image_width);
     var thumb_height = Math.round(scale * data.image_height);
@@ -447,6 +453,12 @@ function generate_thumbnail(req, res, next, data, callback) {
                 format_post(req, res, next, data, callback);
             });
     }
+  } catch(e) {
+	  	if (req.files && req.files.image && req.files.image.path)
+			fs.unlink(req.files.image.path); /* delete blank file */
+		res.json({failure: "illegitimate_request"});
+        return;
+  }
 }
 
 /* format_post:
@@ -455,7 +467,7 @@ function generate_thumbnail(req, res, next, data, callback) {
 	calls callback(data) on success
 */
 function format_post(req, res, next, data, callback) {	
-	    
+  try { /* TODO: remove this try catch */
     /* length checks */
     if (!req.body) {
 	   if (req.files && req.files.image && req.files.image.path)
@@ -553,6 +565,12 @@ function format_post(req, res, next, data, callback) {
     });
     
     return;
+  } catch(e) {
+	  	if (req.files && req.files.image && req.files.image.path)
+			fs.unlink(req.files.image.path); /* delete blank file */
+		res.json({failure: "illegitimate_request"});
+        return;
+  }
 }
 
 /* REQUESTS */
@@ -579,7 +597,9 @@ app.post('/login', function (req, res) {
         user_ip = list[list.length - 1];
     }
 
-    if (req.body.digits === req.session.captcha) {
+	var secure_text = crypto.createHash('sha1').update(req.body.digits + securetrip_salt).digest('base64').toString();
+
+    if (secure_text === req.session.captcha) {
         var key = (Math.random() * 1e17).toString(36);
         var info = req.headers['user-agent'] + user_ip + key;
         var password = crypto.createHash('sha1').update(info).digest('base64').toString();
