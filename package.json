@@ -28,7 +28,7 @@
     "ipfilter": "~0.0.4",
     "logfmt": "~0.18.1",
     "socket.io": "~0.9.16",
-    "tripcode": "~1.1.0",
+    "tripcode": "~1.2.0",
     "mongoose": "*",
     "gm": "*"
   },
