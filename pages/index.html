@@ -19,6 +19,7 @@
 			<option value="all">All</option>
 			<option value="t">/t - (tech)</option>
 			<option value="g">/g - (general)</option>
+			<option value="prog">/prog - (programming)</option>
 			<option value="a">/a - (anime)</option>
 			<option value="r">/r - (random)</option>
 			<option value="int">/int - (internat.)</option>
@@ -69,6 +70,7 @@
 	        <nav class="container" style="text-align:center;">
 	        	         	   <a class="link" href="#" onclick="change_channel('t')">technology - /t</a>
 	         	               <a class="link" href="#" onclick="change_channel('g')">general - /g </a>
+	         	               <a class="link" href="#" onclick="change_channel('prog')">programming - /prog </a>
 	         	               <a class="link" href="#" onclick="change_channel('a')">anime - /a </a>
 	         	               <a class="link" href="#" onclick="change_channel('r')">random (nsfw) - /r </a>
 	         	               <a class="link" href="#" onclick="change_channel('coin')">cryptocoins - /coin </a>
@@ -145,7 +147,7 @@
 		<form id="comment-form" action="?" target="miframe" method="post" enctype="multipart/form-data">
 			<input id="name" name="name" placeholder="Anonymous" class="name" type="text" maxlength="200"/>
 			<input id="convo" name="convo" placeholder="General" class="convo" type="text" maxlength="39"/>
-			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" maxlength="399"></textarea>
+			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" maxlength="1999"></textarea>
 			<input id="image" class="input_button" name="image" type="file" style="max-width:50%;"/>
 			<input id="submit_button" class="input_button" type="button" value="Submit" onclick="submit_chat();"/>
 			<output id="cool_down"></output>

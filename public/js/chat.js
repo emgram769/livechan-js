@@ -487,9 +487,9 @@ function update_chat(new_data, first_load) {
             [/\r?\n/, function(m, o) {
                 o.push($("<br>"));
             }],
-            [/\[code (language=[a-z]+)?\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
+            [/\[code( language=[a-z]+)?\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
             	if (m[2]) {
-            		var lang = m[2].replace("language=","");
+            		var lang = m[2].replace(" language=","");
             		try {
             			o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(lang,m[3]).value)));
             		} catch(e) {
@@ -549,6 +549,7 @@ function update_chat(new_data, first_load) {
         } else {
             post.css('opacity', '0');
         }
+        
         insert_post(post, new_data.chat);
         if (!first_load) {
             post.animate({

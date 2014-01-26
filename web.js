@@ -468,12 +468,12 @@ function format_post(req, res, next, data, callback) {
 	    
     /* length checks */
     
-    if (req.body.body.length > 400) {
-        req.body.body = req.body.body.substring(0, 399) + "...";
+    if (req.body.body.length > 2000) {
+        req.body.body = req.body.body.substring(0, 1999) + "...";
     }
 
-    if (req.body.body.split("\n").length > 8) {
-        req.body.body = req.body.body.split("\n", 8).join("\n");
+    if (req.body.body.split("\n").length > 100) {
+        req.body.body = req.body.body.split("\n", 100).join("\n");
     }
 
 	/* generate tripcode */

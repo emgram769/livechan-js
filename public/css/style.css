@@ -216,7 +216,17 @@ ul {
     word-wrap:break-word;
 	padding: 6px 8px 8px 8px;
 	clear: both;
+	max-height: 150px;
 	overflow: hidden;
+	position:relative;
+}
+
+.chat:after{
+	color:red;
+}
+
+.chat_full{
+	max-height: none !important;
 }
 
 .chat_dim{
