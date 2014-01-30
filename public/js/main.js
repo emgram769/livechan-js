@@ -47,16 +47,24 @@ try {
 /* stuff to do on load */
 $(document).ready(function () {
     "use strict";
+
+    /* subscribe to a chat */
     socket.on('request_location', function (data) {
         socket.emit('subscribe', chat_id);
     });
+    
+    /* load tomorrow theme */
+    //get_css("tomorrow");
+    
     if(title === "") {
     	title = "LiveChan";
     }
+    
     window.document.title = title;
 
     $("#board_select").val(chat_id);
 
+	/* set up notifications */
     $(window).focus(function () {
         unread_chats = 0;
         window.document.title = title;
@@ -67,6 +75,7 @@ $(document).ready(function () {
             window_focus = false;
         });
 
+	/* key bindings for actions */
     $("#name").keydown(function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -95,6 +104,7 @@ $(document).ready(function () {
         }
     });
 
+	/* hacky processing request responses */
     $('iframe#miframe').load(function () {
     	var resp;
     	try {
@@ -689,7 +699,6 @@ function insert_post(post, channel) {
     function expand_post(attempt){
     	if (attempt>=max_attempt || post.height()>0) {
 			if (post[0].offsetHeight < post[0].scrollHeight) {
-			    console.log(post.height());
 			    var expand_button = $("<a>[+]</a>");
 			    expand_button.css({
 				   paddingLeft:"5px"

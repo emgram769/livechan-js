@@ -130,8 +130,8 @@ function swap_to_convo(convo){
     return;
 }
 
-function add_to_convos(convo){
-	console.log(highlighted_convos,convo);
+function add_to_convo(convo){
+	//console.log(highlighted_convos,convo);
 	$('#convo_filter').val("filter");
 	if(convo=="") {
 		highlighted_convos = convos.slice(0);
@@ -198,8 +198,7 @@ function draw_convos(){
 
 		div.on( 'mouseup', function( e ) {
 	        if ( new Date().getTime() >= ( start + longpress )  ) {
-	            swap_to_convo($(this).text());
-	            //alert('long press');
+	            add_to_convo($(this).text());
 	        } else {
 	        	//add_to_convos($(this).text());
 	            swap_to_convo($(this).text());
