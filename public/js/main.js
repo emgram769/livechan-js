@@ -28,7 +28,7 @@ var blink;
 var unread_chats = 0;
 
 var connected = false;
-var socket = io.connect('/', {secure: true});
+var socket = io.connect('/', {secure: (location.protocol === "https:")});
 
 var path = window.location.pathname;
 var chat_path = window.location.href;
@@ -152,16 +152,16 @@ $(document).ready(function () {
 
     $('#theme_select').change(function () {
         get_css($(this).val());
-        localStorage.theme = $(this).val().replace("null", "/style.css");
+        if (html5) localStorage.theme = $(this).val().replace("null", "/style.css");
     });
 
     $('#spoilers').change(function () {
-        localStorage.spoilers = $(this).prop("checked");
+        if (html5) localStorage.spoilers = $(this).prop("checked");
 		$('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
     });
 
     $('#hoversound').change(function () {
-        localStorage.hoversound = $(this).prop("checked");
+        if (html5) localStorage.hoversound = $(this).prop("checked");
     });
     
     $('#board_select').change(function () {
@@ -213,10 +213,12 @@ $(document).ready(function () {
     set_up_html();
     
     $('#clearconvo').change(function() {
-	    if($(this).prop("checked"))
-	        localStorage.clearConvo = "true";
-	    else
-	        localStorage.clearConvo = "false";
+        if (html5) {
+	        if($(this).prop("checked"))
+	            localStorage.clearConvo = "true";
+	        else
+	            localStorage.clearConvo = "false";
+        }
 	});
 	
 	loaded_callbacks.push(function() {
@@ -318,11 +320,11 @@ function set_up_html(){
 	    }
 	
 
-        $("#name").val(localStorage.name);
-        $("#spoilers").prop("checked", localStorage.spoilers === "true");
-        $("#theme_select").val(localStorage.theme);
-        $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
-        $("#hoversound").prop("checked", localStorage.hoversound === "true");
+        if (localStorage.name !== undefined) $("#name").val(localStorage.name);
+        if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
+        if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
+        if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
+        if (localStorage.hoversound !== undefined) $("#hoversound").prop("checked", localStorage.hoversound === "true");
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
         if (cool_down_timer>0)
         	init_cool_down();

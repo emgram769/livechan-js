@@ -277,7 +277,7 @@ function generate_post(id) {
                     videos[id] = display;
                 }
                 display[0].loop = true;
-                display[0].muted = (localStorage.hoversound !== "true");
+                display[0].muted = ($('#hoversound').prop("checked") !== true);
             } else {
                 var display = $("<img>");
             }
