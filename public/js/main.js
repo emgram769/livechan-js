@@ -28,7 +28,7 @@ var blink;
 var unread_chats = 0;
 
 var connected = false;
-var socket = io.connect('/');
+var socket = io.connect('/', {secure: true});
 
 var path = window.location.pathname;
 var chat_path = window.location.href;
@@ -52,9 +52,6 @@ $(document).ready(function () {
     socket.on('request_location', function (data) {
         socket.emit('subscribe', chat_id);
     });
-    
-    /* load tomorrow theme */
-    //get_css("tomorrow");
     
     if(title === "") {
     	title = "LiveChan";
@@ -317,7 +314,7 @@ function set_up_html(){
 	    }
 	
 	    if (!localStorage.theme || localStorage.theme === "null") {
-	        localStorage.theme = "/style.css";
+	        localStorage.theme = "/tomorrow.css";
 	    }
 	
 
