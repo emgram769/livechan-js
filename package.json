@@ -31,7 +31,8 @@
     "tripcode": "~1.2.0",
     "mongoose": "*",
     "gm": "*",
-    "async": "*"
+    "async": "*",
+    "socket.io-stream": "*"
   },
   "engine": "node >= 0.10.0",
   "bugs": {

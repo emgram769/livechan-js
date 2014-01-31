@@ -43,6 +43,7 @@ try {
 } catch (e) {
     html5 = false;
 }
+var submit_beta = false;
 
 /* stuff to do on load */
 $(document).ready(function () {
@@ -440,6 +441,21 @@ function submit_captcha(){
         $("#submit_button").prop("disabled", true);
 }
 
+/* initial code for migration to socket.io data transfer */
+function submit_chat_beta(){
+	var file = $("input:file")[0].files[0];
+    var stream = ss.createStream();
+
+    // upload a file to the server.
+    ss(socket).emit('upload', stream, {
+    	size: file.size,
+    	name: file.name, 
+    	type: file.type
+    });
+   
+    ss.createBlobReadStream(file).pipe(stream);
+}
+
 /* this is currently a POST request TODO: adapt to socket.io websocket request */
 function submit_chat() {
     "use strict";
@@ -590,8 +606,11 @@ function submit_chat() {
         }
         return;
     }
-    
-    $("#comment-form").submit();
+    if (submit_beta) {
+	    submit_chat_beta();
+    } else {
+    	$("#comment-form").submit();
+    }
 
     if (!admin_mode) {
         cool_down_timer += 7;
