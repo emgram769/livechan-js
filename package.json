@@ -30,7 +30,8 @@
     "socket.io": "~0.9.16",
     "tripcode": "~1.2.0",
     "mongoose": "*",
-    "gm": "*"
+    "gm": "*",
+    "async": "*"
   },
   "engine": "node >= 0.10.0",
   "bugs": {
