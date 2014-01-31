@@ -1,0 +1,32 @@
+#!/bin/bash
+ 
+IPTABLES_TARGET="DROP"
+IPTABLES_CHAINNAME="TOR"
+ 
+WORKING_DIR="/tmp/"
+ 
+# get IP address of eth0 network interface
+IP_ADDRESS=$(ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}')
+ 
+if ! iptables -L "$IPTABLES_CHAINNAME" -n >/dev/null 2>&1 ; then            #If chain doesn't exist
+    iptables -N "$IPTABLES_CHAINNAME" >/dev/null 2>&1               #Create it
+fi
+ 
+cd $WORKING_DIR
+
+wget -q -O - "https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=$IP_ADDRESS&port=80" -U NoSuchBrowser/1.0 > temp_tor_list
+wget -q -O - "https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=$IP_ADDRESS&port=9998" -U NoSuchBrowser/1.0 >> temp_tor_list
+sed -i 's|^#.*$||g' temp_tor_list
+ 
+iptables -F "$IPTABLES_CHAINNAME"
+ 
+CMD=$(cat temp_tor_list | uniq | sort)
+ 
+for IP in $CMD; do
+    let COUNT=COUNT+1
+    iptables -A "$IPTABLES_CHAINNAME" -s $IP -j $IPTABLES_TARGET
+done
+ 
+iptables -A "$IPTABLES_CHAINNAME" -j RETURN
+ 
+rm temp_tor*
