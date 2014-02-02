@@ -19,7 +19,7 @@
     "chat"
   ],
   "author": "emgram769",
-  "license": "BSD",
+  "license": "AGPL-3.0",
   "dependencies": {
     "captcha": "~0.0.4",
     "canvas": "~1.1.3",
