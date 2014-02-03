@@ -1,7 +1,7 @@
 {
   "name": "LiveChan",
   "version": "0.0.1",
-  "description": "4chan without threads which auto-updates",
+  "description": "A live multimedia sharing chatroom.",
   "author": "emgram769",
   "license": "AGPL-3.0",
   "homepage": "https://github.com/emgram769/live4chan",
