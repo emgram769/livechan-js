@@ -37,8 +37,12 @@ ul {
 	background: rgb(238, 242, 255);
 	border-bottom: 1px solid rgb(214, 218, 240);
 	border-left: 1px solid rgb(214, 218, 240);
+}
 
-
+.sidebar_shower{
+	position:fixed;
+	top:32px;
+	right:0;
 }
 
 .sidebar{
@@ -50,8 +54,9 @@ ul {
         bottom:0px;
         overflow: auto;
         word-wrap: break-word;
-        border-left: 1px solid rgb(214, 218, 240);
 		display: none;
+		border-left: 1px solid rgb(214, 218, 240);
+
 }
 
 .sidebar_convo_dim {
@@ -334,6 +339,18 @@ input{
 
 }
 
+select{
+    font-size: 10px;
+	padding:none;
+	max-height: 20px;
+}
+
+button{
+    font-size: 10px;
+	padding:none;
+	max-height: 20px;
+}
+
 /* code tag */
 pre {
         white-space: pre-wrap;       /* css-3 */
@@ -362,6 +379,10 @@ pre {
     padding:5px;
     right:270px;
     display:none;
+}
+
+#alert_div_captcha{
+	background-color: #800000;
 }
 
 .alert_message{
