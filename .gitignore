@@ -5,6 +5,7 @@ logs.txt
 salt.txt
 node_modules/*
 !node_modules/captcha/captcha.js
+bower_components/*
 public/chats.json
 nohup.out
 *.swp

@@ -1,3 +1,4 @@
+// @source: https://github.com/patorjk/Extendible-BBCode-Parser/tree/e3bde6c80e4c5a907f2c110623ccba2e5c465a52
 /*
 Copyright (C) 2011 Patrick Gillespie, http://patorjk.com/
 
@@ -41,6 +42,8 @@ var XBBCODE = (function() {
         urlPattern = /^(?:https?|file|c):(?:\/{1,3}|\\{1})[-a-zA-Z0-9:@#%&()~_?\+=\/\\\.]*$/,
         colorNamePattern = /^(?:red|green|blue|orange|yellow|black|white|brown|gray|silver|purple|maroon|fushsia|lime|olive|navy|teal|aqua)$/,
         colorCodePattern = /^#?[a-fA-F0-9]{6}$/,
+        emailPattern = /[^\s@]+@[^\s@]+\.[^\s@]+/,
+        fontFacePattern = /^([a-z][a-z0-9_]+|"[a-z][a-z0-9_\s]+")$/i,
         tags,
         tagList,
         tagsNoParseList = [],
@@ -112,6 +115,15 @@ var XBBCODE = (function() {
                 return '';
             }
         },
+        "center": {
+            openTag: function(params,content) {
+                return '<span class="xbbcode-center">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
+
         "code": {
             openTag: function(params,content) {
                 return '<span class="xbbcode-code">';
@@ -143,6 +155,59 @@ var XBBCODE = (function() {
                 return '</span>';
             }
         },
+        "email": {
+            openTag: function(params,content) {
+            
+                var myEmail;
+            
+                if (!params) {
+                    myEmail = content.replace(/<.*?>/g,"");
+                } else {
+                    myEmail = params.substr(1);
+                }
+                
+                emailPattern.lastIndex = 0;
+                if ( !emailPattern.test( myEmail ) ) {
+                    return '<a>';
+                }
+            
+                return '<a href="mailto:' + myEmail + '">';
+            },
+            closeTag: function(params,content) {
+                return '</a>';
+            }
+        },
+        "face": {
+            openTag: function(params,content) {
+            
+                var faceCode = params.substr(1) || "inherit";
+                fontFacePattern.lastIndex = 0;
+                if ( !fontFacePattern.test( faceCode ) ) {          
+                        faceCode = "inherit";
+                }
+                return '<span style="font-family:' + faceCode + '">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
+        
+
+        "font": {
+            openTag: function(params,content) {
+            
+                var faceCode = params.substr(1) || "inherit";
+                fontFacePattern.lastIndex = 0;
+                if ( !fontFacePattern.test( faceCode ) ) {          
+                        faceCode = "inherit";
+                }
+                return '<span style="font-family:' + faceCode + '">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }  
+        },
+        
         "i": {
             openTag: function(params,content) {
                 return '<span class="xbbcode-i">';
@@ -151,7 +216,6 @@ var XBBCODE = (function() {
                 return '</span>';
             }
         },
-        /*
         "img": {
             openTag: function(params,content) {
             
@@ -161,14 +225,62 @@ var XBBCODE = (function() {
                 if ( !urlPattern.test( myUrl ) ) {
                     myUrl = "";
                 }
-				return '<img src="' + myUrl + '" />';
+            
+                return '<img src="' + myUrl + '" />';
             },
             closeTag: function(params,content) {
                 return '';
             },
             displayContent: false
         },
-        */
+        "justify": {
+            openTag: function(params,content) {
+                return '<span class="xbbcode-justify">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
+        "large": {
+            openTag: function(params,content) {
+				var params = params || '';
+				var colorCode = params.substr(1) || "inherit";
+                colorNamePattern.lastIndex = 0;
+                colorCodePattern.lastIndex = 0;
+                if ( !colorNamePattern.test( colorCode ) ) {
+                    if ( !colorCodePattern.test( colorCode ) ) {
+                        colorCode = "inherit";
+                    } else {
+                        if (colorCode.substr(0,1) !== "#") {
+                            colorCode = "#" + colorCode;
+                        }
+                    }
+                }
+            
+               
+                return '<span class="xbbcode-size-36" style="color:' + colorCode + '">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
+        "left": {
+            openTag: function(params,content) {
+                return '<span class="xbbcode-left">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
+        "li": {
+            openTag: function(params,content) {
+                return "<li>";
+            },
+            closeTag: function(params,content) {
+                return "</li>";
+            },
+            restrictParentsTo: ["list","ul","ol"]
+        },
         "list": {
             openTag: function(params,content) {
                 return '<ul>';
@@ -187,6 +299,15 @@ var XBBCODE = (function() {
             },
             noParse: true
         },
+        "ol": {
+            openTag: function(params,content) {
+                return '<ol>';
+            },
+            closeTag: function(params,content) {
+                return '</ol>';
+            },
+            restrictChildrenTo: ["*", "li"]
+        },
         "php": {
             openTag: function(params,content) {
                 return '<span class="xbbcode-code">';
@@ -196,7 +317,6 @@ var XBBCODE = (function() {
             },
             noParse: true
         },
-        /*
         "quote": {
             openTag: function(params,content) {
                 return '<blockquote class="xbbcode-blockquote">';
@@ -205,7 +325,14 @@ var XBBCODE = (function() {
                 return '</blockquote>';
             }
         },
-        */
+        "right": {
+            openTag: function(params,content) {
+                return '<span class="xbbcode-right">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
         "s": {
             openTag: function(params,content) {
                 return '<span class="xbbcode-s">';
@@ -214,7 +341,6 @@ var XBBCODE = (function() {
                 return '</span>';
             }
         },
-        /*
         "size": {
             openTag: function(params,content) {
             
@@ -229,7 +355,46 @@ var XBBCODE = (function() {
                 return '</span>';
             }
         },
-        */
+        "small": {
+            openTag: function(params,content) {
+				var params = params || '';
+				var colorCode = params.substr(1) || "inherit";
+                colorNamePattern.lastIndex = 0;
+                colorCodePattern.lastIndex = 0;
+                if ( !colorNamePattern.test( colorCode ) ) {
+                    if ( !colorCodePattern.test( colorCode ) ) {
+                        colorCode = "inherit";
+                    } else {
+                        if (colorCode.substr(0,1) !== "#") {
+                            colorCode = "#" + colorCode;
+                        }
+                    }
+                }
+            
+                return '<span class="xbbcode-size-10" style="color:' + colorCode + '">';
+            },
+            closeTag: function(params,content) {
+                return '</span>';
+            }
+        },
+
+        "sub": {
+            openTag: function(params,content) {
+                return '<sub>';
+            },
+            closeTag: function(params,content) {
+                return '</sub>';
+            }
+        },
+        "sup": {
+            openTag: function(params,content) {
+                return '<sup>';
+            },
+            closeTag: function(params,content) {
+                return '</sup>';
+            }
+        },
+
         "table": {
             openTag: function(params,content) {
                 return '<table class="xbbcode-table">';
@@ -280,10 +445,10 @@ var XBBCODE = (function() {
         },
         "th": {
             openTag: function(params,content) {
-                return '<td class="xbbcode-th">';
+                return '<th class="xbbcode-th">';
             },
             closeTag: function(params,content) {
-                return '</td>';
+                return '</th>';
             },
             restrictParentsTo: ["tr"]
         },
@@ -304,6 +469,15 @@ var XBBCODE = (function() {
             closeTag: function(params,content) {
                 return '</span>';
             }
+        },
+        "ul": {
+            openTag: function(params,content) {
+                return '<ul>';
+            },
+            closeTag: function(params,content) {
+                return '</ul>';
+            },
+            restrictChildrenTo: ["*", "li"]
         },
         "url": {
             openTag: function(params,content) {
@@ -339,7 +513,7 @@ var XBBCODE = (function() {
             closeTag: function(params,content) {
                 return "</li>";
             },
-            restrictParentsTo: ["list"]
+            restrictParentsTo: ["list","ul","ol"]
         }
     };
     
@@ -423,7 +597,7 @@ var XBBCODE = (function() {
             reTagNamesParts.lastIndex = 0;
             childTag = (matchingTags[ii].match(reTagNamesParts))[2].toLowerCase();
             
-            if ( pInfo.restrictChildrenTo.length > 0 ) {
+            if ( pInfo && pInfo.restrictChildrenTo && pInfo.restrictChildrenTo.length > 0 ) {
                 if ( !pInfo.validChildLookup[childTag] ) {
                     errStr = "The tag \"" + childTag + "\" is not allowed as a child of the tag \"" + parentTag + "\".";
                     errQueue.push(errStr);
@@ -583,8 +757,7 @@ var XBBCODE = (function() {
             ret.html = ret.html.replace(/\[.*?\]/g,"");
         }
         if (config.addInLineBreaks) {
-            ret.html = ret.html.replace(/\r\n/g, "\n");
-            ret.html = ret.html.replace(/(\r|\n)/g, "$1<br/>");
+            ret.html = '<div style="white-space:pre;">' + ret.html + '</div>';
         }
     
         ret.html = ret.html.replace("&#91;", "["); // put ['s back in

@@ -1,0 +1,21 @@
+{
+  "name": "LiveChan",
+  "version": "0.0.1",
+  "description": "4chan without threads which auto-updates",
+  "author": "emgram769",
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/emgram769/live4chan",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "1.10.2",
+    "html5shiv": "3.7.0",
+    "highlight": "8.0",
+    "Extendible-BBCode-Parser": "git://github.com/patorjk/Extendible-BBCode-Parser.git#e3bde6c80e4c5a907f2c110623ccba2e5c465a52"
+  }
+}
