@@ -1,7 +1,7 @@
 {
   "name": "LiveChan",
   "version": "0.0.1",
-  "description": "4chan without threads which auto-updates",
+  "description": "A live multimedia sharing chatroom.",
   "main": "web.js",
   "_comment_1": "we should probably change the main script, it shouldn't start a server, says http://package.json.nodejitsu.com/ (hover over the main part on there)",
   "scripts": {
