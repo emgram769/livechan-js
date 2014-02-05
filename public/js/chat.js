@@ -315,7 +315,8 @@ function generate_post(id) {
             var display = $(".to_die");
             if (display.is("video") && $("#volume").length !== 0) {
                 var volume = parseFloat($("#volume").val());
-                volume -= 0.01 * event.originalEvent.deltaY;
+                if (event.originalEvent.deltaY > 0) volume -= 0.1;
+                if (event.originalEvent.deltaY < 0) volume += 0.1;
                 if (volume < 0) volume = 0;
                 if (volume > 1) volume = 1;
                 display[0].volume = volume;
