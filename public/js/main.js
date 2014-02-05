@@ -161,8 +161,8 @@ $(document).ready(function () {
 		$('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
     });
 
-    $('#hoversound').change(function () {
-        if (html5) localStorage.hoversound = $(this).prop("checked");
+    $('#volume').change(function () {
+        if (html5) localStorage.volume = $(this).val();
     });
     
     $('#board_select').change(function () {
@@ -325,7 +325,7 @@ function set_up_html(){
         if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
         if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
-        if (localStorage.hoversound !== undefined) $("#hoversound").prop("checked", localStorage.hoversound === "true");
+        if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
         if (cool_down_timer>0)
         	init_cool_down();
