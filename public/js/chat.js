@@ -277,7 +277,9 @@ function generate_post(id) {
                     videos[id] = display;
                 }
                 display[0].loop = true;
-                display[0].muted = ($('#hoversound').prop("checked") !== true);
+                var volume = parseFloat($("#volume").val() || 0);
+                display[0].volume = volume;
+                display[0].muted = (volume == 0);
             } else {
                 var display = $("<img>");
             }
@@ -308,7 +310,21 @@ function generate_post(id) {
                 top: top,
             });
         })
-        .mouseout(kill_excess);
+        .mouseout(kill_excess)
+        .on("wheel", function(event) {
+            var display = $(".to_die");
+            if (display.is("video") && $("#volume").length !== 0) {
+                var volume = parseFloat($("#volume").val());
+                volume -= 0.01 * event.originalEvent.deltaY;
+                if (volume < 0) volume = 0;
+                if (volume > 1) volume = 1;
+                display[0].volume = volume;
+                display[0].muted = (volume == 0);
+                $("#volume").val(volume);
+                if (window.localStorage) localStorage.volume = volume;
+                event.preventDefault();
+            }
+        });
 
     return post;
 }
