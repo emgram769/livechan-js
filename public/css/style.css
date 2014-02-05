@@ -349,6 +349,15 @@ button{
     font-size: 10px;
 	padding:none;
 	max-height: 20px;
+
+.input_range{
+    width:110px;
+    height:16px;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    vertical-align:middle;
+    background:transparent;
 }
 
 /* code tag */
