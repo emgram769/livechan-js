@@ -225,6 +225,7 @@ function generate_post(id) {
                 "File: <a class='file_link' target='_blank'/>" +
                 "<output class='file_data'/>" +
             "</section>" +
+            "<section class='chat_audio_cont'/>" +
             "<a target='_blank' class='chat_img_cont'/>" +
             "<output class='chat_body'/>" +
         "</article>"
@@ -417,31 +418,37 @@ function update_chat(new_data, first_load) {
     }
     if (new_data.image !== undefined || new_data.thumb !== undefined) {
         post.find(".chat_file").css("display", data.image ? "block" : "none");
+        var audio_container = post.find(".chat_audio_cont");
+        audio_container.empty();
         var img_container = post.find(".chat_img_cont");
         img_container.empty();
-        img_container.css("height",104);
 
         if (data.image) {
             var base_name = data.image.match(/[\w\-\.]*$/)[0];
             var extension = base_name.match(/\w*$/)[0];
-            var url_image = "/tmp/uploads/" + base_name;
+            var url_file = "/tmp/uploads/" + base_name;
 
             post.find(".file_link")
-                .attr("href", url_image)
+                .attr("href", url_file)
                 .text(base_name);
+
+            if (extension === "ogg") {
+                audio_container.append($("<audio/>").attr({src: url_file, controls: "controls"}));
+            }
 
             var url_static = null;
             if (data.thumb) {
                 url_static = "/tmp/thumb/" + data.thumb.match(/[\w\-\.]*$/)[0];
-            } else if ($.inArray(extension, ["gif", "ogv", "webm"]) === -1) {
-                url_static = url_image;
+            } else if ($.inArray(extension, ["jpg", "jpeg", "png"]) > -1) {
+                url_static = url_file;
             }
             var url_anim = url_static;
             if (extension === "gif") {
-                url_anim = url_image;
+                url_anim = url_file;
             }
 
-            img_container.attr("href", url_image);
+            img_container.attr("href", url_file);
+            img_container.css("height", (url_static !== null || url_anim !== null) ? 104 : 0);
             if (url_static !== null) {
                 img_container.append($("<img class='chat_img thumb_static'>").attr("src", url_static));
             }
@@ -463,6 +470,15 @@ function update_chat(new_data, first_load) {
         }
         if (data.image_width !== undefined && data.image_height !== undefined) {
             data_items.push(data.image_width + "x" + data.image_height);
+        }
+        if (data.duration !== undefined) {
+            var minutes = Math.floor(data.duration / 60);
+            var seconds = data.duration - 60 * minutes;
+            if (minutes > 0) {
+                data_items.push(minutes + ":" + ("00" + Math.round(seconds)).slice(-2));
+            } else {
+                data_items.push(seconds.toPrecision(3) + "s");
+            }
         }
         if (data.image_filename !== undefined) {
             data_items.push(data.image_filename);

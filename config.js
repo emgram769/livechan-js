@@ -10,7 +10,7 @@ module.exports = {
     ],
 
     all_fields: 'chat name body convo convo_id count date trip',
-    board_fields: 'chat name body convo convo_id count date trip image image_filename image_filesize image_width image_height thumb',
+    board_fields: 'chat name body convo convo_id count date trip image image_filename image_filesize image_width image_height duration thumb',
 
     /* Necessary for hosted version, remove if you're using GraphicMagick */
     use_imagemagick: true,
@@ -26,5 +26,11 @@ module.exports = {
         ca: 'sub.class1.server.ca.pem',
         key: 'ssl.key',
         cert: 'ssl.crt'
-    }
+    },
+
+    /* Supported file types */
+    image_formats: ['jpg', 'jpeg', 'png', 'gif'],
+    video_formats: ['ogv', 'webm'],
+    audio_formats: ['ogg']
+
 };
