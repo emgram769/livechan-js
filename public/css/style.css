@@ -71,7 +71,7 @@ ul {
         margin-bottom: 3px;
 }
 
-.sidebar_convo:hover{
+.sidebar_convo:hover {
         cursor:pointer;
 }
 
@@ -226,7 +226,7 @@ ul {
 	position:relative;
 }
 
-.chat:after{
+.chat:after {
 	color:red;
 }
 
@@ -256,7 +256,7 @@ ul {
 	float:left;
 }
 
-.chat_img:hover{
+.chat_img:hover {
     cursor:pointer;
 }
 
@@ -274,7 +274,7 @@ ul {
     padding-left:5px;
 }
 
-.chat_number:hover{
+.chat_number:hover {
     color:rgb(221, 0, 0);
     cursor:pointer;
 }
@@ -291,7 +291,7 @@ ul {
     color:grey;
 }
 
-.chat_convo:hover{
+.chat_convo:hover {
     cursor:pointer;
 }
 
@@ -299,7 +299,7 @@ a{
     color:rgb(221, 0, 0);
 }
 
-a:hover{
+a:hover {
     cursor:pointer;
 }
 
@@ -319,7 +319,7 @@ a:hover{
     text-decoration:none;
 }
 
-.link:hover{
+.link:hover {
     color:rgb(221, 0, 0);
     cursor:pointer;
 }
@@ -349,6 +349,7 @@ button{
     font-size: 10px;
 	padding:none;
 	max-height: 20px;
+}
 
 .input_range{
     width:110px;

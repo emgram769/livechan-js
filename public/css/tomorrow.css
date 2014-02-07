@@ -143,7 +143,10 @@ input{
 
 
 .sidebar_convo {
-	padding:3px;
+  padding:3px;
   background: #282A2E;
 }
 
+.alert_div {
+  background-color: #282A2E !important;
+}
