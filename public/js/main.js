@@ -167,11 +167,11 @@ $(document).ready(function () {
         quote(parseInt(quote_hash[1], 10));
     }
 
+    set_up_html();
+
     if (get_cookie("password_livechan") === '') {
 		submit_captcha();
     }
-
-    set_up_html();
     
     $('#clearconvo').change(function() {
         if (html5) {

@@ -380,12 +380,16 @@ function markup(text, rules) {
             }
         });
         var unmatched_text = text.substr(0, pos); // text that didn't hit a rule
-        var bbcode = XBBCODE.process({ // may be bbcode
-		    text: unmatched_text,
-		    removeMisalignedTags: false,
-		    addInLineBreaks: false
-		});
-        output.push(bbcode.html); // well processed html
+        try {
+            var bbcode = XBBCODE.process({ // may be bbcode
+                text: unmatched_text,
+                removeMisalignedTags: false,
+                addInLineBreaks: false
+            });
+            output.push(bbcode.html); // well processed html
+        } catch(e) {
+            output.push(document.createTextNode(unmatched_text));
+        }
         if (match !== null) {
             f(match, output);
             text = text.substr(pos + match[0].length);
@@ -539,7 +543,7 @@ function update_chat(new_data, first_load) {
         var ref_ids = [];
         var quote_links = [];
         var rules = [
-        	[/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+)(\/[0-9]+)?)/, function(m, o) {
+            [/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+)(\/[0-9]+)?)/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
                 o.push(board_link(m[3],m[4]));
             }],
@@ -558,16 +562,21 @@ function update_chat(new_data, first_load) {
                 o.push($("<br>"));
             }],
             [/\[code( language=[a-z]+)?\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
-            	if (m[2]) {
-            		var lang = m[2].replace(" language=","");
-            		try {
-            			o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(lang,m[3]).value)));
-            		} catch(e) {
-						o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
-            		}
-            		return;
-            	}
-                o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
+                try {
+                    if (m[2]) {
+                        var lang = m[2].replace(" language=","");
+                        try {
+                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(lang,m[3]).value)));
+                        } catch(e) {
+                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
+                        }
+                        return;
+                    } else {
+                        o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
+                    }
+                } catch(e) {
+                    o.push($("<pre class='code'/>").text(m[3]));
+                }
             }],
             [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
                 o.push($("<span class='spoiler'/>").text(m[1]));
