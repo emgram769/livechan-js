@@ -154,6 +154,7 @@ $(document).ready(function () {
     $('#theme_select').change(function () {
         get_css($(this).val());
         if (html5) localStorage.theme = $(this).val().replace("null", "/style.css");
+        setTimeout(scroll, 300);
     });
 
     $('#spoilers').change(function () {
@@ -221,11 +222,6 @@ $(document).ready(function () {
 	            localStorage.clearConvo = "false";
         }
 	});
-	
-	loaded_callbacks.push(function() {
-	    if ($("#autoscroll").prop('checked')) scroll();
-	});
-	    
 });
 
 /* scroll to bottom of the channel if it is on the page or of all channels on page */
@@ -287,12 +283,11 @@ function get_css(file) {
     link.href = '/plugins/code_highlight/css'+file;
     link.media = 'all';
     $('head').append(link);
-    setTimeout(scroll, 300);
 }
 
-/* set up only html5 local storage stuff */
 function set_up_html(){
 	if (html5) {
+        /* set up only html5 local storage stuff */
 	    if (false || localStorage.reset === "true") {
 	        // set to true to reset local storage to defaults
 	        localStorage.my_ids = "[0]";
@@ -327,21 +322,22 @@ function set_up_html(){
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
-        if (cool_down_timer>0)
-        	init_cool_down();
-        if (!$("#theme_select").val() || $("#theme_select").val() === "null" || !$("#theme_select").val().replace(/^\s+|\s+$/gm, '')) {
-            $("#theme_select").val("/style.css");
-        }
-        get_css($("#theme_select").val());
-        if(chat_id !== "home") {
-            start_chat();
-        } else {
-	    	$('.chats').toggleClass('shown', true);
-			$('.chats_container').toggleClass('chats_container_home', true);
-			$('.chat').toggleClass('chat_full',true);
-        }
+    }
 
-	}	
+    if (cool_down_timer>0)
+    	init_cool_down();
+    if (!$("#theme_select").val() || $("#theme_select").val() === "null" || !$("#theme_select").val().replace(/^\s+|\s+$/gm, '')) {
+        $("#theme_select").val("/style.css");
+    }
+    get_css($("#theme_select").val());
+    if(chat_id !== "home") {
+        var matched_link = window.location.hash.match(/#chat_(\d+)/);
+        start_chat(matched_link ? matched_link[1] : null);
+    } else {
+    	$('.chats').toggleClass('shown', true);
+		$('.chats_container').toggleClass('chats_container_home', true);
+		$('.chat').toggleClass('chat_full',true);
+    }
 }
 
 /* give me captcha TODO: clean this up and make it work better */
@@ -743,15 +739,14 @@ function insert_post(post, channel) {
 }
 
 /* swap to a different channel */
-function change_channel(board, linked_chat)
+function change_channel(board, linked_post)
 {
-	if (!linked_chat)
-		linked_chat = "";
+	if (!linked_post)
+		linked_post = "";
 	if(board!='all')
 		$('.chats_container').toggleClass('chats_container_home',false);
 	else
 		$('.chats_container').toggleClass('chats_container_home',true);
-	$("#autoscroll").prop('checked', true);
     var new_chat = board.replace('/', '');
     $('#comment-form').get(0).setAttribute('action', '/chat/' + new_chat);
     if(chat_id !== "home") {
@@ -770,7 +765,7 @@ function change_channel(board, linked_chat)
     chat = {};
     convos = [];
 	
-    start_chat(linked_chat);
+    start_chat(linked_post);
 
 }
 
@@ -818,7 +813,7 @@ function get_chat_data(channel, first_load){
 }
 
 /* starts up a chat */
-function start_chat(linked_chat) {
+function start_chat(linked_post) {
     if(chat_id === "home") {
         change_channel('all');
         return;
@@ -835,21 +830,13 @@ function start_chat(linked_chat) {
     connected = true;
     $('.alert_div').toggleClass('shown', chat_id !== 'all');
     get_chat_data(chat_id, true);
-    var max_attempt = 40;
-    function scroll_to_chat(linked_chat, attempt){
-    	$("#autoscroll").prop('checked',false);
-	   	try {
-	   		if (attempt > max_attempt)
-	   			return;
-		    $("#chat_"+linked_chat).get(0).scrollIntoView();
-		    return;
-	    } catch(e) {
-		    setTimeout(function(){
-			    scroll_to_chat(linked_chat, attempt+1);
-		    },200);
-	    }
-    }
-    if (linked_chat) {
-		scroll_to_chat(linked_chat, 0);
-    }
+    $("#autoscroll").prop('checked', !linked_post);
+    loaded_callbacks.push(function() {
+        if (linked_post) {
+            $("#chat_"+linked_post)[0].scrollIntoView();
+        } else {
+            scroll();
+        }
+    });
 }
+
