@@ -236,6 +236,7 @@ function draw_convos(){
     }
 }
 
+// Generate blank post element
 function generate_post(id) {
     "use strict";
     var post = $(
@@ -258,12 +259,6 @@ function generate_post(id) {
         "</article>"
     );
     post.attr("id", "chat_" + id);
-
-    if (chat_id === "all") {
-        post.find(".chat_label")
-            .css("display", "inline")
-            .attr("href", "/chat/" + chat[id].chat);
-    }
 
     post.find(".chat_convo")
         .mouseover(quote_mouseover)
@@ -390,40 +385,42 @@ function markup(text, rules) {
 
 
 /*
-pass in a new chat and this function will draw it on the screen
-first_load will disable animation.
+Pass in post data, and this function will draw the post on the screen, or update it if it already exists.
+first_load will disable fade-in animation, redrawing of convo list, and blinking title.
 */
 function update_chat(new_data, first_load) {
     "use strict";
+    // Check if this post number already exists
     var id = new_data.count;
-    if (id === undefined) {
-    	return;
-    }
+    if (id === undefined) return;
     var new_post = (chat[id] === undefined);
-    var post = null;
-    if (new_post) {
-        chat[id] = new_data;
-        post = generate_post(id);
-    } else {
-        var key = null;
-        for (key in new_data) {
-            if (chat[id][key] === new_data[key]) {
-                delete new_data[key];
-            } else {
-                chat[id][key] = new_data[key];
-            }
-        }
-        post = $("#chat_" + id);
+
+    // Find post element or create blank one
+    var post = new_post ? generate_post(id) : $("#chat_" + id);
+
+    // Find old post data object or create empty one
+    if (new_post) chat[id] = {};
+    var data = chat[id];
+
+    // Populate post data object and mark new/changed fields
+    var changed = {};
+    var key = null;
+    for (key in new_data) {
+        changed[key] = (data[key] !== new_data[key]);
+        data[key] = new_data[key];
     }
 
-    var data = chat[id];
-    if (new_data.chat !== undefined && chat_id === "all") {
-        post.find(".chat_label").text("/" + data.chat);
+    // Populate post element with new/changed fields
+    if (changed.chat && chat_id === "all") {
+        post.find(".chat_label")
+            .css("display", "inline")
+            .attr("href", "/chat/" + chat[id].chat)
+            .text("/" + data.chat);
     }
-    if (new_data.name !== undefined) {
+    if (changed.name) {
         post.find(".name_part").text(data.name);
     }
-    if (new_data.trip !== undefined) {
+    if (changed.trip) {
         post.find(".trip_code").text(data.trip);
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
@@ -431,19 +428,22 @@ function update_chat(new_data, first_load) {
             .toggleClass("contrib", contrib && !admin)
             .toggleClass("admin", admin);
     }
-    if (new_data.convo !== undefined || new_data.convo_id !== undefined) {
+    if (changed.convo || changed.convo_id) {
         var is_op = (data.convo_id === data.count);
         post.toggleClass("convo_op", is_op);
         var chat_convo = post.find(".chat_convo");
         chat_convo.text(data.convo + (is_op ? " (OP)" : ""));
         if (!is_op) chat_convo.data("dest", data.convo_id);
     }
-    if (new_data.date !== undefined) {
+    if (changed.convo || new_post) {
+        apply_filter(post);
+    }
+    if (changed.date) {
         var date = new Date(data.date);
         date = (date == "NaN") ? data.date : date.toLocaleString();
         post.find(".chat_date").text(date);
     }
-    if (new_data.image !== undefined || new_data.thumb !== undefined) {
+    if (changed.image || changed.thumb) {
         post.find(".chat_file").css("display", data.image ? "block" : "none");
         var audio_container = post.find(".chat_audio_cont");
         audio_container.empty();
@@ -490,7 +490,7 @@ function update_chat(new_data, first_load) {
             if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
         }
     } 
-    if (new_data.image !== undefined || new_data.image_filesize !== undefined || new_data.image_width !== undefined || new_data.image_height !== undefined || new_data.image_filename !== undefined) {
+    if (changed.image || changed.image_filesize || changed.image_width || changed.image_height || changed.image_filename) {
         var data_items = [];
         if (data.image_filesize !== undefined) {
             data_items.push(humanFileSize(data.image_filesize, false));
@@ -516,7 +516,7 @@ function update_chat(new_data, first_load) {
             post.find(".file_data").text("");
         }
     }
-    if (new_data.body !== undefined) {
+    if (changed.body) {
         // Remove any old backlinks to this post
         if (quote_links_to[id] !== undefined) {
             $.each(quote_links_to[id], function() {
@@ -530,7 +530,6 @@ function update_chat(new_data, first_load) {
         var rules = [
         	[/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+)(\/[0-9]+)?)/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
-                console.log(m);
                 o.push(board_link(m[3],m[4]));
             }],
             [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
@@ -583,7 +582,9 @@ function update_chat(new_data, first_load) {
             }
         });
     }
+
     if (new_post) {
+        // Place post conversation at top of list
         var convo_index = $.inArray(data.convo, convos);
         if (convo_index < 0) {
             convos.push(data.convo);
@@ -592,25 +593,16 @@ function update_chat(new_data, first_load) {
             convos.splice(convo_index,1);
             convos.push(data.convo);
         }
-
         if (!first_load) draw_convos();
-        notifications(data.convo);
-        apply_filter(post);
-        if (first_load) {
-            if (window.location.hash === '#chat_' + id) {
-                $("#autoscroll").prop('checked', false);
-                var chat_container = post.parent();
-                loaded_callbacks.push(function() {
-                    chat_container.scrollTop(
-                        post.offset().top - chat_container.offset().top + chat_container.scrollTop()
-                    );
-                });
-            }
-        } else {
+
+        // Activate blinking title to notify user of new posts
+        if (!first_load) notifications(data.convo);
+
+        // Insert post into chat (with fade-in animation if not first load)
+        if (!first_load) {
             post.css('opacity', '0');
         }
-        
-        insert_post(post, new_data.chat);
+        insert_post(post, data.chat);
         if (!first_load) {
             post.animate({
                 opacity: 1
@@ -618,8 +610,8 @@ function update_chat(new_data, first_load) {
             });
         }
     }
-    $(".spoiler").toggleClass("spoiled", !$('#spoilers').prop("checked"));
 
+    $(".spoiler").toggleClass("spoiled", !$('#spoilers').prop("checked"));
 }
 
 function draw_chat(data) {
@@ -641,6 +633,7 @@ function draw_chat(data) {
             $.each(loaded_callbacks, function() {
                 this();
             });
+            loaded_callbacks = [];
         } else {
             if (counter++ > too_long) {
                 clearInterval(wait_for_last);
