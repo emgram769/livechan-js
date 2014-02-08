@@ -22,8 +22,7 @@ var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
 
-var connected = false;
-var socket = io.connect('/', {secure: (location.protocol === "https:")});
+var socket = null;
 
 var html5 = false;
 try {
@@ -37,14 +36,9 @@ var submit_beta = false;
 $(document).ready(function () {
     "use strict";
 
-    /* subscribe to a chat */
-    socket.on('request_location', function (data) {
-        socket.emit('subscribe', chat_id);
-    });
-    
-    $("#board_select").val(chat_id);
-
-    set_up_nofications();
+    /* set up socket */
+    socket = io.connect('/', {secure: (location.protocol === "https:")});
+    socket.on('chat', function(data) {on_chat(data);});
 
 	/* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -79,25 +73,27 @@ $(document).ready(function () {
     $('iframe#miframe').load(function () {
     	var resp;
     	try {
-        	resp = JSON.parse($("#miframe").contents()[0].body.childNodes[0].innerHTML);
+        	resp = JSON.parse($($("#miframe").contents()[0].body).text());
         } catch (e) {
-	    	resp =  {failure:$("#miframe").contents()[0].body.childNodes[0].innerHTML};
+	    	resp =  {failure:$($("#miframe").contents()[0].body).text()};
         }
         if (resp.failure && resp.failure === "session_expiry") {
         	$("#body").val(last_post);
 		submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
-        } else if (resp.id) {
+        } else if (resp.id && $.inArray(resp.id, my_ids) < 0) {
             clear_fields();
             init_cool_down();
             my_ids.push(resp.id);
             if (html5) {
                 localStorage.my_ids = JSON.stringify(my_ids);
             }
-            $.each(quote_links_to[resp.id], function() {
-                this.text(this.text() + " (You)");
-            });
+            if (quote_links_to[resp.id]) {
+                $.each(quote_links_to[resp.id], function() {
+                    $(this).text($(this).text() + " (You)");
+                });
+            }
         } else if (resp.success === "captcha") {
             $("#submit_button").prop("disabled", false);
             $("#alert_div_captcha").remove();
@@ -143,7 +139,7 @@ $(document).ready(function () {
         var board = $(this).val();
         if (board=="")
             return;
-        change_channel(board);
+        set_channel(board);
     });
 
     thumbnail_mode = $("#thumbnail_mode").val();
@@ -171,12 +167,10 @@ $(document).ready(function () {
         quote(parseInt(quote_hash[1], 10));
     }
 
-    set_up_history();
-    
     if (get_cookie("password_livechan") === '') {
 		submit_captcha();
     }
-    
+
     set_up_html();
     
     $('#clearconvo').change(function() {
@@ -261,14 +255,10 @@ function set_up_html(){
         $("#theme_select").val("/style.css");
     }
     get_css($("#theme_select").val());
-    if(chat_id !== "home") {
-        var matched_link = window.location.hash.match(/#chat_(\d+)/);
-        start_chat(matched_link ? matched_link[1] : null);
-    } else {
-    	$('.chats').toggleClass('shown', true);
-		$('.chats_container').toggleClass('chats_container_home', true);
-		$('.chat').toggleClass('chat_full',true);
-    }
+
+    var board = window.location.pathname.match(/[^\/]*$/)[0];
+    var matched_link = window.location.hash.match(/#chat_(\d+)/);
+    set_channel(board, matched_link ? matched_link[1] : null);
 }
 
 /* give me captcha TODO: clean this up and make it work better */
@@ -303,7 +293,7 @@ function div_alert(message, add_button, div_id) {
         div_id = "";
     }
     var alert_div = document.createElement('aside');
-    alert_div.setAttribute('class', 'alert_div ' + (connected && chat_id !== 'all' ? "shown" : ""));
+    alert_div.setAttribute('class', 'alert_div ' + (chat_id !== 'home' && chat_id !== 'all' ? "shown" : ""));
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
     if (!add_button) {
@@ -455,7 +445,7 @@ function submit_chat() {
         case "s":
         case "switch":
             if (param) {
-                change_channel(param.replace('/', ''))
+                set_channel(param.replace('/', ''))
             } else {
                 div_alert("usage: /switch /channel");
             }

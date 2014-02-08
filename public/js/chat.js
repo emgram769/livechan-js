@@ -19,7 +19,6 @@
 var chat = {};
 var future_ids = {};
 var quote_links_to = {};
-var loaded_callbacks = [];
 var convos = [];
 var highlighted_convos = [];
 var start_press; // for long press detection
@@ -38,14 +37,12 @@ var window_focus = true;
 var window_alert;
 var blink;
 var unread_chats = 0;
-
 var title = "";
-var push_state = true;
 
-var path = window.location.pathname;
-var chat_path = window.location.href;
-chat_path = chat_path.slice(0, chat_path.lastIndexOf('/') + 1);
-var chat_id = path.slice(path.lastIndexOf('/') + 1);
+var chat_id = "";
+var linked_post = "";
+
+var on_chat = function(d) {};
 
 function humanFileSize(bytes, si) {
     "use strict";
@@ -63,7 +60,8 @@ function humanFileSize(bytes, si) {
 }
 
 function quote_click() {
-    $("#autoscroll").prop('checked', false);
+    scroll_to_post(this.href.match(/\d*$/)[0]);
+    return false;
 }
 
 function quote_mouseover() {
@@ -111,7 +109,7 @@ function board_link(dest,linked_chat){
     if(linked_chat == "") link.text(">>>/"+dest);
     else link.text(">>>/"+dest+"/"+linked_chat);
     link.css("text-decoration", "underline");
-    link.click(function(){change_channel(dest, linked_chat);});
+    link.click(function(){set_channel(dest, linked_chat);});
 	return link;
 }
 
@@ -635,29 +633,10 @@ function draw_chat(data) {
     }
 	highlighted_convos = convos.slice(0);
     draw_convos();
-    if (!data[0])
-    	return;
-    var max_chat = data[0].count;
-    var too_long = 1000;
-    var counter = 0;
-    var wait_for_last = setInterval(function () {
-        if ($('#chat_' + max_chat).length) {
-            clearInterval(wait_for_last);
-            $.each(loaded_callbacks, function() {
-                this();
-            });
-            loaded_callbacks = [];
-        } else {
-            if (counter++ > too_long) {
-                clearInterval(wait_for_last);
-            }
-        }
-    }, 100);
 }
 
 
 /* scroll to bottom of the channel if it is on the page or of all channels on page */
-var first_scroll = true;
 function scroll(channel) {
     "use strict";
     if (chat_id=="home") return;
@@ -674,36 +653,6 @@ function scroll(channel) {
 	    }, 200, 'swing', function () {
 		});
     }
-
-	if (first_scroll){
-		first_scroll = false;
-		$('.chats').scroll(function() { /* so this binding doesn't happen in the middle of a scroll */
-	        var scrolled = $(this).height() + $(this).scrollTop();
-	        if(scrolled < $(this)[0].scrollHeight - 5) {
-	            $('#autoscroll').prop("checked", false);
-	        } else {
-	            $('#autoscroll').prop("checked", true);
-	        }
-	    });
-	}
-}
-
-function set_up_nofications() {
-    if(title === "") {
-    	title = "LiveChan";
-    }
-    window.document.title = title;
-
-    $(window)
-        .focus(function () {
-            unread_chats = 0;
-            window.document.title = title;
-            clearInterval(window_alert);
-            window_focus = true;
-        })
-        .blur(function () {
-            window_focus = false;
-        });
 }
 
 /* window blinker (DONT CALL THIS DIRECTLY) */
@@ -735,7 +684,7 @@ function get_convo() {
 function apply_filter(posts) {
     "use strict";
     if (posts === undefined) {
-        posts = $('.chat');
+        posts = $('.chats_container .chat');
     }
     var convo = get_convo();
     var value = $('#convo_filter').val();
@@ -797,37 +746,6 @@ function insert_post(post, channel) {
     return;
 }
 
-/* swap to a different channel */
-function change_channel(board, linked_post)
-{
-	if (!linked_post)
-		linked_post = "";
-	if(board!='all')
-		$('.chats_container').toggleClass('chats_container_home',false);
-	else
-		$('.chats_container').toggleClass('chats_container_home',true);
-    var new_chat = board.replace('/', '');
-    $('#comment-form').get(0).setAttribute('action', '/chat/' + new_chat);
-    if(chat_id !== "home") {
-        socket.emit('unsubscribe', chat_id);
-    }
-    chat_id = new_chat;
-    if(chat_id === "home") {
-        window.location.href = "/chat/home";
-        return;
-    }
-    socket.emit('subscribe', chat_id);
-    $('#board_select').val(board);
-
-    $('.sidebar').empty();
-    $('#convo').val('');
-    chat = {};
-    convos = [];
-	
-    start_chat(linked_post);
-
-}
-
 /* ALPHA STAGES, this function is unstable and uncalled TODO: make it work */
 function split_channel(channel){
 	if ($('.chats').length == 2) return;
@@ -842,72 +760,146 @@ function split_channel(channel){
 	socket.emit('subscribe', channel);
 }
 
-/* a GET request to the server for chat context */
-function get_chat_data(channel, first_load){
-	$.ajax({
-        type: "GET",
-        url: "/data_convo/" + channel
-    }).done(function (data_convo) {
+/* sets the channel and starts up the chat */
+function set_channel(new_channel, new_post, no_push_state) {
+    if (!new_post) new_post = "";
+
+    // unsubscribe from any previous channel
+    if (chat_id && chat_id !== "home") {
+        socket.emit('unsubscribe', chat_id);
+    }
+
+    // clear old stuff
+    $('.sidebar').empty();
+    $('#convo').val('');
+    $('.chats').empty();
+    chat = {};
+    convos = [];
+
+    // indicate new channel
+    $('#board_select').val(new_channel);
+    $('#comment-form').attr('action', '/chat/' + new_channel);
+    title = "LiveChan" + (new_channel === "home" ? "" : " - /" + new_channel);
+    window.document.title = title;
+
+    // hide form, sidebar on /home, /all pages
+    var show_form = (new_channel !== "all" && new_channel !== "home");
+    $('.chats_container').toggleClass('chats_container_home', !show_form);
+    $('.chats').toggleClass('chats_connected', show_form);
+    $('.create, .sidebar, .alert_div').toggleClass('shown', show_form);
+
+    // turn on autoscroll unless linking to post
+    $("#autoscroll").prop('checked', new_post === "");
+
+    // enter into history
+    if (!no_push_state && history.pushState) {
+        var state_data = {channel: new_channel, post: new_post};
+        var chat_path = window.location.pathname.replace(/[^\/]*$/, "") + new_channel;
+        if (chat_id) {
+            history.pushState(state_data, title, chat_path);
+        } else {
+            history.replaceState(state_data, title, chat_path);
+        }
+    }
+
+    // set new channel
+    chat_id = new_channel;
+    linked_post = new_post;
+
+    if (new_channel !== "home") {
+        // subscribe to new channel
+        socket.emit('subscribe', new_channel);
+
+        // get posts
+        var draw_data = [];
+        on_chat = function(data) {
+            draw_data.push(data);
+        }
         $.ajax({
             type: "GET",
-            url: "/data/" + channel
-        }).done(function (data_chat) {
-                var draw_data = data_convo.concat(data_chat);
-                draw_data.sort(function(a,b){
-                        if(a.count && b.count){
-                                return b.count - a.count;
-                        } return -1;
-                });
-            draw_chat(draw_data);
-            $('.chats').toggleClass('shown', true);
-            if(first_load){ /* set up the socket on the first load */
-	            socket.on('chat', function (d) {
-	                update_chat(d);
-	                if($("#autoscroll").prop('checked'))
-	                	scroll();
-	            });
-            }
+            url: "/data_convo/" + new_channel
+        }).done(function (data_convo) {
+            $.ajax({
+                type: "GET",
+                url: "/data/" + new_channel
+            }).done(function (data_chat) {
+                draw_data = draw_data.concat(data_convo, data_chat);
+                draw_data.sort(function(a, b) {return b.count - a.count;});
+                draw_chat(draw_data);
+                $('.chats').toggleClass('shown', true);
+                on_chat = function(d) {
+                    update_chat(d);
+                    if($("#autoscroll").prop('checked'))
+                        scroll();
+                };
+                setTimeout(function() {
+                    if (new_post !== "") {
+                        if ($("#chat_"+linked_post).length) $("#chat_"+linked_post)[0].scrollIntoView();
+                    } else {
+                        scroll();
+                    }
+                }, 100);
+            });
         });
-    });
-}
-
-/* starts up a chat */
-function start_chat(linked_post) {
-    if(chat_id === "home") {
-        change_channel('all');
-        return;
-    } else if (chat_id === "all") {
-		$('.chats_container').toggleClass('chats_container_home',true);
+    } else {
+        $('.chats').append($('.home_screen').contents().clone());
+        $('.chats').toggleClass('shown', true);
+        $('.chats .chat').toggleClass('chat_full',true);
+        $('.chats a').click(function() {
+            set_channel(this.href.match(/[^\/]*$/)[0]);
+            return false;
+        });
     }
-    $('.chat').remove();
-    $('.chats').toggleClass('chats_connected', chat_id !== 'all');
-    $('.create').toggleClass('shown', chat_id !== 'all');
-    $('.sidebar').toggleClass('shown', chat_id !== 'all');
-    title = 'LiveChan - /'+chat_id;
-    window.document.title = title;
-    if(history.pushState && push_state) history.pushState({id: chat_id}, document.title, chat_path + chat_id);
-    connected = true;
-    $('.alert_div').toggleClass('shown', chat_id !== 'all');
-    get_chat_data(chat_id, true);
-    $("#autoscroll").prop('checked', !linked_post);
-    loaded_callbacks.push(function() {
-        if (linked_post) {
-            $("#chat_"+linked_post)[0].scrollIntoView();
-        } else {
-            scroll();
-        }
-    });
 }
 
-function set_up_history() {
-    window.addEventListener('popstate', function(event) {
-        if(!event.state || !event.state.id) {
-            return;
-        }
-        console.log('popstate fired! chat id: ' + event.state.id);
-        push_state = false;
-        change_channel(event.state.id);
-        push_state = true;
-    });
+/* scrolls to a given post */
+function scroll_to_post(new_post, no_push_state) {
+    // enter into history
+    if (!no_push_state && history.pushState) {
+        var state_data = {channel: chat_id, post: new_post};
+        var chat_path = window.location.pathname.replace(/[^\/]*$/, "") + chat_id;
+        history.pushState(state_data, title, chat_path);
+    }
+
+    linked_post = new_post;
+    if (new_post !== "") {
+        if ($("#chat_"+new_post).length) $("#chat_"+new_post)[0].scrollIntoView();
+    } else {
+        scroll();
+    }
+    $("#autoscroll").prop('checked', new_post === "");
 }
+
+$(document).ready(function () {
+    "use strict";
+
+    // setup scrolling
+    $('.chats').scroll(function() {
+        var scrolled = $(this).height() + $(this).scrollTop();
+        $('#autoscroll').prop("checked", scrolled >= $(this)[0].scrollHeight - 5);
+    });
+
+    // setup notifications
+    $(window)
+        .focus(function () {
+            unread_chats = 0;
+            window.document.title = title;
+            clearInterval(window_alert);
+            window_focus = true;
+        })
+        .blur(function () {
+            window_focus = false;
+        });
+
+    // setup history
+    $(window).on('popstate', function(event) {
+        var state = event.originalEvent.state;
+        if (!state) return;
+        if (state.channel !== chat_id) {
+            set_channel(state.channel, state.post, true);
+        } else {
+            scroll_to_post(state.post, true);
+        }
+    });
+});
 
