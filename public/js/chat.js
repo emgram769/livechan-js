@@ -414,7 +414,7 @@ function update_chat(new_data, first_load) {
     if (changed.chat && chat_id === "all") {
         post.find(".chat_label")
             .css("display", "inline")
-            .attr("href", "/chat/" + chat[id].chat)
+            .attr("href", "/chat/" + data.chat)
             .text("/" + data.chat);
     }
     if (changed.name) {
