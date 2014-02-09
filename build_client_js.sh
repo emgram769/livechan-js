@@ -17,7 +17,7 @@ function source_line {
 }
 
 # install jQuery
-cp bower_components/jquery/jquery.* public/js
+(source_line jQuery; cat bower_components/jQuery/dist/jquery.js) > public/js/jquery.js
 
 # install html5shiv
 (source_line html5shiv; cat bower_components/html5shiv/dist/html5shiv.js) > public/js/html5shiv.min.js
@@ -51,11 +51,11 @@ echo Installed:
 ls -l public/js/jquery.* public/js/html5shiv.min.js public/plugins/xbbcode/xbbcode.js public/plugins/code_highlight/highlight.js public/js/socket.io-stream.min.js
 
 # minify scripts
-for x in public/plugins/xbbcode/xbbcode.js public/plugins/code_highlight/highlight.js
+for x in public/js/jquery.js public/plugins/xbbcode/xbbcode.js public/plugins/code_highlight/highlight.js
 do
     pushd $(dirname $x) > /dev/null
     y=$(basename $x)
-    uglifyjs $y --comments '/^\!|@preserve|@license|@cc_on|@source|copyright/i' --source-map ${y/.js/.min.map} > ${y/.js/.min.js}
+    uglifyjs $y -c hoist_funs=false,loops=false,unused=false -m --comments '/^\!|@preserve|@license|@cc_on|@source|copyright/i' --source-map ${y/.js/.min.map} > ${y/.js/.min.js}
     popd > /dev/null
     echo "Minified $x: $(cat $x | wc -c) -> $(cat ${x/.js/.min.js} | wc -c)"
 done

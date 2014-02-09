@@ -13,7 +13,7 @@
     "tests"
   ],
   "devDependencies": {
-    "jquery": "1.10.2",
+    "jQuery": "1.11.0",
     "html5shiv": "3.7.0",
     "highlight": "8.0",
     "Extendible-BBCode-Parser": "git://github.com/patorjk/Extendible-BBCode-Parser.git#e3bde6c80e4c5a907f2c110623ccba2e5c465a52"
