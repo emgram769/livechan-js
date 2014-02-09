@@ -22,21 +22,8 @@ var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
 
-var window_focus = true;
-var window_alert;
-var blink;
-var unread_chats = 0;
+var socket = null;
 
-var connected = false;
-var socket = io.connect('/', {secure: (location.protocol === "https:")});
-
-var path = window.location.pathname;
-var chat_path = window.location.href;
-chat_path = chat_path.slice(0, chat_path.lastIndexOf('/') + 1);
-var chat_id = path.slice(path.lastIndexOf('/') + 1);
-
-var title = "";
-var push_state = true;
 var html5 = false;
 try {
     html5 = (window.localStorage !== undefined && window.localStorage !== null);
@@ -49,29 +36,9 @@ var submit_beta = false;
 $(document).ready(function () {
     "use strict";
 
-    /* subscribe to a chat */
-    socket.on('request_location', function (data) {
-        socket.emit('subscribe', chat_id);
-    });
-    
-    if(title === "") {
-    	title = "LiveChan";
-    }
-    
-    window.document.title = title;
-
-    $("#board_select").val(chat_id);
-
-	/* set up notifications */
-    $(window).focus(function () {
-        unread_chats = 0;
-        window.document.title = title;
-        clearInterval(window_alert);
-        window_focus = true;
-    })
-        .blur(function () {
-            window_focus = false;
-        });
+    /* set up socket */
+    socket = io.connect('/', {secure: (location.protocol === "https:")});
+    socket.on('chat', function(data) {on_chat(data);});
 
 	/* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -106,25 +73,27 @@ $(document).ready(function () {
     $('iframe#miframe').load(function () {
     	var resp;
     	try {
-        	resp = JSON.parse($("#miframe").contents()[0].body.childNodes[0].innerHTML);
+        	resp = JSON.parse($($("#miframe").contents()[0].body).text());
         } catch (e) {
-	    	resp =  {failure:$("#miframe").contents()[0].body.childNodes[0].innerHTML};
+	    	resp =  {failure:$($("#miframe").contents()[0].body).text()};
         }
         if (resp.failure && resp.failure === "session_expiry") {
         	$("#body").val(last_post);
 		submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
-        } else if (resp.id) {
+        } else if (resp.id && $.inArray(resp.id, my_ids) < 0) {
             clear_fields();
             init_cool_down();
             my_ids.push(resp.id);
             if (html5) {
                 localStorage.my_ids = JSON.stringify(my_ids);
             }
-            $.each(quote_links_to[resp.id], function() {
-                this.text(this.text() + " (You)");
-            });
+            if (quote_links_to[resp.id]) {
+                $.each(quote_links_to[resp.id], function() {
+                    $(this).text($(this).text() + " (You)");
+                });
+            }
         } else if (resp.success === "captcha") {
             $("#submit_button").prop("disabled", false);
             $("#alert_div_captcha").remove();
@@ -170,7 +139,7 @@ $(document).ready(function () {
         var board = $(this).val();
         if (board=="")
             return;
-        change_channel(board);
+        set_channel(board);
     });
 
     thumbnail_mode = $("#thumbnail_mode").val();
@@ -198,21 +167,11 @@ $(document).ready(function () {
         quote(parseInt(quote_hash[1], 10));
     }
 
-    window.addEventListener('popstate', function(event) {
-        if(!event.state || !event.state.id) {
-            return;
-        }
-        console.log('popstate fired! chat id: ' + event.state.id);
-        push_state = false;
-        change_channel(event.state.id);
-        push_state = true;
-    });
-    
+    set_up_html();
+
     if (get_cookie("password_livechan") === '') {
 		submit_captcha();
     }
-    
-    set_up_html();
     
     $('#clearconvo').change(function() {
         if (html5) {
@@ -223,40 +182,6 @@ $(document).ready(function () {
         }
 	});
 });
-
-/* scroll to bottom of the channel if it is on the page or of all channels on page */
-var first_scroll = true;
-function scroll(channel) {
-    "use strict";
-    if (chat_id=="home") return;
-	if (channel) {
-		scr = $(".chats[data-channel='"+channel+"'")[0].scrollHeight;
-		return;
-    }
-    var i;
-    for (i = 0; i < $('.chats').length; i++) {
-	    var scr = $('.chats')[i].scrollHeight;
-	    scr += 10;
-	    $('.chats').eq(i).animate({
-	        scrollTop: scr
-	    }, 200, 'swing', function () {
-		});
-    }
-
-	if (first_scroll){
-		first_scroll = false;
-		$('.chats').scroll(function() { /* so this binding doesn't happen in the middle of a scroll */
-	        var scrolled = $(this).height() + $(this).scrollTop();
-	        if(scrolled < $(this)[0].scrollHeight - 5) {
-	            $('#autoscroll').prop("checked", false);
-	        } else {
-	            $('#autoscroll').prop("checked", true);
-	        }
-	    });
-	}
-
-   
-}
 
 /* load up css into the page */
 function get_css(file) {
@@ -330,14 +255,10 @@ function set_up_html(){
         $("#theme_select").val("/style.css");
     }
     get_css($("#theme_select").val());
-    if(chat_id !== "home") {
-        var matched_link = window.location.hash.match(/#chat_(\d+)/);
-        start_chat(matched_link ? matched_link[1] : null);
-    } else {
-    	$('.chats').toggleClass('shown', true);
-		$('.chats_container').toggleClass('chats_container_home', true);
-		$('.chat').toggleClass('chat_full',true);
-    }
+
+    var board = window.location.pathname.match(/[^\/]*$/)[0];
+    var matched_link = window.location.hash.match(/#chat_(\d+)/);
+    set_channel(board, matched_link ? matched_link[1] : null);
 }
 
 /* give me captcha TODO: clean this up and make it work better */
@@ -372,7 +293,7 @@ function div_alert(message, add_button, div_id) {
         div_id = "";
     }
     var alert_div = document.createElement('aside');
-    alert_div.setAttribute('class', 'alert_div ' + (connected && chat_id !== 'all' ? "shown" : ""));
+    alert_div.setAttribute('class', 'alert_div ' + (chat_id !== 'home' && chat_id !== 'all' ? "shown" : ""));
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
     if (!add_button) {
@@ -524,7 +445,7 @@ function submit_chat() {
         case "s":
         case "switch":
             if (param) {
-                change_channel(param.replace('/', ''))
+                set_channel(param.replace('/', ''))
             } else {
                 div_alert("usage: /switch /channel");
             }
@@ -645,198 +566,5 @@ function quote(id) {
         $("#convo").val(chat[id].convo);
         apply_filter();
     }
-}
-
-/* window blinker (DONT CALL THIS DIRECTLY) */
-function notifications(post_convo) {
-    "use strict";
-    if (window_focus === false && ($('#convo_filter').val() !== 'filter' || post_convo === get_convo())) {
-        unread_chats++;
-        clearInterval(window_alert);
-        window_alert = setInterval(function () {
-            if (!blink) {
-                window.document.title = '(' + unread_chats + ') ' + title;
-            } else {
-                window.document.title = title;
-            }
-            blink = !blink;
-
-        }, 1500);
-    }
-}
-
-/* return convo with check for empty */
-function get_convo() {
-    "use strict";
-    var convo = $('#convo').val();
-    return (convo === "") ? "General" : convo;
-}
-
-/* filters out convos not in the highlighted_convo list */
-function apply_filter(posts) {
-    "use strict";
-    if (posts === undefined) {
-        posts = $('.chat');
-    }
-    var convo = get_convo();
-    var value = $('#convo_filter').val();
-    posts.toggleClass('chat_dim', false);
-    posts.toggleClass('chat_hidden', false);
-
-    if (value === "highlight"){
-        posts.toggleClass(function () {
-            var id = parseInt(this.id.match(/\d+/)[0], 10);
-            //return (convo === chat[id].convo) ? '' : 'chat_dim';
-            return ($.inArray(chat[id].convo,highlighted_convos) > -1) ? '' : 'chat_dim';
-        }, true);
-    } else if (value === "filter"){
-        posts.toggleClass(function () {
-            var id = parseInt(this.id.match(/\d+/)[0], 10);
-            //return (convo === chat[id].convo) ? '' : 'chat_hidden';
-            return ($.inArray(chat[id].convo,highlighted_convos) > -1) ? '' : 'chat_hidden';
-        }, true);
-    }
-}
-
-/* adds post to chats div, based on channel if more than one chat */
-function insert_post(post, channel) {
-    "use strict";
-    if ($('.chats').length == 1) {
-    	post.appendTo($(".chats:first"));
-    }
-    else {
-    	post.appendTo($(".chats[data-channel='"+channel+"']"));
-    }
-    
-    var max_attempt = 10;
-    
-    function expand_post(attempt){
-    	if (attempt>=max_attempt || post.height()>0) {
-			if (post[0].offsetHeight < post[0].scrollHeight) {
-			    var expand_button = $("<a>[+]</a>");
-			    expand_button.css({
-				   paddingLeft:"5px"
-			    });
-			    expand_button.click(function(){
-			    	expand_button.parent().parent().toggleClass('chat_full');
-					var new_text = expand_button.text() == "[+]" ? "[-]" : "[+]";
-					expand_button.text(new_text);
-			    });
-			    post.find('.chat_header').append(expand_button);
-		    }  
-		    clearInterval(post_exists);
-		    return;
-	    } else {
-		    expand_post(attempt+1);
-	    }
-    }
-    
-    var post_exists = setInterval(function(){
-    	expand_post(0);
-    }, 500); /* DOM takes forever */
-
-    return;
-}
-
-/* swap to a different channel */
-function change_channel(board, linked_post)
-{
-	if (!linked_post)
-		linked_post = "";
-	if(board!='all')
-		$('.chats_container').toggleClass('chats_container_home',false);
-	else
-		$('.chats_container').toggleClass('chats_container_home',true);
-    var new_chat = board.replace('/', '');
-    $('#comment-form').get(0).setAttribute('action', '/chat/' + new_chat);
-    if(chat_id !== "home") {
-        socket.emit('unsubscribe', chat_id);
-    }
-    chat_id = new_chat;
-    if(chat_id === "home") {
-        window.location.href = "/chat/home";
-        return;
-    }
-    socket.emit('subscribe', chat_id);
-    $('#board_select').val(board);
-
-    $('.sidebar').empty();
-    $('#convo').val('');
-    chat = {};
-    convos = [];
-	
-    start_chat(linked_post);
-
-}
-
-/* ALPHA STAGES, this function is unstable and uncalled TODO: make it work */
-function split_channel(channel){
-	if ($('.chats').length == 2) return;
-	$('.chats_connected').toggleClass('chats_half',true);
-	$('.chats:first').attr('data-channel', chat_id);
-	var new_chats = $('.chats:first').clone();
-	new_chats.empty();
-	new_chats.css('left','50%');
-	new_chats.attr('data-channel', channel);
-	$('.chats_container').append(new_chats);
-	get_chat_data(channel);
-	socket.emit('subscribe', channel);
-}
-
-/* a GET request to the server for chat context */
-function get_chat_data(channel, first_load){
-	$.ajax({
-        type: "GET",
-        url: "/data_convo/" + channel
-    }).done(function (data_convo) {
-        $.ajax({
-            type: "GET",
-            url: "/data/" + channel
-        }).done(function (data_chat) {
-                var draw_data = data_convo.concat(data_chat);
-                draw_data.sort(function(a,b){
-                        if(a.count && b.count){
-                                return b.count - a.count;
-                        } return -1;
-                });
-            draw_chat(draw_data);
-            $('.chats').toggleClass('shown', true);
-            if(first_load){ /* set up the socket on the first load */
-	            socket.on('chat', function (d) {
-	                update_chat(d);
-	                if($("#autoscroll").prop('checked'))
-	                	scroll();
-	            });
-            }
-        });
-    });
-}
-
-/* starts up a chat */
-function start_chat(linked_post) {
-    if(chat_id === "home") {
-        change_channel('all');
-        return;
-    } else if (chat_id === "all") {
-		$('.chats_container').toggleClass('chats_container_home',true);
-    }
-    $('.chat').remove();
-    $('.chats').toggleClass('chats_connected', chat_id !== 'all');
-    $('.create').toggleClass('shown', chat_id !== 'all');
-    $('.sidebar').toggleClass('shown', chat_id !== 'all');
-    title = 'LiveChan - /'+chat_id;
-    window.document.title = title;
-    if(history.pushState && push_state) history.pushState({id: chat_id}, document.title, chat_path + chat_id);
-    connected = true;
-    $('.alert_div').toggleClass('shown', chat_id !== 'all');
-    get_chat_data(chat_id, true);
-    $("#autoscroll").prop('checked', !linked_post);
-    loaded_callbacks.push(function() {
-        if (linked_post) {
-            $("#chat_"+linked_post)[0].scrollIntoView();
-        } else {
-            scroll();
-        }
-    });
 }
 
