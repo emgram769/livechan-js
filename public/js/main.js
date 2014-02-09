@@ -142,10 +142,10 @@ $(document).ready(function () {
         set_channel(board);
     });
 
-    thumbnail_mode = $("#thumbnail_mode").val();
+    var prev_thumbnail_mode = $("#thumbnail_mode").val();
     $("#thumbnail_mode").change(function () {
         var new_value = $(this).val();
-        if (thumbnail_mode === "links-only") {
+        if (prev_thumbnail_mode === "links-only") {
             $('.chat_img_cont').show('slow', function(){
 	            scroll();
             });
@@ -153,13 +153,13 @@ $(document).ready(function () {
             if (new_value === "animated") $('.thumb_anim').show('slow');
         } else if (new_value === "links-only") {
             $('.chat_img_cont').hide('slow');
-            if (thumbnail_mode === "static") $('.thumb_static').hide('slow');
-            if (thumbnail_mode === "animated") $('.thumb_anim').hide('slow');
+            if (prev_thumbnail_mode === "static") $('.thumb_static').hide('slow');
+            if (prev_thumbnail_mode === "animated") $('.thumb_anim').hide('slow');
         } else {
             $('.thumb_static').css("display", (new_value === "static") ? "inline" : "none");
             $('.thumb_anim').css("display", (new_value === "animated") ? "inline" : "none");
         }
-        thumbnail_mode = new_value;
+        prev_thumbnail_mode = new_value;
     });
 
     var quote_hash = window.location.hash.match(/^#q(\d+)$/);
@@ -169,10 +169,6 @@ $(document).ready(function () {
 
     set_up_html();
 
-    if (get_cookie("password_livechan") === '') {
-		submit_captcha();
-    }
-    
     $('#clearconvo').change(function() {
         if (html5) {
 	        if($(this).prop("checked"))
