@@ -340,7 +340,7 @@ function generate_post(id) {
             var yTop = Math.round((maxHeight - display.height()) * event.clientY / maxHeight);
             $(".to_die").css({
                 left: xLeft,
-                top: yTop,
+                top: yTop
             });
         })
         .mouseout(kill_excess)
