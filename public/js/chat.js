@@ -31,7 +31,6 @@ var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
 var contribs = default_contribs;
-var thumbnail_mode = "links-only";
 
 var window_focus = true;
 var window_alert;
@@ -83,7 +82,7 @@ function kill_excess() {
     $('video.to_die')
         .removeClass("to_die")
         .each(function() {
-            this.pause();
+            if (this.pause) this.pause();
         })
         .css("display", "none");
     $('.to_die').remove();
@@ -299,8 +298,8 @@ function generate_post(id) {
             var scale = Math.min(maxWidth/chat[id].image_width, maxHeight/chat[id].image_height, 1);
             var width = Math.round(chat[id].image_width * scale);
             var height = Math.round(chat[id].image_height * scale);
-            var left = Math.min(event.clientX + 10, maxLeft);
-            var top = Math.round((maxHeight - height) * event.clientY / maxHeight);
+            var xLeft = Math.min(event.clientX + 10, maxLeft);
+            var yTop = Math.round((maxHeight - height) * event.clientY / maxHeight);
 
             var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
             var extension = base_name.match(/\w*$/)[0];
@@ -322,26 +321,26 @@ function generate_post(id) {
             display.css({
                 display: 'inline',
                 position: 'fixed',
-                left: left,
-                top: top,
+                left: xLeft,
+                top: yTop,
                 width: width,
                 height: height,
                 zIndex: 1000,
                 'pointer-events': 'none'
             });
             if (!display.parent().is("body")) $('body').append(display);
-            if (display.is("video")) display[0].play();
+            if (display.is("video") && display[0].play) display[0].play();
         })
         .mousemove(function(event) {
             var display = $(".to_die");
             if (display.length == 0) return;
             var maxLeft = $(this).offset().left + $(this).width() + 10;
             var maxHeight = $(window).height();
-            var left = Math.min(event.clientX + 10, maxLeft);
-            var top = Math.round((maxHeight - display.height()) * event.clientY / maxHeight);
+            var xLeft = Math.min(event.clientX + 10, maxLeft);
+            var yTop = Math.round((maxHeight - display.height()) * event.clientY / maxHeight);
             $(".to_die").css({
-                left: left,
-                top: top,
+                left: xLeft,
+                top: yTop,
             });
         })
         .mouseout(kill_excess)
@@ -501,8 +500,8 @@ function update_chat(new_data, first_load) {
                 .css("display", "none")
                 .attr("alt", "Image #" + data.count);
 
-            if (thumbnail_mode === "static") img_container.find(".thumb_static").css("display", "inline");
-            if (thumbnail_mode === "animated") img_container.find(".thumb_anim").css("display", "inline");
+            if ($("#thumbnail_mode").val() === "static") img_container.find(".thumb_static").css("display", "inline");
+            if ($("#thumbnail_mode").val() === "animated") img_container.find(".thumb_anim").css("display", "inline");
         }
     } 
     if (changed.image || changed.image_filesize || changed.image_width || changed.image_height || changed.image_filename) {
@@ -858,6 +857,10 @@ function set_channel(new_channel, new_post, no_push_state) {
             set_channel(this.href.match(/[^\/]*$/)[0]);
             return false;
         });
+    }
+
+    if (new_channel !== "home" && new_channel !== "all" && get_cookie("password_livechan") === '') {
+        submit_captcha();
     }
 }
 
