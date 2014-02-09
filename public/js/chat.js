@@ -854,8 +854,11 @@ function set_channel(new_channel, new_post, no_push_state) {
         $('.chats').toggleClass('shown', true);
         $('.chats .chat').toggleClass('chat_full',true);
         $('.chats a').click(function() {
-            set_channel(this.href.match(/[^\/]*$/)[0]);
-            return false;
+            var match = this.href.match(/^\/chat\/([^\/]+)$/);
+            if (match) {
+                set_channel(match[1]);
+                return false;
+            }
         });
     }
 
