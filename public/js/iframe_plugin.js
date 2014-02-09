@@ -14,7 +14,7 @@ container.style.display = "block";
 container.style.position = 'fixed';
 container.style.right = '0px';
 container.style.top = '0px';
-container.style.width = width+20+'px';
+container.style.width = width+'px';
 container.style.height = '100%';
 container.style.zIndex = '10000';
 container.id='livechan_container';
@@ -30,22 +30,24 @@ showhide.style.background = 'rgb(29, 31, 33)';
 showhide.style.margin = '0';
 showhide.style.padding = '0';
 
+document.body.style.marginRight = '400px';
+
 showhide.innerHTML = '><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>>';
 showhide.onclick = function(){
 	var display = document.getElementById('livechan_iframe').style.display;
 	if (display == 'none') {
 		document.getElementById('livechan_iframe').style.display = 'block';
-		container.style.width = width+40+'px';
+		container.style.width = width+'px';
 		showhide.style.right = width+'px';
 		showhide.innerHTML = '><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>><br/>>';
+		document.body.style.marginRight = '400px';
 
 	} else {
 		document.getElementById('livechan_iframe').style.display = 'none';
-		container.style.width = 40+'px';
+		container.style.width = 0+'px';
 		showhide.style.right = 0+'px';
 		showhide.innerHTML = '<<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><<br/><';
-
-		
+		document.body.style.marginRight = '';
 	}
 };
 
