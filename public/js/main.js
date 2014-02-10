@@ -162,11 +162,6 @@ $(document).ready(function () {
         prev_thumbnail_mode = new_value;
     });
 
-    var quote_hash = window.location.hash.match(/^#q(\d+)$/);
-    if (quote_hash) {
-        quote(parseInt(quote_hash[1], 10));
-    }
-
     set_up_html();
 
     $('#clearconvo').change(function() {
@@ -253,8 +248,8 @@ function set_up_html(){
     get_css($("#theme_select").val());
 
     var board = window.location.pathname.match(/[^\/]*$/)[0];
-    var matched_link = window.location.hash.match(/#chat_(\d+)/);
-    set_channel(board, matched_link ? matched_link[1] : null);
+    var matched_link = window.location.hash.match(/^#(\d+)$/);
+    set_channel(board, matched_link ? matched_link[1] : "");
 }
 
 /* give me captcha TODO: clean this up and make it work better */
