@@ -92,7 +92,6 @@ function toggle_sidebar(){
 	$('.sidebar').hide('slow');
 }
 
-
 function board_link(dest,linked_chat){
     var link = $("<a class='board_link'/>");
     if(!linked_chat) {
@@ -105,17 +104,28 @@ function board_link(dest,linked_chat){
     }
     dest = dest.replace(/\//g,"");
     linked_chat = linked_chat.replace(/\//g,"");
-    if(linked_chat == "") link.text(">>>/"+dest);
-    else link.text(">>>/"+dest+"/"+linked_chat);
-    link.css("text-decoration", "underline");
-    link.click(function(){set_channel(dest, linked_chat);});
+    var link_text = ">>>/" + dest;
+    var link_url = "/chat/" + dest;
+    if (linked_chat !== "") {
+        link_text += "#" + linked_chat;
+        link_url += "#" + linked_chat;
+        if ($.inArray(parseInt(linked_chat, 10), my_ids)) {
+            link_text += " (You)";
+        }
+    }
+    link.text(link_text);
+    link.attr("href", link_url);
+    link.click(function(){
+        set_channel(dest, linked_chat);
+        return false;
+    });
 	return link;
 }
 
 function quote_link(dest) {
     "use strict";
     var link = $("<a class='quote_link'/>");
-    link.attr("href", "#chat_" + dest);
+    link.attr("href", "#" + dest);
     link.data("dest", dest);
     link.text(function () {
         return ">>" + dest + (($.inArray(dest, my_ids) > -1) ? " (You)" : "");
@@ -270,6 +280,12 @@ function generate_post(id) {
     );
     post.attr("id", "chat_" + id);
 
+    post.find(".chat_label")
+        .click(function() {
+            set_channel(chat[id].chat, chat[id].count);
+            return false;
+        });
+
     post.find(".chat_convo")
         .mouseover(quote_mouseover)
         .mouseout(kill_excess)
@@ -281,6 +297,9 @@ function generate_post(id) {
     post.find(".chat_number")
         .text(id)
         .click(function () {
+            if (chat_id === "all") {
+                set_channel(chat[id].chat, chat[id].count);
+            }
             quote(id);
         });
 
@@ -428,7 +447,7 @@ function update_chat(new_data, first_load) {
     if (changed.chat && chat_id === "all") {
         post.find(".chat_label")
             .css("display", "inline")
-            .attr("href", "/chat/" + data.chat)
+            .attr("href", "/chat/" + data.chat + "#" + id)
             .text("/" + data.chat);
     }
     if (changed.name) {
@@ -542,9 +561,9 @@ function update_chat(new_data, first_load) {
         var ref_ids = [];
         var quote_links = [];
         var rules = [
-            [/(\r?\n)?(?:\{(\d+)\}|>>>([\/a-z0-9]+)(\/[0-9]+)?)/, function(m, o) {
+            [/(\r?\n)?>>>\/([a-z0-9]+)(?:[#\/](\d+))?/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
-                o.push(board_link(m[3],m[4]));
+                o.push(board_link(m[2], m[3]));
             }],
             [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
                 if (m[1]) o.push($("<br>"));
@@ -560,21 +579,20 @@ function update_chat(new_data, first_load) {
             [/\r?\n/, function(m, o) {
                 o.push($("<br>"));
             }],
-            [/\[code( language=[a-z]+)?\](\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
+            [/\[code(?: language=([a-z]+))?\](?:\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
                 try {
-                    if (m[2]) {
-                        var lang = m[2].replace(" language=","");
+                    if (m[1]) {
                         try {
-                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(lang,m[3]).value)));
+                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(m[1],m[2]).value)));
                         } catch(e) {
-                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
+                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[2]).value)));
                         }
                         return;
                     } else {
-                        o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[3]).value)));
+                        o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[2]).value)));
                     }
                 } catch(e) {
-                    o.push($("<pre class='code'/>").text(m[3]));
+                    o.push($("<pre class='code'/>").text(m[2]));
                 }
             }],
             [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
@@ -873,7 +891,11 @@ function scroll_to_post(new_post, no_push_state) {
     if (!no_push_state && history.pushState) {
         var state_data = {channel: chat_id, post: new_post};
         var chat_path = window.location.pathname.replace(/[^\/]*$/, "") + chat_id;
-        history.pushState(state_data, title, chat_path);
+        if (/^#?$/.test(window.location.hash)) {
+            history.pushState(state_data, title, chat_path);
+        } else {
+            history.replaceState(state_data, title, chat_path);
+        }
     }
 
     linked_post = new_post;
@@ -915,6 +937,12 @@ $(document).ready(function () {
         } else {
             scroll_to_post(state.post, true);
         }
+    });
+
+    // deal with hash changes
+    $(window).on("hashchange", function() {
+        var matched_link = window.location.hash.match(/^#(\d+)$/);
+        if (matched_link) scroll_to_post(matched_link[1]);
     });
 });
 
