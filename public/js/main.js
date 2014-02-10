@@ -82,6 +82,7 @@ $(document).ready(function () {
 		submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
+            init_cool_down();
         } else if (resp.id && $.inArray(resp.id, my_ids) < 0) {
             clear_fields();
             init_cool_down();
