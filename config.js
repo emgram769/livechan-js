@@ -12,9 +12,6 @@ module.exports = {
     all_fields: 'chat name body convo convo_id count date trip',
     board_fields: 'chat name body convo convo_id count date trip image image_filename image_filesize image_width image_height duration thumb',
 
-    /* Necessary for hosted version, remove if you're using GraphicMagick */
-    use_imagemagick: true,
-
     hash_pass: 'Nqesm9E+3GXfOG0KgJq8YmizCho=',
     securetrip_salt: 'AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL',
     salt_file: 'salt.txt',
