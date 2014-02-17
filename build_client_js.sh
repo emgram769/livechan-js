@@ -35,11 +35,6 @@ python bower_components/highlight/tools/build.py -n
 ) > public/plugins/code_highlight/highlight.js
 cp bower_components/highlight/src/styles/* public/plugins/code_highlight/css
 
-# install xbbcode
-mkdir -p public/plugins/xbbcode
-(source_line Extendible-BBCode-Parser; cat bower_components/Extendible-BBCode-Parser/xbbcode.js) > public/plugins/xbbcode/xbbcode.js
-cp bower_components/Extendible-BBCode-Parser/xbbcode.css public/plugins/xbbcode
-
 # install socket.io-stream client-side script
 (
     echo "// @source: https://github.com/nkzawa/socket.io-stream/tree/$(sed -n 's/.*"version": "\(.*\)".*/\1/p' node_modules/socket.io-stream/package.json)"
@@ -48,10 +43,10 @@ cp bower_components/Extendible-BBCode-Parser/xbbcode.css public/plugins/xbbcode
 
 # check installation
 echo Installed:
-ls -l public/js/jquery.* public/js/html5shiv.min.js public/plugins/xbbcode/xbbcode.js public/plugins/code_highlight/highlight.js public/js/socket.io-stream.min.js
+ls -l public/js/jquery.* public/js/html5shiv.min.js public/plugins/code_highlight/highlight.js public/js/socket.io-stream.min.js
 
 # minify scripts
-for x in public/js/jquery.js public/plugins/xbbcode/xbbcode.js public/plugins/code_highlight/highlight.js
+for x in public/js/jquery.js public/plugins/code_highlight/highlight.js
 do
     pushd $(dirname $x) > /dev/null
     y=$(basename $x)

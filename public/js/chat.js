@@ -382,40 +382,65 @@ function generate_post(id) {
     return post;
 }
 
-function markup(text, rules) {
+/*
+Parser object
+- text = string to be parsed
+*/
+function Parser(text) {
+    this.text = text;
+    this.position = 0;
+}
+
+/*
+Parse the text according to the given markup rules.
+- rules is an array of markup rules in the form [start_tag, handler] where
+    start_tag
+      is a regular expression for the start tag
+    handler(match_result, output) [with this = the Parser object]
+      advances the parser past the body and end tag (if any)
+      creates the DOM nodes that the tag represents
+      and appends them to output (an array to be passed to jQuery's .append() function)
+- end_tag (optional) is a regular expression which causes parsing to stop
+*/
+Parser.prototype.parse = function(rules, end_tag) {
     "use strict";
     var output = [];
+    var end_matched = false;
+    if (end_tag) {
+        var end_handler = function(m, o) {
+            end_matched = true;
+        }
+        rules = [[end_tag, end_handler]].concat(rules);
+    }
     do {
         var match = null;
-        var pos = text.length;
-        var f = null;
-        $.each(rules, function() {
-            var result = this[0].exec(text);
-            if (result !== null && result.index < pos) {
+        var match_pos = this.text.length;
+        var handler = null;
+        for (var i = 0; i < rules.length; i++) {
+            rules[i][0].lastIndex = this.position;
+            var result = rules[i][0].exec(this.text);
+            if (result !== null && this.position <= result.index && result.index < match_pos) {
                 match = result;
-                pos = result.index;
-                f = this[1];
+                match_pos = result.index;
+                handler = rules[i][1];
             }
-        });
-        var unmatched_text = text.substr(0, pos); // text that didn't hit a rule
-        try {
-            var bbcode = XBBCODE.process({ // may be bbcode
-                text: unmatched_text,
-                removeMisalignedTags: false,
-                addInLineBreaks: false
-            });
-            output.push(bbcode.html); // well processed html
-        } catch(e) {
-            output.push(document.createTextNode(unmatched_text));
         }
+        var unmatched_text = this.text.substring(this.position, match_pos);
+        output.push(document.createTextNode(unmatched_text));
+        this.position = match_pos;
         if (match !== null) {
-            f(match, output);
-            text = text.substr(pos + match[0].length);
+            this.position += match[0].length;
+            handler.call(this, match, output);
         }
-    } while (match !== null);
+    } while (match !== null && !end_matched);
     return output;
 }
 
+/* Advances past end_tag and returns the unparsed body */
+Parser.prototype.no_parse = function(end_tag) {
+    "use strict";
+    return $(this.parse([], end_tag)[0]).text();
+}
 
 /*
 Pass in post data, and this function will draw the post on the screen, or update it if it already exists.
@@ -559,51 +584,71 @@ function update_chat(new_data, first_load) {
 
         // Process body markup
         var ref_ids = [];
-        var quote_links = [];
         var rules = [
-            [/(\r?\n)?>>>\/([a-z0-9]+)(?:[#\/](\d+))?/, function(m, o) {
-                if (m[1]) o.push($("<br>"));
-                o.push(board_link(m[2], m[3]));
+            [/>>>\/([a-z0-9]+)(?:[#\/](\d+))?/g, function(m, o) {
+                o.push(board_link(m[1], m[2]));
             }],
-            [/(\r?\n)?(?:\{(\d+)\}|>>(\d+))/, function(m, o) {
-                if (m[1]) o.push($("<br>"));
-                var ref_id = parseInt(m[2] ? m[2] : m[3], 10);
+            [/(?:\{(\d+)\}|>>(\d+))/g, function(m, o) {
+                var ref_id = parseInt(m[1] ? m[1] : m[2], 10);
                 if ($.inArray(ref_id, ref_ids) === -1) ref_ids.push(ref_id);
                 o.push(quote_link(ref_id));
             }],
-            [/(^|\r?\n)(>+)([^\r\n]*)/, function(m, o) {
-                if (m[1]) o.push($("<br>"));
-                var line = markup(m[3], rules);
-                o.push($("<output class='greentext'/>").text(m[2]).append(line));
+            [/^>+/mg, function(m, o) {
+                var body = this.parse(rules, /$/mg);
+                o.push($("<output class='greentext'/>").text(m[0]).append(body));
             }],
-            [/\r?\n/, function(m, o) {
+            [/\r?\n/g, function(m, o) {
                 o.push($("<br>"));
             }],
-            [/\[code(?: language=([a-z]+))?\](?:\r?\n)?([\s\S]*?)\[\/code\]/, function(m, o) {
+            [/\[code(?: language=([a-z]+))?\](?:\r?\n)?/g, function(m, o) {
+                var body = this.no_parse(/\[\/code\]/g);
                 try {
                     if (m[1]) {
                         try {
-                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(m[1],m[2]).value)));
+                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlight(m[1], body).value)));
                         } catch(e) {
-                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[2]).value)));
+                            o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(body).value)));
                         }
-                        return;
                     } else {
-                        o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(m[2]).value)));
+                        o.push($("<pre class='code'/>").html($("<code/>").html(hljs.highlightAuto(body).value)));
                     }
                 } catch(e) {
-                    o.push($("<pre class='code'/>").text(m[2]));
+                    o.push($("<pre class='code'/>").text(body));
                 }
             }],
-            [/\[spoiler\]([\s\S]*?)\[\/spoiler\]/, function(m, o) {
-                o.push($("<span class='spoiler'/>").text(m[1]));
+            [/\[spoiler\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/spoiler\]/g);
+                o.push($("<span class='spoiler'/>").append(body));
             }],
-            [/https?:\/\/\S+/, function(m, o) {
+            [/https?:\/\/\S+/g, function(m, o) {
                 o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
+            }],
+            [/\[b\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/b\]/g);
+                o.push($("<span style='font-weight: bold;'/>").append(body));
+            }],
+            [/\[i\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/i\]/g);
+                o.push($("<span style='font-style: italic;'/>").append(body));
+            }],
+            [/\[u\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/u\]/g);
+                o.push($("<span style='text-decoration: underline;'/>").append(body));
+            }],
+            [/\[s\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/s\]/g);
+                o.push($("<span style='text-decoration: line-through;'/>").append(body));
+            }],
+            [/\[color=([#\w]+)\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/color\]/g);
+                o.push($("<span/>").css("color", m[1]).append(body));
+            }],
+            [/\[noparse\]/g, function(m, o) {
+                var body = this.no_parse(/\[\/noparse\]/g);
+                o.push(document.createTextNode(body));
             }]
         ];
-        var body = markup(data.body, rules);
-
+        var body = new Parser(data.body).parse(rules);
         post.find(".chat_body").empty().append(body);
 
         // Create new backlinks
