@@ -22,31 +22,38 @@ Requirements:
 The commands below are based on a Debian installation, other distros / operating systems will vary.
 
 1) Install git:
+
     sudo apt-get install git
 
 2) Install node.js and NPM:
+
     sudo apt-get install nodejs npm nodejs-legacy
 
 (nodejs-legacy creates a symlink from /usr/bin/node to Debian's location /usr/bin/nodejs, needed for installation scripts that call "node".)
 
 3) Install MongoDB:
+
     sudo apt-get install mongodb
 
 4) Install ImageMagick:
+
     sudo apt-get install imagemagick
 
 5) Install the dependencies of the canvas module:
+
     sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 
 6) Install FFmpeg. See instructions at [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html).
 
 Add the sources from [http://www.deb-multimedia.org/](http://www.deb-multimedia.org/) to your /etc/apt/sources.list and do:
+
     sudo apt-get update
     sudo apt-get install deb-multimedia-keyring
     sudo apt-get update
     sudo apt-get install ffmpeg
 
 Alternately you can download a static build from [http://ffmpeg.gusari.org/static/](http://ffmpeg.gusari.org/static/) and copy the extracted binaries to /usr/local/bin:
+
     sudo cp ffmpeg ffprobe /usr/local/bin
 
 Note that many distributions come with Libav in place of FFmpeg. FFmpeg is recommended. Using Libav instead should be possible, but will require appropriate changes to [format-image.js](https://github.com/emgram769/live4chan/blob/master/lib/utils/format-image.js) and [generate-thumbnail.js](https://github.com/emgram769/live4chan/blob/master/lib/utils/generate-thumbnail.js) in lib/utils.
@@ -54,18 +61,23 @@ Note that many distributions come with Libav in place of FFmpeg. FFmpeg is recom
 If you do not want audio/video support, you should edit your [config.js](https://github.com/emgram769/live4chan/blob/master/config.js) so that video_formats and audio_formats are both empty arrays.
 
 7) Clone the git repo
+
     git clone https://github.com/emgram769/live4chan.git
 
 8) Install the dependencies with npm install
+
     cd live4chan; npm install
 
 9) Restore the changes to the captcha module which were overwritten by npm install:
+
     git checkout node_modules/captcha/captcha.js
 
 10) Make sure the public/tmp/uploads and public/tmp/thumb folders are writable
+
     chmod 777 public/tmp/uploads public/tmp/thumb
 
 11) Run LiveChan
+
     npm start
 
 If this is the first run, it will prompt for you to set and confirm a password. This is used for the admin commands to delete and edit posts.
