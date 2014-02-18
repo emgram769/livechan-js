@@ -76,11 +76,15 @@ If you do not want audio/video support, you should edit your [config.js](https:/
 
     chmod 777 public/tmp/uploads public/tmp/thumb
 
-11) Run LiveChan
+11) Set the admin password
+
+    node lib/set-password.js
+
+This is used for the admin commands to delete/change posts and ban users.
+
+12) Run LiveChan
 
     npm start
-
-If this is the first run, it will prompt for you to set and confirm a password. This is used for the admin commands to delete and edit posts.
 
 Nginx proxy config
 ====
