@@ -1,8 +1,16 @@
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
 .buildpacks
 push
 logs.txt
 salt.txt
+admin_pw.txt
 node_modules/*
 !node_modules/captcha/captcha.js
 bower_components/*

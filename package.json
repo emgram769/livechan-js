@@ -29,7 +29,8 @@
     "tripcode": "1.2.0",
     "mongoose": "3.8.6",
     "async": "0.2.10",
-    "socket.io-stream": "0.5.2"
+    "socket.io-stream": "0.5.2",
+    "read": "1.0.5"
   },
   "devDependencies": {
     "bower": "1.2.8",

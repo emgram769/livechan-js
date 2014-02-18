@@ -12,7 +12,9 @@ module.exports = {
     all_fields: 'chat name body convo convo_id count date trip',
     board_fields: 'chat name body convo convo_id count date trip image image_filename image_filesize image_width image_height duration thumb',
 
-    hash_pass: 'Nqesm9E+3GXfOG0KgJq8YmizCho=',
+    admin_pw_file: 'admin_pw.txt',
+    admin_pw_salt: '',
+    admin_pw_hash: '',
     securetrip_salt: 'AVEPwfpR4K8PXQaKa4PjXYMGktC2XY4Qt59ZnERsEt5PzAxhyL',
     salt_file: 'salt.txt',
 
