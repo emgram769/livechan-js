@@ -1,0 +1,367 @@
+<html>
+<head>
+<title>/draw</title>
+<script src="https://livechan.net:5000/socket.io/socket.io.js"></script>
+<script>
+
+/* globals */
+var mouse_coords = {};
+var displacement = {x:0, y:0};
+var max_length = 5000;
+var socket;
+var redraw_interval = 1000;
+var redraw_counter = 0;
+var image = new Image();
+var image_size = 200.0;
+var max = {height:1000, width:2000};
+var backCanvas = document.createElement('canvas');
+backCanvas.width = max.width;
+backCanvas.height = max.height;
+var backCtx = backCanvas.getContext('2d');
+
+
+
+function draw_pt(ctx, p) {
+    ctx.beginPath();
+    ctx.moveTo(p.prevX, p.prevY);
+    ctx.lineTo(p.currX, p.currY);
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.closePath();
+}
+
+function draw_char(ctx, c, color) {
+	var text_width = c.c.length * 14.45;
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillRect(c.currTextX, c.currTextY+5, text_width, -23);
+    ctx.font = '18pt Courier';
+    ctx.fillStyle = color ? color : 'black';
+    if (c.c[0] == ">")
+    	ctx.fillStyle = 'green';
+    ctx.fillText(c.c, c.currTextX, c.currTextY);
+
+}
+
+function draw_image(ctx, image_data, callback) {
+	var load_image = new Image();
+    load_image.src = image_data.src;
+    load_image.onload = function(){
+    	var scale_factor = load_image.height > load_image.width ? image_size/load_image.height : image_size/load_image.width;
+		ctx.drawImage(load_image, image_data.x, image_data.y,
+	  				scale_factor*load_image.width,
+	  				scale_factor*load_image.height);  
+	  	if (callback) callback();
+    };
+}
+
+function draw_canvas(canvas){
+	var c = canvas;
+	var ctx = c.getContext("2d");
+	ctx.clearRect ( 0 , 0 , canvas.width , canvas.height );
+
+	/* background */
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillRect(0,0,c.width,c.height);
+	
+	/* saved canvas */
+	ctx.drawImage(backCanvas, displacement.x, displacement.y);
+
+}
+
+var flag = false,
+    prevX = 0,
+    currX = 0,
+    prevY = 0,
+    currY = 0,
+    currTextX = 0,
+    currTextY = 0,
+    dot_flag = false;
+    
+var x = "black",
+y = 2;
+
+function handle_mouse(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    mouse_coords = {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+    ctx = canvas.getContext("2d");
+
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(currX, currY);
+    ctx.strokeStyle = x;
+    ctx.lineWidth = y;
+    ctx.stroke();
+    ctx.closePath();
+
+    return;
+}
+ 
+var counter = 0;
+var counter2 = 0;
+var clear_interval = 500;
+var send_interval = 10;
+var to_send = [];
+
+function add_to_capped_array(element, ignore) {
+	if (ignore) {
+		ctx = document.getElementById("main_canvas").getContext("2d");
+		switch (element.type) {
+			case "word":
+				draw_char(ctx, element);
+				break;
+			case "stroke":
+				draw_pt(ctx, element);
+				break;
+			case "image":
+				draw_image(ctx, element);
+				break;
+		}
+	} else {
+		to_send.push(element);
+	}
+	if (counter >= send_interval || element.type == "word" || element.type == "image"){
+		counter = 0;
+		socket.emit('client', to_send);
+		delete to_send;
+		to_send = [];
+	}
+	if (counter2 >= clear_interval) {
+		var canvas = document.getElementById('main_canvas');
+	
+		ctx.fillStyle = "rgba(255,255,255,0.1)";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		counter2 = 0;
+	}
+
+	counter++;
+	counter2++;
+	return;
+}
+
+window.addEventListener('load', function(){
+	var canvas = document.getElementById('main_canvas'),
+        context = canvas.getContext('2d');
+
+	function resize_canvas() {
+		//image.src = canvas.toDataURL();
+		backCtx.drawImage(canvas, 0,0);
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        draw_canvas(canvas);
+	}
+	
+	function handlefocus(e){
+	  if(e.type=='mouseover'){
+	    canvas.focus();
+	    return false;
+	  }else if(e.type=='mouseout'){
+	    canvas.blur();
+	    return false;
+	  }
+	  return true;
+	};
+	
+    function findxy(res, e) {
+		currTextX = e.clientX - canvas.offsetLeft;
+		currTextY = e.clientY - canvas.offsetTop;
+	    if (res == 'down') {
+	    		document.getElementById("main_text_input").value = '';
+
+	        prevX = currX;
+	        prevY = currY;
+	        currX = e.clientX - canvas.offsetLeft;
+	        currY = e.clientY - canvas.offsetTop;
+	
+	        flag = true;
+	        dot_flag = true;
+	        if (dot_flag) {
+	            ctx.beginPath();
+	            ctx.fillStyle = x;
+	            ctx.fillRect(currX, currY, 2, 2);
+	            ctx.closePath();
+	            dot_flag = false;
+	        }
+	    }
+	    if (res == 'up' || res == "out") {
+	        flag = false;
+	    }
+	    if (res == 'move') {
+	    		document.getElementById("main_text_input").value = '';
+
+	        if (flag) {
+	            prevX = currX;
+	            prevY = currY;
+	            currX = e.clientX - canvas.offsetLeft;
+	            currY = e.clientY - canvas.offsetTop;
+	            draw_stroke();
+	        }
+
+	    }
+	}
+	
+	ctx = context;
+	function draw_stroke() {
+		var stroke_obj = {
+					prevX:prevX,
+					prevY:prevY,
+					currX:currX,
+					currY:currY,
+					strokeStyle:"rgba(0, 0, 0, 0.3)",
+					lineWidth:5,
+					type:"stroke"
+		};
+		draw_pt(context, stroke_obj);
+		
+		add_to_capped_array(stroke_obj);
+		
+	}
+
+	function draw_words(e) {
+	   	var text_area = document.getElementById("main_text_input");
+	   	text_area.value = text_area.value.slice(0,40);
+        var text_width = text_area.value.length * 14.45;
+
+        var word_obj = {
+        	c: text_area.value,
+        	currTextX: currTextX,
+        	currTextY: currTextY,
+			type:"word"
+        };
+        draw_char(context, word_obj);
+        add_to_capped_array(word_obj);
+        
+	}
+
+	range = document.getElementById("slider");
+	range.addEventListener('change', function(e){
+		clear_interval = 500*range.value;
+		console.log(clear_interval);
+	}, false);
+
+    window.addEventListener('resize', resize_canvas, false);
+
+	canvas.addEventListener("mousemove", function (e) {
+        findxy('move', e);
+    }, false);
+    canvas.addEventListener("mousedown", function (e) {
+        findxy('down', e);
+    }, false);
+    canvas.addEventListener("mouseup", function (e) {
+        findxy('up', e);
+    }, false);
+    canvas.addEventListener("mouseout", function (e) {
+        findxy('out', e);
+        handlefocus(e);
+    }, false);
+    canvas.addEventListener("mouseover", function (e) {
+        handlefocus(e);
+    }, false);
+    document.body.addEventListener("keydown", function (e) {
+		if (!e)
+			e = window.event;
+		var code = e.keyCode;
+		if (e.charCode && code == 0)
+			code = e.charCode;
+		switch(code) {
+			/*case 37:
+			// Key left.
+				displacement.x = displacement.x >= 0 ? 0 : displacement.x+10;
+				draw_canvas(canvas);
+				break;
+			case 38:
+			// Key up.
+				displacement.y = displacement.y >= 0 ? 0 : displacement.y+10;
+				draw_canvas(canvas);
+				break;
+			case 39:
+			// Key right.
+				displacement.x = displacement.x - window.innerWidth <= -max.width ? -max.width+window.innerWidth : displacement.x-10;
+				draw_canvas(canvas);
+				break;
+			case 40:
+			// Key down.
+				displacement.y = displacement.y - window.innerHeight <= -max.height ? -max.height+window.innerHeight : displacement.y-10;
+				draw_canvas(canvas);
+				break;*/
+			default:
+				document.getElementById("main_text_input").focus();
+		}
+		return false;
+    }, false);
+
+
+	document.body.addEventListener("keyup", function (e) {
+        draw_words(e);
+		return false;
+    }, false);
+	document.ondragover = function () { this.className = 'hover'; return false; };
+	document.ondragend = function () { this.className = ''; return false; };
+	document.ondrop = function (e) {
+	  e.preventDefault();
+	
+	  var file = e.dataTransfer.files[0],
+	      reader = new FileReader();
+	  reader.onloadend = function (event) {
+	    console.log(e);
+	    /*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
+	    var image_data = {
+	    	type: "image",
+		    x: e.pageX,
+		    y: e.pageY,
+		    src: event.target.result
+	    };
+	    draw_image(ctx,image_data, function(){
+		    socket.emit('client', [image_data]);
+	    });
+	    
+	  };
+	  console.log(file);
+	  reader.readAsDataURL(file);
+	
+	  return false;
+	};
+
+    resize_canvas();
+    
+	socket = io.connect('http://livechan.net:5000/', {secure: true});
+	socket.on('server', function (data) {
+		for (i in data) {
+	    	add_to_capped_array(data[i], true);
+		}
+	    //draw_canvas(document.getElementById('main_canvas'));
+
+	  });
+	  
+	 socket.on('init_draw', function (data) { 
+		image.src = data.image;
+		image.onload = function() {
+		    backCtx.drawImage(image, 0, 0);
+		    draw_canvas(canvas);
+		};
+	 });
+	
+}, false);
+
+</script>
+</head>
+<body style="padding:0;margin:0;">
+<div width="100%" style="background:black;position:relative;">
+<div style="overflow: hidden; height: 0">
+<textarea id="main_text_input" style="outline: none"></textarea>
+<input type="file" id="imageLoader" name="imageLoader"/>
+
+</div>
+<div style="position:absolute;top:0;right:0;">
+<input id="slider" type="range" name="points" min="1" max="10" style="float:right">
+<a href="https://livechan.net/chat/all" style="float:right">chat</a>
+
+</div>
+<canvas id="main_canvas" height="100%" width="100%"></canvas>
+</div>
+</body>
+</html>

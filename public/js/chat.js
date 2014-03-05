@@ -26,7 +26,7 @@ var longpress = 1000;
 
 var videos = {};
 
-var admins = ["!/b/suPrEmE", "!KRBtzmcDIw"];
+var admins = ["!/b/suPrEmE", "!Qn9APmSPdw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
