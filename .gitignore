@@ -7,6 +7,7 @@ ehthumbs.db
 Thumbs.db
 *~
 .buildpacks
+public/draw.jpg
 push
 logs.txt
 salt.txt
