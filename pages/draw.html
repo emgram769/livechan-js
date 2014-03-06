@@ -7,6 +7,9 @@ html,body{
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 	font-weight: 300;
 }
+#chat_button:hover{
+	cursor: pointer;
+}
 </style>
 <script src="https://livechan.net:5000/socket.io/socket.io.js"></script>
 <script>
@@ -20,13 +23,11 @@ var redraw_interval = 1000;
 var redraw_counter = 0;
 var image = new Image();
 var image_size = 200.0;
-var max = {height:2000, width:4000};
+var max = {height:1500, width:1500};
 var backCanvas = document.createElement('canvas');
 backCanvas.width = max.width;
 backCanvas.height = max.height;
 var backCtx = backCanvas.getContext('2d');
-
-
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
@@ -36,7 +37,7 @@ function draw_pt(ctx, p, callback) {
 	ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
     ctx.lineWidth = 5;
     ctx.stroke();
     ctx.closePath();
@@ -176,14 +177,36 @@ function draw_remote(element) {
 
 function draw_to_binary(){
 		var canvas = document.getElementById('main_canvas');
-		backCtx.fillStyle = "rgba(255,255,255,"+0.01+")";
+		backCtx.fillStyle = "rgba(255,255,255,"+0.005+")";
 		backCtx.fillRect(0, 0, backCanvas.width, backCanvas.height);
-		ctx.fillStyle = "rgba(255,255,255,"+0.01+")";
+		ctx.fillStyle = "rgba(255,255,255,"+0.005+")";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		//draw_canvas(canvas);
 }
 
 setInterval(draw_to_binary, 3000);
+
+var chat_open = false;
+function toggle_chat(){
+	if (chat_open === false) {
+    	var chat_sidebar = document.createElement("div");
+    	chat_sidebar.setAttribute("id", "chat_sidebar");
+    	chat_sidebar.style.position = "absolute";
+    	chat_sidebar.style.top = "30%";
+    	chat_sidebar.style.bottom = "0";
+		chat_sidebar.style.right = "0";
+		chat_sidebar.style.width = "400px";
+		chat_sidebar.innerHTML = "<div style='height:100%;'>\
+		<iframe src='https://livechan.net/chat/g' style='position:absolute;width:100%;height:100%;border:none;'></iframe></div>";
+		document.getElementById('chat_button').innerHTML = 'hide chat';
+		chat_open = true;
+    	document.body.appendChild(chat_sidebar);
+	} else if (chat_open === true){
+		document.body.removeChild(document.getElementById('chat_sidebar'));
+		document.getElementById('chat_button').innerHTML = 'chat';
+		chat_open = false;
+	}
+}
 
 window.addEventListener('load', function(){
 	var canvas = document.getElementById('main_canvas'),
@@ -275,6 +298,13 @@ window.addEventListener('load', function(){
 	}
 
     window.addEventListener('resize', resize_canvas, false);
+
+	function scrollFunction(e) {
+	console.log(e);
+    	// do your stuff here;
+	}
+
+	window.addEventListener('scroll', scrollFunction, false);
 
 	canvas.addEventListener("mousemove", function (e) {
         findxy('move', e);
@@ -389,15 +419,13 @@ window.addEventListener('load', function(){
  	loading_div.style.top = "10px";
  	loading_div.style.width = "100%";
  	loading_div.style.textAlign = "center";
-
+	toggle_chat();
  	document.body.appendChild(loading_div);
 	image.onload = function() {
 		document.body.removeChild(loading_div);
 		backCtx.drawImage(image, 0, 0);
 		draw_canvas(canvas);
 	};
-	 
-
 	
 }, false);
 
@@ -408,10 +436,10 @@ window.addEventListener('load', function(){
 <div style="overflow: hidden; height: 0">
 <textarea id="main_text_input" style="outline: none"></textarea>
 <input type="file" id="imageLoader" name="imageLoader"/>
-
 </div>
-<div id="corner" style="position:absolute;top:10px;right:10px;">
-<a href="https://livechan.net/chat/all" style="float:right">chat</a>
+<div id="corner" style="position:absolute;top:10px;right:10px;background:#282A2E;color:white;padding:5px;border-radius:4px;">
+<a href="/chat/home" style="float:right;text-decoration:none;color:inherit;">livechan</a><br>
+<div onclick="toggle_chat();" style="float:right;" id="chat_button">chat</div>
 </div>
 <canvas id="main_canvas" height="100%" width="100%"></canvas>
 </div>
