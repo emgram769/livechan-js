@@ -1,0 +1,432 @@
+body,html{
+    padding:0;
+    margin:0;
+    background:rgb(238, 242, 255);
+    font-family: arial,helvetica,sans-serif;
+    font-size: 15px;
+}
+
+.header{
+        position:fixed;
+        z-index: 1;
+        background: rgba(255,255,255,0.78);
+        color: black;
+        left:0;
+        right:0;
+        text-align: right;
+        font-size: 14px;
+        padding:3px;
+}
+
+.settings_list{
+	display:block;
+}
+
+ul {
+	list-style-type:none;
+	padding:0;
+	margin:0;
+}
+
+.settings_nav{
+	position:fixed;
+	z-index: 2;
+	top:27px;
+	right:0px;
+	padding:10px;
+	background: rgb(238, 242, 255);
+	border-bottom: 1px solid rgb(214, 218, 240);
+	border-left: 1px solid rgb(214, 218, 240);
+}
+
+.sidebar_shower{
+	position:fixed;
+	top:32px;
+	right:0;
+}
+
+.sidebar{
+        margin:0;
+        position: absolute;
+        right:0px;
+        width:250px;
+        top:30px;
+        bottom:0px;
+        overflow: auto;
+        word-wrap: break-word;
+		display: none;
+		border-left: 1px solid rgb(214, 218, 240);
+
+}
+
+.sidebar_convo_dim {
+	background:none !important;
+}
+
+.sidebar_convo {
+        display:inherit;
+        padding:3px;
+        padding-left:8px;
+        background:rgb(214, 218, 240);
+        margin-bottom: 3px;
+}
+
+.sidebar_convo:hover {
+        cursor:pointer;
+}
+
+@media (max-width: 650px) {
+        .sidebar {
+            display: none !important;
+        }
+        .sidebar_convo {
+        	display: none;
+		}
+		.create{
+			right:0 !important;
+		}
+        .chats_container{
+			width:100%;
+		}
+
+        .comment{
+                padding:5px;
+                margin:0;
+                width:100%;
+        }
+        
+        .name{
+                padding:0;
+                margin:0;
+                width:68%;
+                float:left;
+        }
+        
+        .convo{
+                padding:0;
+                margin:0;
+                width:28%;
+                float:right;
+        }
+        .alert_div{
+            	right:0px !important;
+        }
+}
+
+.left_float{
+        float:left;
+}
+
+.right_float{
+        float:right;
+}
+
+.create{
+    position:fixed;
+    bottom:0;
+    padding:0;
+    margin:0;
+    width:auto;
+    left:0px;
+	right:255px;
+    background:rgb(153, 136, 238);
+    font-size:16px;
+    min-width:300px;
+    height:155px;
+    font-size:14px;
+    text-align:center;
+    overflow:hidden;
+    padding:7px;
+    display:none;
+}
+
+.half-height{
+    max-height:50%;
+    overflow:auto;
+}
+
+.comment{
+    padding:0;
+    margin:0;
+    width:100%;
+    max-width:100%;
+}
+
+.name{
+    padding:0;
+    margin:0;
+    width:70%;
+    float:left;
+}
+
+.convo{
+    padding:0;
+    margin:0;
+    margin-right:-2px;
+    margin-left:-2px;
+    width:30%;
+    float:right;
+}
+
+.greentext {
+    color: #789922;
+}
+
+.redtext {
+    color:rgb(221, 0, 0);
+}
+
+.home_screen {
+    display: none;
+}
+
+.chats_container{
+	position:absolute;
+    top:30px;
+	bottom:168px;
+	right:250px;
+	left:0px
+}
+
+.chats_container_home{
+	bottom:0px;
+	right:0px;
+}
+
+.chats{
+    position:absolute;
+    overflow:auto;
+    top:0px;
+    left:0px;
+    bottom:0px;
+    right:0px;
+    display:none;
+}
+
+.chats_half{
+	width:50% !important;
+}
+
+.chats_connected{
+    width:100%;
+}
+
+.chats-home{
+    position:absolute;
+    overflow:auto;
+    height:50%;
+    width:100%;
+    bottom:0;
+}
+
+.chat{
+    background:rgb(214, 218, 240);
+    margin:5px;
+    word-wrap:break-word;
+	padding: 6px 8px 8px 8px;
+	clear: both;
+	max-height: 150px;
+	overflow: hidden;
+	position:relative;
+}
+
+.chat:after {
+	color:red;
+}
+
+.chat_full{
+	max-height: none !important;
+}
+
+.chat_dim{
+    background:inherit;
+}
+
+.chat_hidden{
+    display:none;
+}
+
+.chat_img{
+    padding:2px;
+    padding-right:5px;
+    vertical-align:text-top;
+    max-width:250px;
+    max-height:100px;
+    border: 0;
+}
+
+.chat_img_cont {
+	display:inline-block;
+	float:left;
+}
+
+.chat_img:hover {
+    cursor:pointer;
+}
+
+.chat_name{
+    color:green;
+    font-weight:bold;
+    padding-right:4px;
+}
+
+.trip_code{
+    font-weight:normal;
+}
+
+.chat_number{
+    padding-left:5px;
+}
+
+.chat_number:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+
+.chat_label{
+    color:grey;
+    font-size:16px;
+    padding:5px;
+    text-decoration:none;
+}
+
+.chat_convo{
+    padding-right:3px;
+    color:grey;
+}
+
+.chat_convo:hover {
+    cursor:pointer;
+}
+
+a{
+    color:rgb(221, 0, 0);
+}
+
+a:hover {
+    cursor:pointer;
+}
+
+.center{
+    width:100%;
+    text-align:center;
+}
+
+.container{
+    padding:20px;
+}
+
+.link{
+    color:black;
+    padding:5px;
+    display:inline-block;
+    text-decoration:none;
+}
+
+.link:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+
+textarea{
+    resize: none;
+    font-family: arial,helvetica,sans-serif;
+    font-size:14px;
+    border:1px solid rgb(153, 136, 238);
+
+}
+
+input{
+    font-family: arial,helvetica,sans-serif;
+    font-size:14px;
+    border:1px solid rgb(153, 136, 238);
+
+}
+
+select{
+    font-size: 10px;
+	padding:none;
+	max-height: 20px;
+}
+
+button{
+    font-size: 10px;
+	padding:none;
+	max-height: 20px;
+}
+
+.input_range{
+    width:110px;
+    height:16px;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    vertical-align:middle;
+    background:transparent;
+}
+
+/* code tag */
+pre {
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+.code {
+	display:inline;
+}
+
+.admin{
+    color:rgb(221, 0, 0);
+}
+
+.contrib{
+    color:blue;
+}
+
+.alert_div{
+    background:white;
+    color:black;
+    text-align:center;
+    padding:5px;
+    right:270px;
+    display:none;
+}
+
+#alert_div_captcha{
+	background-color: #800000;
+}
+
+.alert_message{
+    display:block;
+    color:black;
+}
+
+.alert_button{
+    display:block;
+    float:right;
+}
+
+.spoiler{
+        background:black;
+        color:black;
+}
+
+.spoiled{
+	background:none;
+}
+
+.spoiler:hover{
+        background:none;
+}
+
+.shown{
+    display:block;
+}
+
+.hidden{
+    display:none;
+}
+

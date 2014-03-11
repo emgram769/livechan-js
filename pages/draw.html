@@ -28,6 +28,9 @@ var backCanvas = document.createElement('canvas');
 backCanvas.width = max.width;
 backCanvas.height = max.height;
 var backCtx = backCanvas.getContext('2d');
+var quota = 8000;
+var max_quota = 8000;
+var quota_interval = 100;
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
@@ -44,17 +47,54 @@ function draw_pt(ctx, p, callback) {
 	if (callback) callback(p, x1,y1,x2,y2);
 }
 
+function draw_file(file, type, x, y) {
+	var elem;
+	if (["gif", "jpg", "jpeg", "png"].indexOf(type) > -1) {
+		elem = document.createElement("img");
+	} else if (["webm", "ogv"].indexOf(type) > -1) {
+		elem = document.createElement("video");
+		elem.onmouseover = function(){this.play();}
+		elem.onmouseout = function(){this.pause();}
+	} else {
+		return;
+	}
+	elem.src = "/tmp/uploads/"+file+"."+type;
+	elem.style.position = "absolute";
+	elem.style.top = y;
+	elem.style.left = x;
+	elem.style.maxWidth = "200px";
+	elem.style.maxHeight = "200px";
+	elem.style.zIndex = "99999";
+	document.body.appendChild(elem);
+
+	return;
+}
+
 function draw_char(ctx, c, callback) {
 	var x = ctx === backCtx ? c.currTextX - displacement.x : c.currTextX;
 	var y = ctx === backCtx ? c.currTextY - displacement.y : c.currTextY;
-	var text_width = c.c.length * 14.45;
+
+	var supported_types = ["gif", "jpg", "jpeg", "png", "webm", "ogv"];
+    var file_test = c.c.match(/embed:([a-z0-9\-]+).([a-z]+)/);
+    if (file_test){
+		if (file_test[1] && file_test[2] && !(ctx === backCtx)){
+			if (supported_types.indexOf(file_test[2])>-1) {
+				draw_file(file_test[1], file_test[2], x, y);
+				return;				
+			}
+
+		}
+    }
+    
+    var text_width = c.c.length * 14.45;
 	ctx.fillStyle = "#FFFFFF";
 	ctx.fillRect(x, y+5, text_width, -23);
-    ctx.font = '18pt Courier';
+	ctx.font = '18pt Courier';
     ctx.fillStyle = 'black';
     if (c.c[0] == ">")
     	ctx.fillStyle = 'green';
     ctx.fillText(c.c, x, y);
+
 	if (callback) callback(c, x,y);
 }
 
@@ -73,6 +113,28 @@ function draw_image(ctx, image_data, callback) {
 }
 
 var send_interval = 10;
+var last_image = 0;
+
+function update_quota(){
+	var base_width = 100.0;
+	var width = base_width*quota/max_quota;
+	width = width < 0 ? 0 : width;
+	var height = 20;
+	var canvas = document.getElementById("main_canvas");
+	var context = canvas.getContext("2d");
+	context.fillStyle = 'white';
+	context.fillRect(10, 10, base_width, height);
+	context.fillStyle = 'green';
+	context.fillRect(10, 10, width, height);
+
+	//document.getElementById("quota").style.width = 1.0*quota/max_quota+"%";
+	return;
+}
+
+function quota_loop(){
+	quota = quota+20 >= max_quota ? max_quota : quota+20;
+	update_quota();
+}
 
 function push_element(element, x, y, x2, y2) {
 	var send_obj = {
@@ -85,17 +147,24 @@ function push_element(element, x, y, x2, y2) {
 			send_obj.c = element.c;
 			break;
 		case "stroke":
+			quota -= Math.abs(x2-x)+Math.abs(y2-y);
 			send_obj.prevX = x;
 			send_obj.prevY = y;
 			send_obj.currX = x2;
 			send_obj.currY = y2;
 			break;
 		case "image":
+			//quota -= quota;
 			send_obj.x = x;
 			send_obj.y = y;
 			send_obj.src = element.src;
 			break;
 	}
+	if (quota <= 0) {
+		quota = 0;
+		return;
+	}
+	update_quota();
 	to_send.push(send_obj);
 	if (to_send.length >= send_interval || element.type == "word" || element.type == "image"){
 		socket.emit('client', to_send);
@@ -115,7 +184,7 @@ function draw_canvas(canvas){
 	
 	/* saved canvas */
 	ctx.drawImage(backCanvas, displacement.x, displacement.y);
-
+	update_quota();
 }
 
 var flag = false,
@@ -148,6 +217,7 @@ function handle_mouse(canvas, evt) {
  
 var counter = 0;
 var to_send = [];
+var word_obj = {};
 
 function draw_remote(element) {
 	ctx = document.getElementById("main_canvas").getContext("2d");
@@ -173,6 +243,7 @@ function draw_remote(element) {
 			draw_image(backCtx, element);
 			break;
 	}
+	return;
 }
 
 function draw_to_binary(){
@@ -187,24 +258,36 @@ function draw_to_binary(){
 setInterval(draw_to_binary, 3000);
 
 var chat_open = false;
+var chat_loaded = false;
 function toggle_chat(){
-	if (chat_open === false) {
+	if (chat_open === false && chat_loaded == false) {
     	var chat_sidebar = document.createElement("div");
     	chat_sidebar.setAttribute("id", "chat_sidebar");
+    	var test_string = window.location.pathname.match(/draw\/([a-z0-9]+)/);
+    	if (test_string)
+    		chat_channel = test_string[1];
+    	else
+    		chat_channel = 'g';
     	chat_sidebar.style.position = "absolute";
     	chat_sidebar.style.top = "30%";
     	chat_sidebar.style.bottom = "0";
 		chat_sidebar.style.right = "0";
 		chat_sidebar.style.width = "400px";
 		chat_sidebar.innerHTML = "<div style='height:100%;'>\
-		<iframe src='https://livechan.net/chat/g' style='position:absolute;width:100%;height:100%;border:none;'></iframe></div>";
+		<iframe src='https://livechan.net/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;'></iframe></div>";
 		document.getElementById('chat_button').innerHTML = 'hide chat';
 		chat_open = true;
     	document.body.appendChild(chat_sidebar);
-	} else if (chat_open === true){
-		document.body.removeChild(document.getElementById('chat_sidebar'));
+		chat_loaded = true;
+	} else if (chat_open === true && chat_loaded == true){
+		document.getElementById('chat_sidebar').style.display = 'none';
 		document.getElementById('chat_button').innerHTML = 'chat';
 		chat_open = false;
+	} else if (chat_open === false && chat_loaded == true){
+		document.getElementById('chat_sidebar').style.display = 'block';
+		document.getElementById('chat_button').innerHTML = 'hide chat';
+		chat_open = true;
+
 	}
 }
 
@@ -254,7 +337,12 @@ window.addEventListener('load', function(){
 	        flag = false;
 	    }
 	    if (res == 'move') {
-	    		document.getElementById("main_text_input").value = '';
+	    		if (document.getElementById("main_text_input").value != '') {
+	    		        draw_char(context, word_obj);
+						draw_char(backCtx, word_obj, push_element);     
+						document.getElementById("main_text_input").value = '';
+	    		}
+
 
 	        if (flag) {
 	            prevX = currX;
@@ -283,24 +371,30 @@ window.addEventListener('load', function(){
 	}
 
 	function draw_words(e) {
+		if (quota - 110 < 0) return;
 	   	var text_area = document.getElementById("main_text_input");
 	   	text_area.value = text_area.value.slice(0,40);
         var text_width = text_area.value.length * 14.45;
-
-        var word_obj = {
+		if (word_obj) delete word_obj;
+        word_obj = {
         	c: text_area.value,
         	currTextX: currTextX,
         	currTextY: currTextY,
 			type:"word"
         };
-        draw_char(context, word_obj);
-        draw_char(backCtx, word_obj, push_element);        
+        
+		quota -= 110;
+		update_quota();
+		
+		draw_char(context, word_obj);
+		draw_char(backCtx, word_obj);     
+
 	}
 
     window.addEventListener('resize', resize_canvas, false);
 
 	function scrollFunction(e) {
-	console.log(e);
+		console.log(e);
     	// do your stuff here;
 	}
 
@@ -375,16 +469,31 @@ window.addEventListener('load', function(){
 	  reader.onloadend = function (event) {
 	    console.log(e);
 	    /*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
+		var img = new Image;
+	    img.src = event.target.result;
+	    var resizeCanvas = document.createElement("canvas");
+	    var scale_factor = img.height > img.width ? image_size/img.height : image_size/img.width;
+		resizeCanvas.width = scale_factor*img.width;
+		resizeCanvas.height = scale_factor*img.height;
+		var resizeCtx = resizeCanvas.getContext("2d");
+		//resizeCtx.scale(scale_factor, scale_factor);
+		resizeCtx.clearRect(0,0, resizeCanvas.width, resizeCanvas.height);
+		resizeCtx.drawImage(img, 0, 0, scale_factor*img.width, scale_factor*img.height);
+	    var compressedSrc = resizeCanvas.toDataURL();
+	    
 	    var image_data = {
 	    	type: "image",
 		    x: e.pageX,
 		    y: e.pageY,
-		    src: event.target.result
+		    src: compressedSrc
 	    };
-	    draw_image(ctx,image_data, function(){
-		    socket.emit('client', [image_data]);
-	    });
-	    draw_image(backCtx,image_data);
+	    if (last_image + 10000 < Date.now()){
+		    last_image = Date.now();
+		    draw_image(ctx, image_data, push_element);
+		    draw_image(backCtx,image_data);
+	    } else {
+		    return;
+	    }
 	    
 	  };
 	  console.log(file);
@@ -426,6 +535,9 @@ window.addEventListener('load', function(){
 		backCtx.drawImage(image, 0, 0);
 		draw_canvas(canvas);
 	};
+	
+	update_quota();
+	setInterval(quota_loop, quota_interval);
 	
 }, false);
 

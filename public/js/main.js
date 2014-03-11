@@ -228,9 +228,9 @@ function set_up_html(){
 	        contribs = default_contribs;
 	    }
 	
-	    if (!localStorage.theme || localStorage.theme === "null") {
-	        localStorage.theme = "/tomorrow.css";
-	    }
+	    /*if (!localStorage.theme || localStorage.theme === "null") {
+	        localStorage.theme = "/style.css";
+	    }*/
 	
 
         if (localStorage.name !== undefined) $("#name").val(localStorage.name);

@@ -1,0 +1,41 @@
+html,body{
+	//background:#006363;
+	//background:#33CCCC;
+	background:white;
+}
+
+.chat_header{
+	padding:5px;
+	margin:-5px -5px 2px -5px;
+	background:#00CC00;
+}
+
+.header{
+	background:#009999;
+}
+
+.chat{
+	margin-top:4px;
+	padding:5px;
+	background: white;
+	border: 1px solid #00CC00;
+}
+
+.settings_nav{
+	position:fixed;
+	background: rgb(238, 242, 255);
+	border-bottom: 1px solid rgb(214, 218, 240);
+	border-left: 1px solid rgb(214, 218, 240);
+}
+
+.chat_name{
+    color:#006363;
+}
+
+.create{
+	background:#009999;
+}
+
+input,textarea{
+	border-color:#009999;
+}
