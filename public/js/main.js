@@ -288,9 +288,9 @@ function div_alert(message, add_button, div_id) {
     alert_div.setAttribute('class', 'alert_div ' + (chat_id !== 'home' && chat_id !== 'all' ? "shown" : ""));
     alert_div.setAttribute('id', 'alert_div_' + div_id);
     var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
-    if (!add_button) {
+    /*if (!add_button) {
         button_html = "";
-    }
+    }*/
     alert_div.innerHTML = "<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>" + button_html;
     $(alert_div).css({
         position: 'fixed',

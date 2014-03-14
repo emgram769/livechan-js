@@ -1,41 +1,80 @@
 html,body{
-	//background:#006363;
-	//background:#33CCCC;
 	background:white;
 }
 
 .chat_header{
-	padding:5px;
+	padding:2px;
 	margin:-5px -5px 2px -5px;
-	background:#00CC00;
+/*	border-bottom: 1px solid black;*/
+	font-size: 13px;
+	background:rgba(236,236,236,1);
+}
+
+.chats_container{
+	top:0px;
 }
 
 .header{
-	background:#009999;
+	background:white;
+	border-bottom: 1px solid rgb(214, 218, 240);
 }
 
 .chat{
 	margin-top:4px;
 	padding:5px;
 	background: white;
-	border: 1px solid #00CC00;
+	border-radius: 2px;
+	border:1px solid rgba(236,236,236,1);
 }
 
 .settings_nav{
 	position:fixed;
-	background: rgb(238, 242, 255);
+	background: white;
 	border-bottom: 1px solid rgb(214, 218, 240);
 	border-left: 1px solid rgb(214, 218, 240);
+	top:23px;
 }
 
 .chat_name{
-    color:#006363;
+    color:black;
+}
+
+.sidebar{
+	border-left:1px solid rgb(214, 218, 240);
+	top:23px;
+}
+.sidebar_convo{
+	background: white;
+	border-top: 1px solid rgb(214, 218, 240);
+}
+
+.sidebar_convo_dim{
+	color:gray;
+}
+
+#body{
+	border-top: 0px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+
+#convo{
+	border-top-right-radius: 2px;
+}
+
+#name{
+	border-top-left-radius: 2px;
+
 }
 
 .create{
-	background:#009999;
+	background:white;
+	border-top:1px solid rgb(214, 218, 240);
+	background:rgba(236,236,236,1);
+
 }
 
 input,textarea{
-	border-color:#009999;
+	border-color:rgb(214, 218, 240);
+	background:white;
 }

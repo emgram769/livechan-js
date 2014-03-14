@@ -6,10 +6,25 @@
 html,body{
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 	font-weight: 300;
+	   width:      100%;
+    height:     100%;
+    overflow:   hidden;
 }
 #chat_button:hover{
 	cursor: pointer;
 }
+
+body > canvas {
+    height:     100%;
+    overflow:   scroll;
+}
+
+.faded{
+	opacity: 0;
+	-webkit-transition:opacity 700ms ease,height 300ms ease 700ms;
+	-moz-transition:opacity 700ms ease,height 300ms ease 700ms;
+}
+
 </style>
 <script src="https://livechan.net:5000/socket.io/socket.io.js"></script>
 <script>
@@ -23,7 +38,7 @@ var redraw_interval = 1000;
 var redraw_counter = 0;
 var image = new Image();
 var image_size = 200.0;
-var max = {height:1500, width:1500};
+var max = {height:1500, width:2500};
 var backCanvas = document.createElement('canvas');
 backCanvas.width = max.width;
 backCanvas.height = max.height;
@@ -31,6 +46,7 @@ var backCtx = backCanvas.getContext('2d');
 var quota = 8000;
 var max_quota = 8000;
 var quota_interval = 100;
+var curr_downkey = '';
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
@@ -40,14 +56,18 @@ function draw_pt(ctx, p, callback) {
 	ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+	var r = p.r ? p.r : '0';
+	var g = p.g ? p.g : '0';
+    var b = p.b ? p.b : '0';
+	ctx.strokeStyle = "rgba("+r+", "+g+", "+b+", 0.5)";
     ctx.lineWidth = 5;
     ctx.stroke();
     ctx.closePath();
-	if (callback) callback(p, x1,y1,x2,y2);
+	if (callback) callback(p, x1,y1,r,g,b,x2,y2);
 }
 
 function draw_file(file, type, x, y) {
+return;
 	var elem;
 	if (["gif", "jpg", "jpeg", "png"].indexOf(type) > -1) {
 		elem = document.createElement("img");
@@ -75,7 +95,10 @@ function draw_char(ctx, c, callback) {
 	var y = ctx === backCtx ? c.currTextY - displacement.y : c.currTextY;
 
 	var supported_types = ["gif", "jpg", "jpeg", "png", "webm", "ogv"];
-    var file_test = c.c.match(/embed:([a-z0-9\-]+).([a-z]+)/);
+	if (c && c.c)
+    	var file_test = c.c.match(/embed:([a-z0-9\-]+).([a-z]+)/);
+    else
+    	return;
     if (file_test){
 		if (file_test[1] && file_test[2] && !(ctx === backCtx)){
 			if (supported_types.indexOf(file_test[2])>-1) {
@@ -112,6 +135,20 @@ function draw_image(ctx, image_data, callback) {
     };
 }
 
+function cast_vote(clear_val) {
+	if (have_voted)
+		return;
+	var vote_data = {
+		type:"vote",
+		clear:clear_val
+	};
+	socket.emit('client', [vote_data]);
+	vote += clear_val;
+	update_clear();
+	have_voted = true;
+	return;
+}
+
 var send_interval = 10;
 var last_image = 0;
 
@@ -126,9 +163,27 @@ function update_quota(){
 	context.fillRect(10, 10, base_width, height);
 	context.fillStyle = 'green';
 	context.fillRect(10, 10, width, height);
-
 	//document.getElementById("quota").style.width = 1.0*quota/max_quota+"%";
 	return;
+}
+
+var vote = 0;
+var max_vote = 20;
+var have_voted = false;
+
+function update_clear(){
+	var base_width = 100.0;
+	var width = (base_width*vote)/(max_vote*2);
+	width = width > (base_width/2) ? base_width/2 : width;
+	width = width < -(base_width/2) ? -(base_width/2) : width;
+	var height = 10;
+	var canvas = document.getElementById("main_canvas");
+	var context = canvas.getContext("2d");
+	context.fillStyle = 'white';
+	context.fillRect(10, 35, base_width, height);
+	context.fillStyle = 'rgb(221, 0, 0)';
+	context.fillRect(60, 35, width, height);
+
 }
 
 function quota_loop(){
@@ -136,7 +191,7 @@ function quota_loop(){
 	update_quota();
 }
 
-function push_element(element, x, y, x2, y2) {
+function push_element(element, x, y, r, g, b, x2, y2) {
 	var send_obj = {
 		type: element.type
 	}
@@ -152,16 +207,19 @@ function push_element(element, x, y, x2, y2) {
 			send_obj.prevY = y;
 			send_obj.currX = x2;
 			send_obj.currY = y2;
+			send_obj.r = r;
+			send_obj.g = g;
+			send_obj.b = b;
 			break;
 		case "image":
-			//quota -= quota;
+			quota -= 4000;
 			send_obj.x = x;
 			send_obj.y = y;
 			send_obj.src = element.src;
 			break;
 	}
 	if (quota <= 0) {
-		quota = 0;
+		//quota = 0;
 		return;
 	}
 	update_quota();
@@ -185,6 +243,7 @@ function draw_canvas(canvas){
 	/* saved canvas */
 	ctx.drawImage(backCanvas, displacement.x, displacement.y);
 	update_quota();
+	update_clear();
 }
 
 var flag = false,
@@ -242,20 +301,50 @@ function draw_remote(element) {
 			draw_image(ctx, element);
 			draw_image(backCtx, element);
 			break;
+		case "vote":
+			vote+=-1+2*(element.clear > 0);
+			update_clear();
+			break;
+		case "init_vote":
+			vote = element.clear;
+			have_voted = false;
+			update_clear();
+			break;
+		case "clear_screen":
+			ctx.fillStyle = "white";
+			ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+			backCtx.fillStyle = "white";
+			backCtx.fillRect(0,0,backCanvas.width, backCanvas.height);
+			break;
+		case "user_count":
+			document.getElementById("user_count").innerHTML = element.count;
+			break;
+		case "notification":
+			notifier(element.message, element.length);
+			break;
 	}
 	return;
 }
 
 function draw_to_binary(){
-		var canvas = document.getElementById('main_canvas');
+		var randomX = Math.floor(Math.random()*window.innerWidth);
+		var randomY = Math.floor(Math.random()*window.innerHeight);
+		var clearBlock = {
+			type:"word",
+			currTextX:randomX,
+			currTextY:randomY,
+			c:"  "
+		}
+		draw_char(ctx, clearBlock);
+		/*var canvas = document.getElementById('main_canvas');
 		backCtx.fillStyle = "rgba(255,255,255,"+0.005+")";
 		backCtx.fillRect(0, 0, backCanvas.width, backCanvas.height);
 		ctx.fillStyle = "rgba(255,255,255,"+0.005+")";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		//draw_canvas(canvas);
+		//draw_canvas(canvas);*/
 }
 
-setInterval(draw_to_binary, 3000);
+//setInterval(draw_to_binary, 100);
 
 var chat_open = false;
 var chat_loaded = false;
@@ -273,24 +362,73 @@ function toggle_chat(){
     	chat_sidebar.style.bottom = "0";
 		chat_sidebar.style.right = "0";
 		chat_sidebar.style.width = "400px";
-		chat_sidebar.innerHTML = "<div style='height:100%;'>\
-		<iframe src='https://livechan.net/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;'></iframe></div>";
-		document.getElementById('chat_button').innerHTML = 'hide chat';
+		chat_sidebar.style.display = 'block';
+		chat_sidebar.innerHTML = "<div style='margin-top:-21px;'>\
+								  <div onclick='toggle_chat();'\
+								  	style='height:20px;width:100%;background:white;margin-top:-1px;margin-left:-1px;\
+								  	border-top-left-radius:3px;border-top: 1px solid black;border-left: 1px solid black;\
+								  	border-right: 1px solid black;margin-right:-1px;'>\
+								  <div style='float:left;' id='chat_button'>&#x25BC; hide</div><br>\
+								  <br></div>\
+		<iframe id='chat_frame' src='https://livechan.net/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;border-left: 1px solid black;left:-1px;	'></iframe></div></div>";
+		//document.getElementById('chat_button').innerHTML = 'hide chat';
 		chat_open = true;
     	document.body.appendChild(chat_sidebar);
 		chat_loaded = true;
 	} else if (chat_open === true && chat_loaded == true){
-		document.getElementById('chat_sidebar').style.display = 'none';
-		document.getElementById('chat_button').innerHTML = 'chat';
+		document.getElementById('chat_frame').style.display = 'none';
+		document.getElementById('chat_sidebar').style.top = '100%';
+		document.getElementById('chat_button').innerHTML = '&#x25B2; chat';
 		chat_open = false;
 	} else if (chat_open === false && chat_loaded == true){
-		document.getElementById('chat_sidebar').style.display = 'block';
-		document.getElementById('chat_button').innerHTML = 'hide chat';
+		document.getElementById('chat_frame').style.display = 'block';
+		document.getElementById('chat_sidebar').style.top = '30%';
+		document.getElementById('chat_button').innerHTML = '&#x25BC; hide';
 		chat_open = true;
-
 	}
 }
 
+function notifier(message, length) {
+	if (message == "forcerefreshall") {
+		setTimeout(function(){
+			location.reload();
+		}, 1000);
+		return;
+	}
+
+ 	var loading_div = document.getElementById("alert_div");
+ 	loading_div.innerHTML = message;
+	setTimeout(function(){
+		loading_div.classList.toggle("faded");
+		setTimeout(function(){
+			loading_div.innerHTML = "";
+			document.getElementById("alert_div_container").style.display = "none";
+		},750);
+		//loading_div.innerHTML = "";
+	},length);
+}
+
+function send_notification(message, length, password){
+	var send_obj = {
+		type:"notification",
+		password:password,
+		message:message,
+		length:length
+	};
+	socket.emit('client', [send_obj]);
+}
+
+function send_force_clear(password){
+	var send_obj = {
+		type:"force_clear",
+		password:password
+	};
+	socket.emit('client', [send_obj]);
+}
+
+
+var rainbow = 0;
+var can_type = 2;
 window.addEventListener('load', function(){
 	var canvas = document.getElementById('main_canvas'),
         context = canvas.getContext('2d');
@@ -316,7 +454,7 @@ window.addEventListener('load', function(){
 		currTextX = e.clientX - canvas.offsetLeft;
 		currTextY = e.clientY - canvas.offsetTop;
 	    if (res == 'down') {
-	    		document.getElementById("main_text_input").value = '';
+	    	document.getElementById("main_text_input").value = '';
 
 	        prevX = currX;
 	        prevY = currY;
@@ -332,31 +470,79 @@ window.addEventListener('load', function(){
 	            ctx.closePath();
 	            dot_flag = false;
 	        }
+	        can_type = 0;
 	    }
 	    if (res == 'up' || res == "out") {
 	        flag = false;
+	        can_type = 1;
 	    }
 	    if (res == 'move') {
-	    		if (document.getElementById("main_text_input").value != '') {
-	    		        draw_char(context, word_obj);
-						draw_char(backCtx, word_obj, push_element);     
-						document.getElementById("main_text_input").value = '';
-	    		}
+    		if (document.getElementById("main_text_input").value != '') {
+    		        draw_char(context, word_obj);
+					draw_char(backCtx, word_obj, push_element);     
+					document.getElementById("main_text_input").value = '';
+    		}
 
+			if (can_type)
+				can_type = 2;
 
 	        if (flag) {
 	            prevX = currX;
 	            prevY = currY;
 	            currX = e.clientX - canvas.offsetLeft;
 	            currY = e.clientY - canvas.offsetTop;
-	            draw_stroke();
+	            if(quota-Math.abs(currX-prevX)+Math.abs(currY-prevY) >= 0)
+	            	draw_stroke();
 	        }
-
 	    }
 	}
 	
 	ctx = context;
 	function draw_stroke() {
+		var r = '0';
+		var g = '0';
+		var b = '0';
+		switch(curr_downkey){
+			case 'F':
+				break;
+			case 'B':
+				b = '255';
+				break;
+			case 'R':
+				r = '255';
+				break;
+			case 'G':
+				g = '255';
+				break;
+			case 'Y':
+				r = '255';
+				g = '255';
+				break;
+			case 'P':
+				r = '255';
+				g = '170';
+				b = '170';
+				break;
+			case 'W':
+				r = '255';
+				g = '255';
+				b = '255';
+				break;
+			case 'Q':
+				r = '100';
+				g = '12';
+				b = '170';
+				break;
+			case 'U':
+				r = Math.floor(Math.sin(rainbow)*127+128)+'';
+				g = Math.floor(Math.sin(rainbow+2)*127+128)+'';
+				b = Math.floor(Math.sin(rainbow+4)*127+128)+'';
+				rainbow = (rainbow+1)%100;
+				break;
+			default:
+				break;
+		}
+		//document.getElementById("main_text_input") = '';
 		var stroke_obj = {
 					prevX:prevX,
 					prevY:prevY,
@@ -364,7 +550,8 @@ window.addEventListener('load', function(){
 					currY:currY,
 					strokeStyle:"rgba(0, 0, 0, 0.3)",
 					lineWidth:5,
-					type:"stroke"
+					type:"stroke",
+					r:r, g:g, b:b
 		};
 		draw_pt(context, stroke_obj);
 		draw_pt(backCtx, stroke_obj, push_element);
@@ -385,20 +572,37 @@ window.addEventListener('load', function(){
         
 		quota -= 110;
 		update_quota();
-		
 		draw_char(context, word_obj);
 		draw_char(backCtx, word_obj);     
+
 
 	}
 
     window.addEventListener('resize', resize_canvas, false);
 
-	function scrollFunction(e) {
-		console.log(e);
-    	// do your stuff here;
+
+	function mouseWheelHandler(e) {
+		var scroll_speed = 10;
+		e.preventDefault();
+	    document.getElementById("main_text_input").value = '';
+	    if (!e.wheelDeltaX) {
+		    e.wheelDeltaX = -e.deltaX;
+		    e.wheelDeltaY = -e.deltaY;
+	    }
+	    if (Math.abs(e.wheelDeltaX + e.wheelDeltaY) < 20) {
+		    e.wheelDeltaX *=4;
+		    e.wheelDeltaY *=4;
+	    }
+	    displacement.x = displacement.x + e.wheelDeltaX;
+		displacement.y = displacement.y + e.wheelDeltaY;
+		displacement.y = displacement.y - window.innerHeight <= -max.height ? -max.height + window.innerHeight : displacement.y;
+		displacement.x = displacement.x - window.innerWidth <= -max.width ? -max.width + window.innerWidth : displacement.x;
+		displacement.y = displacement.y >= 0 ? 0 : displacement.y;
+		displacement.x = displacement.x >= 0 ? 0 : displacement.x;
+		draw_canvas(canvas);		
 	}
 
-	window.addEventListener('scroll', scrollFunction, false);
+	canvas.addEventListener("wheel", mouseWheelHandler, false);
 
 	canvas.addEventListener("mousemove", function (e) {
         findxy('move', e);
@@ -423,6 +627,9 @@ window.addEventListener('load', function(){
 		if (e.charCode && code == 0)
 			code = e.charCode;
 		var scroll_speed = 20;
+		//console.log(e)
+		if (code < 200) // fucking os x...
+			curr_downkey = String.fromCharCode(code);
 		switch(code) {
 			case 37:
 			// Key left.
@@ -456,6 +663,26 @@ window.addEventListener('load', function(){
 
 
 	document.body.addEventListener("keyup", function (e) {
+		if (can_type != 2) {
+			document.getElementById("main_text_input").value = '';
+			return;
+		}
+		if (!e)
+				e = window.event;
+		var code = e.keyCode;
+		if (e.charCode && code == 0)
+			code = e.charCode;
+		curr_downkey = '';
+		switch(code) {
+			case 37:
+			case 38:
+			case 39:
+			case 40:
+				return;
+			default:
+				break;
+		}
+
         draw_words(e);
 		return false;
     }, false);
@@ -487,8 +714,7 @@ window.addEventListener('load', function(){
 		    y: e.pageY,
 		    src: compressedSrc
 	    };
-	    if (last_image + 10000 < Date.now()){
-		    last_image = Date.now();
+	    if (quota > 4000){
 		    draw_image(ctx, image_data, push_element);
 		    draw_image(backCtx,image_data);
 	    } else {
@@ -505,9 +731,16 @@ window.addEventListener('load', function(){
     resize_canvas();
     
 	socket = io.connect('http://livechan.net:5000/', {secure: true});
+	var load_buffer = []; /* don't display until the background is loaded */
+	var loaded = false;
 	socket.on('server', function (data) {
-		for (i in data) {
-			draw_remote(data[i]);
+		if (data.length){
+			for (i in data) {
+				if (loaded)
+					draw_remote(data[i]);
+				else
+					load_buffer.push(data[i]);
+			}
 		}
 	  });
 	  
@@ -522,18 +755,27 @@ window.addEventListener('load', function(){
 	 });
 	 */
  	image.src = "/draw.jpg";
- 	var loading_div = document.createElement("div");
+ 	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = "Loading...";
- 	loading_div.style.position = "absolute";
- 	loading_div.style.top = "10px";
- 	loading_div.style.width = "100%";
- 	loading_div.style.textAlign = "center";
-	toggle_chat();
- 	document.body.appendChild(loading_div);
+ 	toggle_chat();
+ 	//document.body.appendChild(loading_div);
 	image.onload = function() {
-		document.body.removeChild(loading_div);
+		loading_div.innerHTML = "Scroll or use the arrow keys to move.<br>Drag images in to upload.<br>\
+								 Hold down R/G/B/Y/P/Q/W/U and draw for color.";
+		setTimeout(function(){
+			loading_div.classList.toggle("faded");
+			setTimeout(function(){
+				loading_div.innerHTML = "";
+				document.getElementById("alert_div_container").style.display = "none";
+			},750);
+			//loading_div.innerHTML = "";
+		},3500);
 		backCtx.drawImage(image, 0, 0);
 		draw_canvas(canvas);
+		loaded = true;
+		for (i in load_buffer) {
+			draw_remote(load_buffer[i]);
+		}
 	};
 	
 	update_quota();
@@ -549,9 +791,14 @@ window.addEventListener('load', function(){
 <textarea id="main_text_input" style="outline: none"></textarea>
 <input type="file" id="imageLoader" name="imageLoader"/>
 </div>
-<div id="corner" style="position:absolute;top:10px;right:10px;background:#282A2E;color:white;padding:5px;border-radius:4px;">
+<div id="vote" style="position:absolute;top:50px;left:10px;text-align:center;width:100px;">
+	<button onclick="cast_vote(-1);">don't</button>
+	<button onclick="cast_vote(1);">clear</button>
+</div>
+<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;"><div id="alert_div" style="display:inline-block;background:white;border-radius:5px;padding:5px;border:1px solid black;">test</div></div>
+<div id="corner" style="position:absolute;top:10px;right:10px;background:white;color:black;padding:5px;border-radius:4px;border:1px solid black;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; ">
 <a href="/chat/home" style="float:right;text-decoration:none;color:inherit;">livechan</a><br>
-<div onclick="toggle_chat();" style="float:right;" id="chat_button">chat</div>
+<span id="user_count"># of</span> users
 </div>
 <canvas id="main_canvas" height="100%" width="100%"></canvas>
 </div>
