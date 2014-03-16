@@ -30,6 +30,7 @@ body > canvas {
 }
 
 </style>
+<script src="/socket.io/socket.io.js"></script>
 <script>
 
 /* globals */
@@ -453,39 +454,16 @@ function send_force_clear(password){
 var rainbow = 0;
 var can_type = 2;
 var loaded_files = [];
-var port;
+var port = 5000;
 
 window.addEventListener('load', function(){
 	var path = window.location.pathname.match(/\/([a-z0-9]+)/);
 	if (path && path.length && path[1]) {
-		if (path[1] == "draw") {
-			load_js_lib(location.protocol+'//'+location.hostname+":5000/socket.io/socket.io.js", initial_load);
-			port = 5000;
-		} else if (path[1] == "draw2") {
+		if (path[1] == "draw2") {
 			window.title = '/draw2';
-			load_js_lib(location.protocol+'//'+location.hostname+":5010/socket.io/socket.io.js", initial_load);
 			port = 5010;
 		}
 	}
-},false);
-
-var load_js_lib = function(src, callback) {
-    var f = document.createElement('script');
-    var loaded;
-    f.setAttribute("type","text/javascript");
-    f.setAttribute("src", src);
-    if (callback) {
-        f.onreadystatechange = f.onload = function() {
-            if (!loaded) {
-                callback(f);
-            }
-            loaded = true;
-        }
-    }
-    document.getElementsByTagName("head")[0].appendChild(f);
-}
-
-function initial_load(){
 
 	var canvas = document.getElementById('main_canvas'),
         context = canvas.getContext('2d');
@@ -904,7 +882,7 @@ function initial_load(){
 	update_quota();
 	setInterval(quota_loop, quota_interval);
 	
-};
+}, false);
 
 </script>
 </head>
