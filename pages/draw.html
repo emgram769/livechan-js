@@ -2,11 +2,15 @@
 <head>
 <title>/draw</title>
 <link rel="shortcut icon" href="/favicon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="/draw">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 <style>
 html,body{
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 	font-weight: 300;
-	   width:      100%;
+	width:      100%;
     height:     100%;
     overflow:   hidden;
 }
@@ -26,7 +30,6 @@ body > canvas {
 }
 
 </style>
-<script src="https://livechan.net:5000/socket.io/socket.io.js"></script>
 <script>
 
 /* globals */
@@ -251,6 +254,10 @@ var flag = false,
     currX = 0,
     prevY = 0,
     currY = 0,
+    prevScrollX = 0,
+    prevScrollY = 0,
+    currScrollX = 0,
+    currScrollY = 0,
     currTextX = 0,
     currTextY = 0,
     dot_flag = false;
@@ -277,6 +284,7 @@ function handle_mouse(canvas, evt) {
 var counter = 0;
 var to_send = [];
 var word_obj = {};
+var said_once = [];
 
 function draw_remote(element) {
 	ctx = document.getElementById("main_canvas").getContext("2d");
@@ -358,10 +366,11 @@ function toggle_chat(){
     	else
     		chat_channel = 'g';
     	chat_sidebar.style.position = "absolute";
-    	chat_sidebar.style.top = "30%";
+    	chat_sidebar.style.top = document.width < 600 ? "20px" : '30%';
     	chat_sidebar.style.bottom = "0";
 		chat_sidebar.style.right = "0";
 		chat_sidebar.style.width = "400px";
+		chat_sidebar.style.maxWidth = "100%";
 		chat_sidebar.style.display = 'block';
 		chat_sidebar.innerHTML = "<div style='margin-top:-21px;'>\
 								  <div onclick='toggle_chat();'\
@@ -375,6 +384,9 @@ function toggle_chat(){
 		chat_open = true;
     	document.body.appendChild(chat_sidebar);
 		chat_loaded = true;
+		if (document.width < 600) {
+    		toggle_chat();
+		}
 	} else if (chat_open === true && chat_loaded == true){
 		document.getElementById('chat_frame').style.display = 'none';
 		document.getElementById('chat_sidebar').style.top = '100%';
@@ -382,9 +394,18 @@ function toggle_chat(){
 		chat_open = false;
 	} else if (chat_open === false && chat_loaded == true){
 		document.getElementById('chat_frame').style.display = 'block';
-		document.getElementById('chat_sidebar').style.top = '30%';
+		document.getElementById('chat_sidebar').style.top = document.width < 600 ? "20px" : '30%';
 		document.getElementById('chat_button').innerHTML = '&#x25BC; hide';
 		chat_open = true;
+		scroll_sidebar();
+	}
+	function scroll_sidebar(){
+		var sidebar_check = document.getElementById("chat_frame");
+		if (typeof(sidebar_check) != 'undefined' && sidebar_check != null) {
+			sidebar_check.contentWindow.scroll();
+		} else {
+			console.log("sidebar not found :(");
+		}
 	}
 }
 
@@ -398,6 +419,8 @@ function notifier(message, length) {
 
  	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = message;
+ 	loading_div.classList.toggle("faded");
+ 	document.getElementById("alert_div_container").style.display = "block";
 	setTimeout(function(){
 		loading_div.classList.toggle("faded");
 		setTimeout(function(){
@@ -429,7 +452,41 @@ function send_force_clear(password){
 
 var rainbow = 0;
 var can_type = 2;
+var loaded_files = [];
+var port;
+
 window.addEventListener('load', function(){
+	var path = window.location.pathname.match(/\/([a-z0-9]+)/);
+	if (path && path.length && path[1]) {
+		if (path[1] == "draw") {
+			load_js_lib("https://livechan.net:5000/socket.io/socket.io.js", initial_load);
+			port = 5000;
+		} else if (path[1] == "draw2") {
+			window.title = '/draw2';
+			load_js_lib("https://livechan.net:5010/socket.io/socket.io.js", initial_load);
+			port = 5010;
+		}
+	}
+},false);
+
+var load_js_lib = function(src, callback) {
+    var f = document.createElement('script');
+    var loaded;
+    f.setAttribute("type","text/javascript");
+    f.setAttribute("src", src);
+    if (callback) {
+        f.onreadystatechange = f.onload = function() {
+            if (!loaded) {
+                callback(f);
+            }
+            loaded = true;
+        }
+    }
+    document.getElementsByTagName("head")[0].appendChild(f);
+}
+
+function initial_load(){
+
 	var canvas = document.getElementById('main_canvas'),
         context = canvas.getContext('2d');
 
@@ -442,6 +499,8 @@ window.addEventListener('load', function(){
 	function handlefocus(e){
 	  if(e.type=='mouseover'){
 	    canvas.focus();
+	    document.getElementById("main_text_input").value = '';
+	    document.getElementById("main_text_input").focus();
 	    return false;
 	  }else if(e.type=='mouseout'){
 	    canvas.blur();
@@ -469,8 +528,8 @@ window.addEventListener('load', function(){
 	            ctx.fillRect(currX, currY, 2, 2);
 	            ctx.closePath();
 	            dot_flag = false;
+
 	        }
-	        can_type = 0;
 	    }
 	    if (res == 'up' || res == "out") {
 	        flag = false;
@@ -478,19 +537,56 @@ window.addEventListener('load', function(){
 	    }
 	    if (res == 'move') {
     		if (document.getElementById("main_text_input").value != '') {
-    		        draw_char(context, word_obj);
-					draw_char(backCtx, word_obj, push_element);     
+    				if (said_once.indexOf(word_obj.c) < 0){
+				        draw_char(context, word_obj);
+						draw_char(backCtx, word_obj, push_element);
+						said_once.push(word_obj.c);
+    				}
+    
 					document.getElementById("main_text_input").value = '';
     		}
 
 			if (can_type)
 				can_type = 2;
 
+
+
 	        if (flag) {
+	     		can_type = 0;
 	            prevX = currX;
 	            prevY = currY;
-	            currX = e.clientX - canvas.offsetLeft;
-	            currY = e.clientY - canvas.offsetTop;
+		        if (e.targetTouches && e.targetTouches.length == 1) {
+				    var touch = e.targetTouches[0];
+				    // Place element where the finger is
+				    currX = touch.pageX;
+				    currY = touch.pageY;
+				} else if (e.targetTouches && e.targetTouches.length == 2) {
+					prevScrollX = currScrollX;
+					prevScrollY = currScrollY;
+					console.log("Xs",e.targetTouches[0].pageX, e.targetTouches[1].pageX);
+					console.log("Ys",e.targetTouches[0].pageY, e.targetTouches[1].pageY);
+
+				    currScrollX = (e.targetTouches[0].pageX + e.targetTouches[1].pageX)/2;
+				    currScrollY = (e.targetTouches[0].pageY + e.targetTouches[1].pageY)/2;
+				    
+				    console.log("scrolls", currScrollX, currScrollY);
+				    
+				    var wheelDeltaX = Math.floor(-(currScrollX - prevScrollX)),
+				    	wheelDeltaY =  Math.floor(-(currScrollY - prevScrollY));
+					console.log("wheel", wheelDeltaX, wheelDeltaY);
+					wheelDeltaX = wheelDeltaX == 0 ? 1 : wheelDeltaX;
+					wheelDeltaY = wheelDeltaY == 0 ? 1 : wheelDeltaY;
+					if (prevScrollX+prevScrollY == 0)
+						return;
+				    mouseWheelHandler({
+					    wheelDeltaX: wheelDeltaX,
+					    wheelDeltaY: wheelDeltaY
+				    });
+				} else {
+	            	currX = e.clientX - canvas.offsetLeft;
+					currY = e.clientY - canvas.offsetTop;
+	            }
+
 	            if(quota-Math.abs(currX-prevX)+Math.abs(currY-prevY) >= 0)
 	            	draw_stroke();
 	        }
@@ -573,8 +669,7 @@ window.addEventListener('load', function(){
 		quota -= 110;
 		update_quota();
 		draw_char(context, word_obj);
-		draw_char(backCtx, word_obj);     
-
+		draw_char(backCtx, word_obj);
 
 	}
 
@@ -583,16 +678,21 @@ window.addEventListener('load', function(){
 
 	function mouseWheelHandler(e) {
 		var scroll_speed = 10;
-		e.preventDefault();
+		if (e.preventDefault)
+			e.preventDefault();
 	    document.getElementById("main_text_input").value = '';
 	    if (!e.wheelDeltaX) {
 		    e.wheelDeltaX = -e.deltaX;
 		    e.wheelDeltaY = -e.deltaY;
 	    }
 	    if (Math.abs(e.wheelDeltaX + e.wheelDeltaY) < 20) {
-		    e.wheelDeltaX *=4;
-		    e.wheelDeltaY *=4;
+		    e.wheelDeltaX *= 4;
+		    e.wheelDeltaY *= 4;
 	    }
+	    if (Math.abs(e.wheelDeltaX + e.wheelDeltaY) > 400) {
+		    return;
+	    }
+	    console.log("wheeldata",e.wheelDeltaX, e.wheelDeltaY);
 	    displacement.x = displacement.x + e.wheelDeltaX;
 		displacement.y = displacement.y + e.wheelDeltaY;
 		displacement.y = displacement.y - window.innerHeight <= -max.height ? -max.height + window.innerHeight : displacement.y;
@@ -603,7 +703,8 @@ window.addEventListener('load', function(){
 	}
 
 	canvas.addEventListener("wheel", mouseWheelHandler, false);
-
+	canvas.addEventListener("mousewheel", mouseWheelHandler, false);
+	
 	canvas.addEventListener("mousemove", function (e) {
         findxy('move', e);
     }, false);
@@ -613,6 +714,20 @@ window.addEventListener('load', function(){
     canvas.addEventListener("mouseup", function (e) {
         findxy('up', e);
     }, false);
+    
+    canvas.addEventListener("touchmove", function (e) {
+    	e.preventDefault();
+        findxy('move', e);
+    }, false);
+    canvas.addEventListener("touchstart", function (e) {
+        findxy('down', e);
+    }, false);
+    canvas.addEventListener("touchend", function (e) {
+	    currScrollX = 0;
+	    currScrollY = 0;
+        findxy('up', e);
+    }, false);
+    
     canvas.addEventListener("mouseout", function (e) {
         findxy('out', e);
         handlefocus(e);
@@ -620,6 +735,10 @@ window.addEventListener('load', function(){
     canvas.addEventListener("mouseover", function (e) {
         handlefocus(e);
     }, false);
+    
+    
+
+    
     document.body.addEventListener("keydown", function (e) {
 		if (!e)
 			e = window.event;
@@ -690,9 +809,13 @@ window.addEventListener('load', function(){
 	document.ondragend = function () { this.className = ''; return false; };
 	document.ondrop = function (e) {
 	  e.preventDefault();
-	
+
 	  var file = e.dataTransfer.files[0],
 	      reader = new FileReader();
+	  if (!file)
+	  	file = e.originalEvent.dataTransfer.files[0];
+	  if (loaded_files.indexOf(file.name)>-1)
+	  	return;
 	  reader.onloadend = function (event) {
 	    console.log(e);
 	    /*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
@@ -723,14 +846,14 @@ window.addEventListener('load', function(){
 	    
 	  };
 	  console.log(file);
+	  loaded_files.push(file.name);
 	  reader.readAsDataURL(file);
 	
 	  return false;
 	};
 
     resize_canvas();
-    
-	socket = io.connect('http://livechan.net:5000/', {secure: true});
+    socket = io.connect('http://livechan.net:'+port+'/', {secure: true});
 	var load_buffer = []; /* don't display until the background is loaded */
 	var loaded = false;
 	socket.on('server', function (data) {
@@ -754,7 +877,7 @@ window.addEventListener('load', function(){
 		};
 	 });
 	 */
- 	image.src = "/draw.jpg";
+ 	image.src = port == 5000 ? "/draw.jpg" : "/draw"+port+".jpg";
  	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = "Loading...";
  	toggle_chat();
@@ -781,12 +904,12 @@ window.addEventListener('load', function(){
 	update_quota();
 	setInterval(quota_loop, quota_interval);
 	
-}, false);
+};
 
 </script>
 </head>
 <body style="padding:0;margin:0;">
-<div width="100%" style="background:black;position:relative;">
+<div width="100%" style="background:white;position:relative;">
 <div style="overflow: hidden; height: 0">
 <textarea id="main_text_input" style="outline: none"></textarea>
 <input type="file" id="imageLoader" name="imageLoader"/>
@@ -795,8 +918,8 @@ window.addEventListener('load', function(){
 	<button onclick="cast_vote(-1);">don't</button>
 	<button onclick="cast_vote(1);">clear</button>
 </div>
-<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;"><div id="alert_div" style="display:inline-block;background:white;border-radius:5px;padding:5px;border:1px solid black;">test</div></div>
-<div id="corner" style="position:absolute;top:10px;right:10px;background:white;color:black;padding:5px;border-radius:4px;border:1px solid black;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; ">
+<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;z-index:10;"><div id="alert_div" style="display:inline-block;background:white;border-radius:5px;padding:5px;border:1px solid black;">Loading...</div></div>
+<div id="corner" style="position:absolute;top:10px;right:10px;background:white;color:black;padding:5px;border-radius:4px;border:1px solid black;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;z-index:9; ">
 <a href="/chat/home" style="float:right;text-decoration:none;color:inherit;">livechan</a><br>
 <span id="user_count"># of</span> users
 </div>
