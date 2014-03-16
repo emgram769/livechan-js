@@ -26,7 +26,7 @@ body > canvas {
 }
 
 </style>
-<script src="https://livechan.net:5000/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
 
 /* globals */
@@ -370,7 +370,7 @@ function toggle_chat(){
 								  	border-right: 1px solid black;margin-right:-1px;'>\
 								  <div style='float:left;' id='chat_button'>&#x25BC; hide</div><br>\
 								  <br></div>\
-		<iframe id='chat_frame' src='https://livechan.net/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;border-left: 1px solid black;left:-1px;	'></iframe></div></div>";
+		<iframe id='chat_frame' src='/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;border-left: 1px solid black;left:-1px;	'></iframe></div></div>";
 		//document.getElementById('chat_button').innerHTML = 'hide chat';
 		chat_open = true;
     	document.body.appendChild(chat_sidebar);
@@ -730,7 +730,7 @@ window.addEventListener('load', function(){
 
     resize_canvas();
     
-	socket = io.connect('http://livechan.net:5000/', {secure: true});
+	socket = io.connect(location.protocol+'//'+location.hostname+':5000/', {secure: (location.protocol === "https:")});
 	var load_buffer = []; /* don't display until the background is loaded */
 	var loaded = false;
 	socket.on('server', function (data) {
