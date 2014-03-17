@@ -452,7 +452,7 @@ function send_force_clear(password){
 
 
 var rainbow = 0;
-var can_type = 2;
+var can_type = true;
 var loaded_files = [];
 var port = 5000;
 
@@ -491,6 +491,7 @@ window.addEventListener('load', function(){
 		currTextX = e.clientX - canvas.offsetLeft;
 		currTextY = e.clientY - canvas.offsetTop;
 	    if (res == 'down') {
+            can_type = false;
 	    	document.getElementById("main_text_input").value = '';
 
 	        prevX = currX;
@@ -511,7 +512,6 @@ window.addEventListener('load', function(){
 	    }
 	    if (res == 'up' || res == "out") {
 	        flag = false;
-	        can_type = 1;
 	    }
 	    if (res == 'move') {
     		if (document.getElementById("main_text_input").value != '') {
@@ -524,13 +524,7 @@ window.addEventListener('load', function(){
 					document.getElementById("main_text_input").value = '';
     		}
 
-			if (can_type)
-				can_type = 2;
-
-
-
 	        if (flag) {
-	     		can_type = 0;
 	            prevX = currX;
 	            prevY = currY;
 		        if (e.targetTouches && e.targetTouches.length == 1) {
@@ -760,8 +754,10 @@ window.addEventListener('load', function(){
 
 
 	document.body.addEventListener("keyup", function (e) {
-		if (can_type != 2) {
+		curr_downkey = '';
+		if (!can_type) {
 			document.getElementById("main_text_input").value = '';
+			if (!flag) can_type = true;
 			return;
 		}
 		if (!e)
@@ -769,7 +765,6 @@ window.addEventListener('load', function(){
 		var code = e.keyCode;
 		if (e.charCode && code == 0)
 			code = e.charCode;
-		curr_downkey = '';
 		switch(code) {
 			case 37:
 			case 38:
