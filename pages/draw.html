@@ -129,7 +129,6 @@ function draw_image(ctx, image_data, callback) {
 	var load_image = new Image();
 	var x = ctx === backCtx ? image_data.x - displacement.x : image_data.x;
 	var y = ctx === backCtx ? image_data.y - displacement.y : image_data.y;
-    load_image.src = image_data.src;
     load_image.onload = function(){
     	var scale_factor = load_image.height > load_image.width ? image_size/load_image.height : image_size/load_image.width;
 		ctx.drawImage(load_image, x, y,
@@ -137,6 +136,7 @@ function draw_image(ctx, image_data, callback) {
 	  				scale_factor*load_image.height);  
 	  	if (callback) callback(image_data, x,y);
     };
+	load_image.src = image_data.src;
 }
 
 function cast_vote(clear_val) {
@@ -790,33 +790,34 @@ window.addEventListener('load', function(){
 	  if (loaded_files.indexOf(file.name)>-1)
 	  	return;
 	  reader.onloadend = function (event) {
-	    console.log(e);
-	    /*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
-		var img = new Image;
-	    img.src = event.target.result;
-	    var resizeCanvas = document.createElement("canvas");
-	    var scale_factor = img.height > img.width ? image_size/img.height : image_size/img.width;
-		resizeCanvas.width = scale_factor*img.width;
-		resizeCanvas.height = scale_factor*img.height;
-		var resizeCtx = resizeCanvas.getContext("2d");
-		//resizeCtx.scale(scale_factor, scale_factor);
-		resizeCtx.clearRect(0,0, resizeCanvas.width, resizeCanvas.height);
-		resizeCtx.drawImage(img, 0, 0, scale_factor*img.width, scale_factor*img.height);
-	    var compressedSrc = resizeCanvas.toDataURL();
-	    
-	    var image_data = {
-	    	type: "image",
-		    x: e.pageX,
-		    y: e.pageY,
-		    src: compressedSrc
-	    };
-	    if (quota > 4000){
-		    draw_image(ctx, image_data, push_element);
-		    draw_image(backCtx,image_data);
-	    } else {
-		    return;
-	    }
-	    
+			console.log(e);
+			/*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
+			var img = new Image;
+			img.onload = function() {
+				var resizeCanvas = document.createElement("canvas");
+				var scale_factor = img.height > img.width ? image_size/img.height : image_size/img.width;
+				resizeCanvas.width = scale_factor*img.width;
+				resizeCanvas.height = scale_factor*img.height;
+				var resizeCtx = resizeCanvas.getContext("2d");
+				//resizeCtx.scale(scale_factor, scale_factor);
+				resizeCtx.clearRect(0,0, resizeCanvas.width, resizeCanvas.height);
+				resizeCtx.drawImage(img, 0, 0, scale_factor*img.width, scale_factor*img.height);
+				var compressedSrc = resizeCanvas.toDataURL();
+
+				var image_data = {
+					type: "image",
+					x: e.pageX,
+					y: e.pageY,
+					src: compressedSrc
+				};
+				if (quota > 4000){
+					draw_image(ctx, image_data, push_element);
+					draw_image(backCtx,image_data);
+				} else {
+					return;
+				}
+			};
+			img.src = event.target.result;
 	  };
 	  console.log(file);
 	  loaded_files.push(file.name);
@@ -843,14 +844,13 @@ window.addEventListener('load', function(){
 	  
 	  /*
 	 socket.on('init_draw', function (data) { 
-		image.src = data.image;
 		image.onload = function() {
 		    backCtx.drawImage(image, 0, 0);
 		    draw_canvas(canvas);
 		};
+		image.src = data.image;
 	 });
 	 */
- 	image.src = port == 5000 ? "/draw.jpg" : "/draw"+port+".jpg";
  	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = "Loading...";
  	toggle_chat();
@@ -873,6 +873,7 @@ window.addEventListener('load', function(){
 			draw_remote(load_buffer[i]);
 		}
 	};
+	image.src = port == 5000 ? "/draw.jpg" : "/draw"+port+".jpg";
 	
 	update_quota();
 	setInterval(quota_loop, quota_interval);
