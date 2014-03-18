@@ -811,8 +811,8 @@ window.addEventListener('load', function(){
 					src: compressedSrc
 				};
 				if (quota > 4000){
-					draw_image(ctx, image_data, push_element);
-					draw_image(backCtx,image_data);
+					draw_image(ctx, image_data);
+					draw_image(backCtx, image_data, push_element);
 				} else {
 					return;
 				}
