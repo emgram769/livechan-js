@@ -754,7 +754,6 @@ window.addEventListener('load', function(){
 
 
 	document.body.addEventListener("keyup", function (e) {
-		curr_downkey = '';
 		if (!can_type) {
 			document.getElementById("main_text_input").value = '';
 			if (!flag) can_type = true;
@@ -765,6 +764,7 @@ window.addEventListener('load', function(){
 		var code = e.keyCode;
 		if (e.charCode && code == 0)
 			code = e.charCode;
+		curr_downkey = '';
 		switch(code) {
 			case 37:
 			case 38:
