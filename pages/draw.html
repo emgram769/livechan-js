@@ -50,6 +50,7 @@ var backCtx = backCanvas.getContext('2d');
 var quota = 8000;
 var max_quota = 8000;
 var quota_interval = 100;
+var curr_downkey = '';
 var curr_color = 'F';
 
 function draw_pt(ctx, p, callback) {
@@ -512,6 +513,8 @@ window.addEventListener('load', function(){
 	    }
 	    if (res == 'up' || res == "out") {
 	        flag = false;
+			if (curr_downkey === '')
+				can_type = true;
 	    }
 	    if (res == 'move') {
     		if (document.getElementById("main_text_input").value != '') {
@@ -720,9 +723,9 @@ window.addEventListener('load', function(){
 		var scroll_speed = 20;
 		//console.log(e)
 		if (code < 200) { // fucking os x...
-			var c = String.fromCharCode(code);
-			if (flag && "FRGBYPQWU".indexOf(c) >= 0)
-				curr_color = c;
+			curr_downkey = String.fromCharCode(code);
+			if (flag && "FRGBYPQWU".indexOf(curr_downkey) >= 0)
+				curr_color = curr_downkey;
 		}
 		switch(code) {
 			case 37:
@@ -757,6 +760,7 @@ window.addEventListener('load', function(){
 
 
 	document.body.addEventListener("keyup", function (e) {
+		curr_downkey = '';
 		if (!can_type) {
 			document.getElementById("main_text_input").value = '';
 			if (!flag) can_type = true;
