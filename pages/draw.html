@@ -50,7 +50,7 @@ var backCtx = backCanvas.getContext('2d');
 var quota = 8000;
 var max_quota = 8000;
 var quota_interval = 100;
-var curr_downkey = '';
+var curr_color = 'F';
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
@@ -570,7 +570,7 @@ window.addEventListener('load', function(){
 		var r = '0';
 		var g = '0';
 		var b = '0';
-		switch(curr_downkey){
+		switch(curr_color){
 			case 'F':
 				break;
 			case 'B':
@@ -719,8 +719,11 @@ window.addEventListener('load', function(){
 			code = e.charCode;
 		var scroll_speed = 20;
 		//console.log(e)
-		if (code < 200) // fucking os x...
-			curr_downkey = String.fromCharCode(code);
+		if (code < 200) { // fucking os x...
+			var c = String.fromCharCode(code);
+			if (flag && "FRGBYPQWU".indexOf(c) >= 0)
+				curr_color = c;
+		}
 		switch(code) {
 			case 37:
 			// Key left.
@@ -764,7 +767,6 @@ window.addEventListener('load', function(){
 		var code = e.keyCode;
 		if (e.charCode && code == 0)
 			code = e.charCode;
-		curr_downkey = '';
 		switch(code) {
 			case 37:
 			case 38:
@@ -857,7 +859,7 @@ window.addEventListener('load', function(){
  	//document.body.appendChild(loading_div);
 	image.onload = function() {
 		loading_div.innerHTML = "Scroll or use the arrow keys to move.<br>Drag images in to upload.<br>\
-								 Hold down R/G/B/Y/P/Q/W/U and draw for color.";
+								 Press F/R/G/B/Y/P/Q/W/U while drawing to change color.";
 		setTimeout(function(){
 			loading_div.classList.toggle("faded");
 			setTimeout(function(){
