@@ -50,7 +50,7 @@ ul {
         position: absolute;
         right:0px;
         width:250px;
-        top:30px;
+        top:26px;
         bottom:0px;
         overflow: auto;
         word-wrap: break-word;
@@ -182,7 +182,7 @@ ul {
 
 .chats_container{
 	position:absolute;
-    top:30px;
+    top:26px;
 	bottom:168px;
 	right:250px;
 	left:0px

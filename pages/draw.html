@@ -59,14 +59,20 @@ function draw_pt(ctx, p, callback) {
 	var x2 = ctx === backCtx ? p.currX - displacement.x : p.currX;
 	var y2 = ctx === backCtx ? p.currY - displacement.y : p.currY;
 	ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
+
 	var r = p.r ? p.r : '0';
 	var g = p.g ? p.g : '0';
     var b = p.b ? p.b : '0';
 	ctx.strokeStyle = "rgba("+r+", "+g+", "+b+", 0.5)";
+	//ctx.lineJoin = ctx.lineCap = 'round';
+	
     ctx.lineWidth = 5;
+
+    ctx.moveTo(x1, y1);
+
+    ctx.lineTo(x2, y2);
     ctx.stroke();
+
     ctx.closePath();
 	if (callback) callback(p, x1,y1,r,g,b,x2,y2);
 }
@@ -119,6 +125,7 @@ function draw_char(ctx, c, callback) {
 	ctx.fillRect(x, y+5, text_width, -23);
 	ctx.font = '18pt Courier';
     ctx.fillStyle = 'black';
+
     if (c.c[0] == ">")
     	ctx.fillStyle = 'green';
     ctx.fillText(c.c, x, y);
@@ -460,11 +467,16 @@ var port = 5000;
 window.addEventListener('load', function(){
 	var path = window.location.pathname.match(/\/([a-z0-9]+)/);
 	if (path && path.length && path[1]) {
-		if (path[1] == "draw2") {
+		if (path[1] == "draw") {
+			initial_load();
+		} else if (path[1] == "draw2") {
 			window.title = '/draw2';
-			port = 5010;
+			document.write("sorry, draw2 was shutdown");
 		}
 	}
+},false);
+
+function initial_load(){
 
 	var canvas = document.getElementById('main_canvas'),
         context = canvas.getContext('2d');
@@ -538,17 +550,14 @@ window.addEventListener('load', function(){
 				} else if (e.targetTouches && e.targetTouches.length == 2) {
 					prevScrollX = currScrollX;
 					prevScrollY = currScrollY;
-					console.log("Xs",e.targetTouches[0].pageX, e.targetTouches[1].pageX);
-					console.log("Ys",e.targetTouches[0].pageY, e.targetTouches[1].pageY);
-
+					
 				    currScrollX = (e.targetTouches[0].pageX + e.targetTouches[1].pageX)/2;
 				    currScrollY = (e.targetTouches[0].pageY + e.targetTouches[1].pageY)/2;
 				    
-				    console.log("scrolls", currScrollX, currScrollY);
 				    
 				    var wheelDeltaX = Math.floor(-(currScrollX - prevScrollX)),
 				    	wheelDeltaY =  Math.floor(-(currScrollY - prevScrollY));
-					console.log("wheel", wheelDeltaX, wheelDeltaY);
+
 					wheelDeltaX = wheelDeltaX == 0 ? 1 : wheelDeltaX;
 					wheelDeltaY = wheelDeltaY == 0 ? 1 : wheelDeltaY;
 					if (prevScrollX+prevScrollY == 0)
@@ -578,6 +587,11 @@ window.addEventListener('load', function(){
 				break;
 			case 'B':
 				b = '255';
+				break;
+			case 'N':
+				r = 63;
+				g = 173;
+				b = 233;
 				break;
 			case 'R':
 				r = '255';
@@ -652,6 +666,15 @@ window.addEventListener('load', function(){
 
 
 	function mouseWheelHandler(e) {
+		if (document.getElementById("main_text_input").value != '') {
+    				if (said_once.indexOf(word_obj.c) < 0){
+				        draw_char(context, word_obj);
+						draw_char(backCtx, word_obj, push_element);
+						said_once.push(word_obj.c);
+    				}
+    
+					document.getElementById("main_text_input").value = '';
+    		}
 		var scroll_speed = 10;
 		if (e.preventDefault)
 			e.preventDefault();
@@ -667,7 +690,6 @@ window.addEventListener('load', function(){
 	    if (Math.abs(e.wheelDeltaX + e.wheelDeltaY) > 400) {
 		    return;
 	    }
-	    console.log("wheeldata",e.wheelDeltaX, e.wheelDeltaY);
 	    displacement.x = displacement.x + e.wheelDeltaX;
 		displacement.y = displacement.y + e.wheelDeltaY;
 		displacement.y = displacement.y - window.innerHeight <= -max.height ? -max.height + window.innerHeight : displacement.y;
@@ -724,7 +746,7 @@ window.addEventListener('load', function(){
 		//console.log(e)
 		if (code < 200) { // fucking os x...
 			curr_downkey = String.fromCharCode(code);
-			if (flag && "FRGBYPQWU".indexOf(curr_downkey) >= 0)
+			if (flag && "FRGBYPQNWU".indexOf(curr_downkey) >= 0)
 				curr_color = curr_downkey;
 		}
 		switch(code) {
@@ -808,7 +830,10 @@ window.addEventListener('load', function(){
 				//resizeCtx.scale(scale_factor, scale_factor);
 				resizeCtx.clearRect(0,0, resizeCanvas.width, resizeCanvas.height);
 				resizeCtx.drawImage(img, 0, 0, scale_factor*img.width, scale_factor*img.height);
-				var compressedSrc = resizeCanvas.toDataURL();
+				var compressedSrc = resizeCanvas.toDataURL('image/png');
+				//console.log(compressedSrc);
+				if ("data:," === compressedSrc)
+					compressedSrc = img.src;
 
 				var image_data = {
 					type: "image",
@@ -819,6 +844,7 @@ window.addEventListener('load', function(){
 				if (quota > 4000){
 					draw_image(ctx, image_data);
 					draw_image(backCtx, image_data, push_element);
+					loaded_files.push(file.name);
 				} else {
 					return;
 				}
@@ -826,7 +852,6 @@ window.addEventListener('load', function(){
 			img.src = event.target.result;
 	  };
 	  console.log(file);
-	  loaded_files.push(file.name);
 	  reader.readAsDataURL(file);
 	
 	  return false;
@@ -858,12 +883,12 @@ window.addEventListener('load', function(){
 	 });
 	 */
  	var loading_div = document.getElementById("alert_div");
- 	loading_div.innerHTML = "Loading...";
+ 	loading_div.innerHTML = "/draw is temporarily down while optimizations are worked on.";
  	toggle_chat();
  	//document.body.appendChild(loading_div);
 	image.onload = function() {
 		loading_div.innerHTML = "Scroll or use the arrow keys to move.<br>Drag images in to upload.<br>\
-								 Press F/R/G/B/Y/P/Q/W/U while drawing to change color.";
+								 Press F/R/G/B/Y/P/Q/N/W/U while drawing to change color.";
 		setTimeout(function(){
 			loading_div.classList.toggle("faded");
 			setTimeout(function(){
@@ -879,7 +904,7 @@ window.addEventListener('load', function(){
 			draw_remote(load_buffer[i]);
 		}
 	};
-	image.src = port == 5000 ? "/draw.jpg" : "/draw"+port+".jpg";
+	image.src = "/draw.jpg";
 	
 	update_quota();
 	setInterval(quota_loop, quota_interval);
@@ -898,7 +923,7 @@ window.addEventListener('load', function(){
 	<button onclick="cast_vote(-1);">don't</button>
 	<button onclick="cast_vote(1);">clear</button>
 </div>
-<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;z-index:10;"><div id="alert_div" style="display:inline-block;background:white;border-radius:5px;padding:5px;border:1px solid black;">Loading...</div></div>
+<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;z-index:10;"><div id="alert_div" style="display:inline-block;background:white;border-radius:5px;padding:5px;border:1px solid black;">/draw is temporarily down while optimizations are worked on.</div></div>
 <div id="corner" style="position:absolute;top:10px;right:10px;background:white;color:black;padding:5px;border-radius:4px;border:1px solid black;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;z-index:9; ">
 <a href="/chat/home" style="float:right;text-decoration:none;color:inherit;">livechan</a><br>
 <span id="user_count"># of</span> users
