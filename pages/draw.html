@@ -513,6 +513,8 @@ function initial_load(){
 	        currY = e.clientY - canvas.offsetTop;
 	
 	        flag = true;
+			if (curr_downkey !== '')
+				process_key();
 	        dot_flag = true;
 	        if (dot_flag) {
 	            ctx.beginPath();
@@ -732,10 +734,12 @@ function initial_load(){
     canvas.addEventListener("mouseover", function (e) {
         handlefocus(e);
     }, false);
-    
-    
 
-    
+	function process_key() {
+		if ("FRGBYPQNWU".indexOf(curr_downkey) >= 0)
+			curr_color = curr_downkey;
+	}
+
     document.body.addEventListener("keydown", function (e) {
 		if (!e)
 			e = window.event;
@@ -746,8 +750,8 @@ function initial_load(){
 		//console.log(e)
 		if (code < 200) { // fucking os x...
 			curr_downkey = String.fromCharCode(code);
-			if (flag && "FRGBYPQNWU".indexOf(curr_downkey) >= 0)
-				curr_color = curr_downkey;
+			if (flag)
+				process_key();
 		}
 		switch(code) {
 			case 37:
