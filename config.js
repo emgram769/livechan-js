@@ -30,6 +30,11 @@ module.exports = {
     /* Supported file types */
     image_formats: ['jpg', 'jpeg', 'png', 'gif'],
     video_formats: ['ogv', 'webm'],
-    audio_formats: ['ogg']
+    audio_formats: ['ogg'],
 
+    format_names: ['ogg', 'matroska,webm'],
+    codec_names: {
+        video: ['theora', 'vp8', 'vp9'],
+        audio: ['vorbis', 'libopus']
+    }
 };

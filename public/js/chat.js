@@ -24,8 +24,6 @@ var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 1000;
 
-var videos = {};
-
 var admins = ["!/b/suPrEmE", "!Qn9APmSPdw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
@@ -79,12 +77,6 @@ function quote_mouseover() {
 
 function kill_excess() {
     "use strict";
-    $('video.to_die')
-        .removeClass("to_die")
-        .each(function() {
-            if (this.pause) this.pause();
-        })
-        .css("display", "none");
     $('.to_die').remove();
 }
 
@@ -307,65 +299,99 @@ function generate_post(id) {
         post.find(".chat_refs").append(" ", future_ids[id].contents());
     }
 
+    // Fullsize (if space allows) image/video displayed on hover
+    var display;
+    var windowWidth, windowHeight; // dimensions of window containing full image/video
+    var frameLeft, frameTop;       // offset of subframe containing chat
+    var displayAlign;              // CSS position attribute to set: "left" or "right"
+
     post.find(".chat_img_cont")
         .mouseover(function(event) {
             if (!chat[id].image || chat[id].image_width === undefined || chat[id].image_height === undefined) return;
-            var maxLeft = $(this).offset().left + $(this).width() + 10;
-            var maxWidth = $(window).width() - maxLeft;
+
+            // Find window to place fullsize image/video in
+            var targetWindow = window;
+            frameLeft = 0;
+            frameTop = 0;
+            try {
+                while (targetWindow.parent) {
+                    var frameOffset = $(targetWindow.frameElement).offset();
+                    frameLeft += frameOffset.left;
+                    frameTop += frameOffset.top;
+                    targetWindow = targetWindow.parent;
+                }
+            } catch(e) {}
+            windowWidth = $(targetWindow).width();
+            windowHeight = $(targetWindow).height();
+
+            // Use space to left or right of thumbnail, whichever is larger
+            var thumbLeft = frameLeft + $(this).offset().left;
+            var thumbRight = windowWidth - (thumbLeft + $(this).width());
+            var maxWidth, xPosition;
+            if (thumbLeft > thumbRight) {
+                // display to the left, set position of right side
+                displayAlign = "right";
+                maxWidth = thumbLeft - 10;
+                xPosition = windowWidth - (frameLeft + event.clientX - 10);
+            } else {
+                // display to the right, set position of left side
+                displayAlign = "left";
+                maxWidth = thumbRight - 10;
+                xPosition = frameLeft + event.clientX + 10;
+            }
             if (maxWidth <= 0) return;
-            var maxHeight = $(window).height();
-            var scale = Math.min(maxWidth/chat[id].image_width, maxHeight/chat[id].image_height, 1);
+            var scale = Math.min(maxWidth/chat[id].image_width, windowHeight/chat[id].image_height, 1);
             var width = Math.round(chat[id].image_width * scale);
             var height = Math.round(chat[id].image_height * scale);
-            var xLeft = Math.min(event.clientX + 10, maxLeft);
-            var yTop = Math.round((maxHeight - height) * event.clientY / maxHeight);
+            var yTop = Math.round((windowHeight - height) * (frameTop + event.clientY) / windowHeight);
 
             var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
             var extension = base_name.match(/\w*$/)[0];
             if ($.inArray(extension, ["ogv", "webm"]) > -1) {
-                var display = videos[id];
                 if (display === undefined) {
                     display = $("<video/>");
-                    videos[id] = display;
                 }
                 display[0].loop = true;
                 var volume = parseFloat($("#volume").val() || 0);
                 display[0].volume = volume;
                 display[0].muted = (volume == 0);
             } else {
-                var display = $("<img>");
+                display = $("<img>");
             }
             display.attr("src", "/tmp/uploads/" + base_name);
-            display.toggleClass("to_die", true);
             display.css({
                 display: 'inline',
                 position: 'fixed',
-                left: xLeft,
-                top: yTop,
-                width: width,
-                height: height,
+                top: yTop + 'px',
+                width: width + 'px',
+                height: height + 'px',
                 zIndex: 1000,
                 'pointer-events': 'none'
             });
-            if (!display.parent().is("body")) $('body').append(display);
+            display.css(displayAlign, xPosition);
+            $(targetWindow.document.body).append(display);
             if (display.is("video") && display[0].play) display[0].play();
         })
         .mousemove(function(event) {
-            var display = $(".to_die");
-            if (display.length == 0) return;
-            var maxLeft = $(this).offset().left + $(this).width() + 10;
-            var maxHeight = $(window).height();
-            var xLeft = Math.min(event.clientX + 10, maxLeft);
-            var yTop = Math.round((maxHeight - display.height()) * event.clientY / maxHeight);
-            $(".to_die").css({
-                left: xLeft,
-                top: yTop
-            });
+            if (display === undefined) return;
+            var xCorrected = frameLeft + event.clientX;
+            var xPosition = (displayAlign === "left") ? xCorrected + 10 : windowWidth - (xCorrected - 10);
+            var yTop = Math.round((windowHeight - display.height()) * (frameTop + event.clientY) / windowHeight);
+            display.css(displayAlign, xPosition + 'px');
+            display.css("top", yTop + 'px');
         })
-        .mouseout(kill_excess)
+        .mouseout(function(event) {
+            if (display === undefined) return;
+            if (display.is("video")) {
+                if (display[0].pause) display[0].pause();
+                display.css("display", "none");
+            } else {
+                display.remove();
+                display = undefined;
+            }
+        })
         .on("wheel", function(event) {
-            var display = $(".to_die");
-            if (display.is("video") && $("#volume").length !== 0) {
+            if (display !== undefined && display.is("video") && $("#volume").length !== 0) {
                 var volume = parseFloat($("#volume").val());
                 if (event.originalEvent.deltaY > 0) volume -= 0.1;
                 if (event.originalEvent.deltaY < 0) volume += 0.1;

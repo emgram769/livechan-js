@@ -30,7 +30,7 @@ body > canvas {
 }
 
 </style>
-<script src="https://livechan.net:5000/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
 
 /* globals */
@@ -51,6 +51,7 @@ var quota = 8000;
 var max_quota = 8000;
 var quota_interval = 100;
 var curr_downkey = '';
+var curr_color = 'F';
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
@@ -136,7 +137,6 @@ function draw_image(ctx, image_data, callback) {
 	var load_image = new Image();
 	var x = ctx === backCtx ? image_data.x - displacement.x : image_data.x;
 	var y = ctx === backCtx ? image_data.y - displacement.y : image_data.y;
-    load_image.src = image_data.src;
     load_image.onload = function(){
     	var scale_factor = load_image.height > load_image.width ? image_size/load_image.height : image_size/load_image.width;
 		ctx.drawImage(load_image, x, y,
@@ -144,6 +144,7 @@ function draw_image(ctx, image_data, callback) {
 	  				scale_factor*load_image.height);  
 	  	if (callback) callback(image_data, x,y);
     };
+	load_image.src = image_data.src;
 }
 
 function cast_vote(clear_val) {
@@ -387,7 +388,7 @@ function toggle_chat(){
 								  	border-right: 1px solid black;margin-right:-1px;'>\
 								  <div style='float:left;' id='chat_button'>&#x25BC; hide</div><br>\
 								  <br></div>\
-		<iframe id='chat_frame' src='https://livechan.net/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;border-left: 1px solid black;left:-1px;	'></iframe></div></div>";
+		<iframe id='chat_frame' src='/chat/"+chat_channel+"' style='position:absolute;width:100%;height:100%;border:none;border-left: 1px solid black;left:-1px;	'></iframe></div></div>";
 		//document.getElementById('chat_button').innerHTML = 'hide chat';
 		chat_open = true;
     	document.body.appendChild(chat_sidebar);
@@ -459,20 +460,18 @@ function send_force_clear(password){
 
 
 var rainbow = 0;
-var can_type = 2;
+var can_type = true;
 var loaded_files = [];
-var port;
+var port = 5000;
 
 window.addEventListener('load', function(){
 	var path = window.location.pathname.match(/\/([a-z0-9]+)/);
 	if (path && path.length && path[1]) {
 		if (path[1] == "draw") {
 			initial_load();
-			port = 5000;
 		} else if (path[1] == "draw2") {
 			window.title = '/draw2';
 			document.write("sorry, draw2 was shutdown");
-			port = 5010;
 		}
 	}
 },false);
@@ -505,6 +504,7 @@ function initial_load(){
 		currTextX = e.clientX - canvas.offsetLeft;
 		currTextY = e.clientY - canvas.offsetTop;
 	    if (res == 'down') {
+            can_type = false;
 	    	document.getElementById("main_text_input").value = '';
 
 	        prevX = currX;
@@ -525,7 +525,8 @@ function initial_load(){
 	    }
 	    if (res == 'up' || res == "out") {
 	        flag = false;
-	        can_type = 1;
+			if (curr_downkey === '')
+				can_type = true;
 	    }
 	    if (res == 'move') {
     		if (document.getElementById("main_text_input").value != '') {
@@ -538,13 +539,7 @@ function initial_load(){
 					document.getElementById("main_text_input").value = '';
     		}
 
-			if (can_type)
-				can_type = 2;
-
-
-
 	        if (flag) {
-	     		can_type = 0;
 	            prevX = currX;
 	            prevY = currY;
 		        if (e.targetTouches && e.targetTouches.length == 1) {
@@ -587,7 +582,7 @@ function initial_load(){
 		var r = '0';
 		var g = '0';
 		var b = '0';
-		switch(curr_downkey){
+		switch(curr_color){
 			case 'F':
 				break;
 			case 'B':
@@ -749,8 +744,11 @@ function initial_load(){
 			code = e.charCode;
 		var scroll_speed = 20;
 		//console.log(e)
-		if (code < 200) // fucking os x...
+		if (code < 200) { // fucking os x...
 			curr_downkey = String.fromCharCode(code);
+			if (flag && "FRGBYPQNWU".indexOf(curr_downkey) >= 0)
+				curr_color = curr_downkey;
+		}
 		switch(code) {
 			case 37:
 			// Key left.
@@ -784,8 +782,10 @@ function initial_load(){
 
 
 	document.body.addEventListener("keyup", function (e) {
-		if (can_type != 2) {
+		curr_downkey = '';
+		if (!can_type) {
 			document.getElementById("main_text_input").value = '';
+			if (!flag) can_type = true;
 			return;
 		}
 		if (!e)
@@ -793,7 +793,6 @@ function initial_load(){
 		var code = e.keyCode;
 		if (e.charCode && code == 0)
 			code = e.charCode;
-		curr_downkey = '';
 		switch(code) {
 			case 37:
 			case 38:
@@ -819,40 +818,38 @@ function initial_load(){
 	  if (loaded_files.indexOf(file.name)>-1)
 	  	return;
 	  reader.onloadend = function (event) {
-	    console.log(e);
-	    /*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
-		var img = new Image;
-	    img.src = event.target.result;
+			console.log(e);
+			/*holder.style.background = 'url(' + event.target.result + ') no-repeat center';*/
+			var img = new Image;
+			img.onload = function() {
+				var resizeCanvas = document.createElement("canvas");
+				var scale_factor = img.height > img.width ? image_size/img.height : image_size/img.width;
+				resizeCanvas.width = scale_factor*img.width;
+				resizeCanvas.height = scale_factor*img.height;
+				var resizeCtx = resizeCanvas.getContext("2d");
+				//resizeCtx.scale(scale_factor, scale_factor);
+				resizeCtx.clearRect(0,0, resizeCanvas.width, resizeCanvas.height);
+				resizeCtx.drawImage(img, 0, 0, scale_factor*img.width, scale_factor*img.height);
+				var compressedSrc = resizeCanvas.toDataURL('image/png');
+				//console.log(compressedSrc);
+				if ("data:," === compressedSrc)
+					compressedSrc = img.src;
 
-	    var resizeCanvas = document.createElement("canvas");
-	    var scale_factor = img.height > img.width ? image_size/img.height : image_size/img.width;
-		resizeCanvas.width = scale_factor*img.width;
-		resizeCanvas.height = scale_factor*img.height;
-		var resizeCtx = resizeCanvas.getContext("2d");
-		//resizeCtx.scale(scale_factor, scale_factor);
-		resizeCtx.clearRect(0,0, resizeCanvas.width, resizeCanvas.height);
-		resizeCtx.drawImage(img, 0, 0, scale_factor*img.width, scale_factor*img.height);
-
-	    var compressedSrc = resizeCanvas.toDataURL('image/png');
-	    //console.log(compressedSrc);
-	    if ("data:," === compressedSrc)
-	    	compressedSrc = img.src;
-	    
-	    var image_data = {
-	    	type: "image",
-		    x: e.pageX,
-		    y: e.pageY,
-		    src: compressedSrc
-	    };
-
-	    if (quota > 4000){
-		    draw_image(ctx, image_data, push_element);
-		    draw_image(backCtx, image_data);
-			loaded_files.push(file.name);
-	    } else {
-		    return;
-	    }
-	    
+				var image_data = {
+					type: "image",
+					x: e.pageX,
+					y: e.pageY,
+					src: compressedSrc
+				};
+				if (quota > 4000){
+					draw_image(ctx, image_data);
+					draw_image(backCtx, image_data, push_element);
+					loaded_files.push(file.name);
+				} else {
+					return;
+				}
+			};
+			img.src = event.target.result;
 	  };
 	  console.log(file);
 	  reader.readAsDataURL(file);
@@ -861,7 +858,7 @@ function initial_load(){
 	};
 
     resize_canvas();
-    socket = io.connect('http://livechan.net:'+port+'/', {secure: true});
+    socket = io.connect(location.protocol+'//'+location.hostname+':'+port+'/', {secure: (location.protocol === "https:")});
 	var load_buffer = []; /* don't display until the background is loaded */
 	var loaded = false;
 	socket.on('server', function (data) {
@@ -878,21 +875,20 @@ function initial_load(){
 	  
 	  /*
 	 socket.on('init_draw', function (data) { 
-		image.src = data.image;
 		image.onload = function() {
 		    backCtx.drawImage(image, 0, 0);
 		    draw_canvas(canvas);
 		};
+		image.src = data.image;
 	 });
 	 */
- 	image.src = port == "/draw.jpg";
  	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = "/draw is temporarily down while optimizations are worked on.";
  	toggle_chat();
  	//document.body.appendChild(loading_div);
 	image.onload = function() {
 		loading_div.innerHTML = "Scroll or use the arrow keys to move.<br>Drag images in to upload.<br>\
-								 Hold down R/G/B/Y/P/Q/W/U and draw for color.";
+								 Press F/R/G/B/Y/P/Q/N/W/U while drawing to change color.";
 		setTimeout(function(){
 			loading_div.classList.toggle("faded");
 			setTimeout(function(){
@@ -908,11 +904,12 @@ function initial_load(){
 			draw_remote(load_buffer[i]);
 		}
 	};
+	image.src = "/draw.jpg";
 	
 	update_quota();
 	setInterval(quota_loop, quota_interval);
 	
-};
+}
 
 </script>
 </head>

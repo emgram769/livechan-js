@@ -8,7 +8,7 @@ Thumbs.db
 *~
 .buildpacks
 lib/.nohup.out.swn
-public/draw.jpg
+public/draw*.jpg
 push
 logs.txt
 salt.txt
