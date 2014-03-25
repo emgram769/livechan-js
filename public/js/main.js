@@ -451,9 +451,11 @@ function submit_chat() {
             break;
         case "delete":
         	if (param) {
+				param = param.split('/');
 				$.ajax({
-		            type: "GET",
-		            url: '/delete/' + param
+		            type: "POST",
+		            url: '/delete',
+		            data: {password: param[0], id: param[1]}
 		        }).done(function (data_delete) {
 		        	if(data_delete.success)
 		        		div_alert("success");
@@ -466,9 +468,11 @@ function submit_chat() {
         	break;
         case "set":
         	if (param) {
+				param = param.split('/');
 				$.ajax({
-		            type: "GET",
-		            url: '/set/' + encodeURI(param)
+		            type: "POST",
+		            url: '/set',
+		            data: {password: param[0], id: param[1], text: param.splice(2).join('/')}
 		        }).done(function (data_delete) {
 		        	if(data_delete.success)
 		        		div_alert("success");
@@ -481,9 +485,11 @@ function submit_chat() {
         	break;
         case "ban":
 	    	if (param) {
+				param = param.split('/');
 				$.ajax({
-		            type: "GET",
-		            url: '/ban/' + encodeURI(param)
+		            type: "POST",
+		            url: '/ban',
+		            data: {password: param[0], id: param[1], board: param[2]}
 		        }).done(function (data_delete) {
 		        	if(data_delete.success)
 		        		div_alert(data_delete.success);
