@@ -365,6 +365,34 @@ function submit_chat_beta(){
     ss.createBlobReadStream(file).pipe(stream);
 }
 
+/* prompt for admin password */
+function prompt_password(callback) {
+    var pw_div = $("<div style='position: absolute; z-index: 1000; text-align: center; background: white;'>Admin password:<br><input type='password'></div>");
+    pw_div.css({
+        top: ($(window).height()-pw_div.height())/2 + "px",
+        left: ($(window).width()-pw_div.width())/2 + "px"
+    });
+    var pw_field = pw_div.find('input');
+    pw_div.keypress(function(e) {
+        if (e.keyCode === 13) { // enter
+            pw_div.remove();
+            callback(pw_field.val());
+        }
+    });
+    pw_div.keyup(function(e) {
+        if (e.keyCode === 27) { // escape
+            pw_div.remove();
+            callback(null);
+        }
+    });
+    pw_field.blur(function(e) {
+        pw_div.remove();
+        callback(null);
+    });
+    $("body").append(pw_div);
+    pw_field.focus();
+}
+
 /* this is currently a POST request TODO: adapt to socket.io websocket request */
 function submit_chat() {
     "use strict";
@@ -450,58 +478,55 @@ function submit_chat() {
             }
             break;
         case "delete":
-        	var password = prompt('Password');
-        	if (param && password) {
-				$.ajax({
-		            type: "POST",
-		            url: '/delete',
-		            data: {password: password, id: param}
-		        }).done(function (data_delete) {
-		        	if(data_delete.success)
-		        		div_alert("success");
-		        	else 
-		        		div_alert("failure");
-		        });
-        	} else {
-	        	div_alert("this is an admin only command");
-        	}
-        	break;
+            prompt_password(function(password) {
+                if (password) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/delete',
+                        data: {password: password, id: param}
+                    }).done(function (data_delete) {
+                        if(data_delete.success)
+                            div_alert("success");
+                        else 
+                            div_alert("failure");
+                    });
+                }
+            });
+            break;
         case "set":
-        	var password = prompt('Password');
-        	if (param && password) {
-				param = param.split('/');
-				$.ajax({
-		            type: "POST",
-		            url: '/set',
-		            data: {password: password, id: param[0], text: param.splice(1).join('/')}
-		        }).done(function (data_delete) {
-		        	if(data_delete.success)
-		        		div_alert("success");
-		        	else 
-		        		div_alert("failure");
-		        });
-        	} else {
-	        	div_alert("this is an admin only command");
-        	}
-        	break;
+            prompt_password(function(password) {
+                if (password) {
+                    param = param.split('/');
+                    $.ajax({
+                        type: "POST",
+                        url: '/set',
+                        data: {password: password, id: param[0], text: param.splice(1).join('/')}
+                    }).done(function (data_delete) {
+                        if(data_delete.success)
+                            div_alert("success");
+                        else 
+                            div_alert("failure");
+                    });
+                }
+            });
+            break;
         case "ban":
-	    	var password = prompt('Password');
-	    	if (param && password) {
-				param = param.split('/');
-				$.ajax({
-		            type: "POST",
-		            url: '/ban',
-		            data: {password: password, id: param[0], board: param[1]}
-		        }).done(function (data_delete) {
-		        	if(data_delete.success)
-		        		div_alert(data_delete.success);
-		        	else 
-		        		div_alert("failure", data_delete.failure);
-		        });
-	    	} else {
-	        	div_alert("this is an admin only command");
-	    	}
-	    	break;
+            prompt_password(function(password) {
+                if (password) {
+                    param = param.split('/');
+                    $.ajax({
+                        type: "POST",
+                        url: '/ban',
+                        data: {password: password, id: param[0], board: param[1]}
+                    }).done(function (data_delete) {
+                        if(data_delete.success)
+                            div_alert(data_delete.success);
+                        else 
+                            div_alert("failure", data_delete.failure);
+                    });
+                }
+            });
+            break;
         case "help":
         default:
             div_alert(
