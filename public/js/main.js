@@ -450,12 +450,12 @@ function submit_chat() {
             }
             break;
         case "delete":
-        	if (param) {
-				param = param.split('/');
+        	var password = prompt('Password');
+        	if (param && password) {
 				$.ajax({
 		            type: "POST",
 		            url: '/delete',
-		            data: {password: param[0], id: param[1]}
+		            data: {password: password, id: param}
 		        }).done(function (data_delete) {
 		        	if(data_delete.success)
 		        		div_alert("success");
@@ -467,12 +467,13 @@ function submit_chat() {
         	}
         	break;
         case "set":
-        	if (param) {
+        	var password = prompt('Password');
+        	if (param && password) {
 				param = param.split('/');
 				$.ajax({
 		            type: "POST",
 		            url: '/set',
-		            data: {password: param[0], id: param[1], text: param.splice(2).join('/')}
+		            data: {password: password, id: param[0], text: param.splice(1).join('/')}
 		        }).done(function (data_delete) {
 		        	if(data_delete.success)
 		        		div_alert("success");
@@ -484,12 +485,13 @@ function submit_chat() {
         	}
         	break;
         case "ban":
-	    	if (param) {
+	    	var password = prompt('Password');
+	    	if (param && password) {
 				param = param.split('/');
 				$.ajax({
 		            type: "POST",
 		            url: '/ban',
-		            data: {password: param[0], id: param[1], board: param[2]}
+		            data: {password: password, id: param[0], board: param[1]}
 		        }).done(function (data_delete) {
 		        	if(data_delete.success)
 		        		div_alert(data_delete.success);
