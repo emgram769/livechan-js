@@ -24,7 +24,7 @@ var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 1000;
 
-var admins = ["!/b/suPrEmE", "!Qn9APmSPdw"];
+var admins = ["!/b/suPrEmE", "!!3xVuTKubFw","!!rr1C6aJjtk"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];

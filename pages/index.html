@@ -6,6 +6,7 @@
         <meta name="description" content="LiveChan is a live anonymous chatroom with an imageboard twist. Join us and post images and comments to other people on one of our many discussion boards.">
         <meta name="viewport" content="width=device-width,user-scalable=no">
         <link type="text/css" rel="stylesheet" href="/css/style.css">
+        <link media="all" href="/css/livechan.css" type="text/css" rel="stylesheet" id="css_new">
         <link rel="shortcut icon" href="/favicon.png" />
         <!--[if lt IE 9]>
         <script src="/js/html5shiv.min.js"></script>
@@ -45,20 +46,17 @@
 			<option value="filter">Full Filter</option>
 		</select></li>
 		<li><select id="theme_select" class="input_select">
-			<option value="/style.css">Main Theme</option>
 			<option value="/livechan.css">Livechan</option>
-			<option value="/tomorrow.css">Tomorrow</option>
+			<option value="/style.css">Blue</option>
 			<option value="/red.css">Red</option>
-			<option value="/blue.css">Blue</option>
+			<option value="/tomorrow.css">Tomorrow</option>
+			<!--<option value="/blue.css">Blue</option>-->
 			<option value="/zenburn.css">Zenburn</option>
-
 		</select></li>
 		<li><button id='sidebar_hider' onclick='hide_sidebar();'>hide sidebar</button></li>
-
 		</ul>
 	</nav>
 	<section class="home_screen">
-	
 		<article class="chat" id="chat_boards" style="opacity: 1;">
 	        <section class="chat_file" style="display: none;">File:
 	            <a class="file_link" target="_blank"></a>
