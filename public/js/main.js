@@ -123,7 +123,7 @@ $(document).ready(function () {
 
     $('#theme_select').change(function () {
         get_css($(this).val());
-        if (html5) localStorage.theme = $(this).val().replace("null", "/style.css");
+        if (html5) localStorage.theme = $(this).val().replace("null", "/livechan.css");
         setTimeout(scroll, 300);
     });
 
@@ -210,7 +210,7 @@ function set_up_html(){
 	        localStorage.my_ids = "[0]";
 	        localStorage.contribs = "[\"0\"]";
 	        localStorage.name = "";
-	        localStorage.theme = "/style.css";
+	        localStorage.theme = "/livechan.css";
 	        localStorage.clearConvo = "false";
 	        localStorage.reset = "false";
 	    }
@@ -244,7 +244,7 @@ function set_up_html(){
     if (cool_down_timer>0)
     	init_cool_down();
     if (!$("#theme_select").val() || $("#theme_select").val() === "null" || !$("#theme_select").val().replace(/^\s+|\s+$/gm, '')) {
-        $("#theme_select").val("/style.css");
+        $("#theme_select").val("/livechan.css");
     }
     get_css($("#theme_select").val());
 
