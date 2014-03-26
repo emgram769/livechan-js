@@ -181,6 +181,7 @@ function update_quota(){
 
 var vote = 0;
 var max_vote = 20;
+var user_count = 0;
 var have_voted = false;
 
 function update_clear(){
@@ -334,6 +335,9 @@ function draw_remote(element) {
 			backCtx.fillRect(0,0,backCanvas.width, backCanvas.height);
 			break;
 		case "user_count":
+			user_count = element.count;
+			max_vote = Math.floor(0.75*user_count);
+			update_clear();
 			document.getElementById("user_count").textContent = element.count;
 			break;
 		case "notification":
@@ -362,6 +366,20 @@ function draw_to_binary(){
 }
 
 //setInterval(draw_to_binary, 100);
+
+var chat_count = 0;
+var old_chat_count = 0;
+var chat_counter_interval;
+/* keeps count of the chats seen and not seen
+   to alert on new chat */
+function chat_counter(){
+	if (document.getElementById("chat_frame") && document.getElementById("chat_frame").contentWindow
+		&& document.getElementById("chat_frame").contentWindow.chat) {
+		chat_count = Object.keys(document.getElementById("chat_frame").contentWindow.chat).length;
+	}
+	var new_chats = chat_count - old_chat_count;
+	if (new_chats > 0) document.getElementById("chat_button").innerHTML = "&#x25B2; chat ("+new_chats+")";
+}
 
 var chat_open = false;
 var chat_loaded = false;
@@ -397,12 +415,16 @@ function toggle_chat(){
 		if (document.width < 600) {
     		toggle_chat();
 		}
+		
 	} else if (chat_open === true && chat_loaded == true){
 		document.getElementById('chat_frame').style.display = 'none';
 		document.getElementById('chat_sidebar').style.top = '100%';
 		document.getElementById('chat_button').innerHTML = '&#x25B2; chat';
 		chat_open = false;
+		old_chat_count = Object.keys(document.getElementById("chat_frame").contentWindow.chat).length;
+		chat_counter_interval = setInterval(chat_counter, 250);
 	} else if (chat_open === false && chat_loaded == true){
+		clearInterval(chat_counter_interval);
 		document.getElementById('chat_frame').style.display = 'block';
 		document.getElementById('chat_sidebar').style.top = document.width < 600 ? "20px" : '30%';
 		document.getElementById('chat_button').innerHTML = '&#x25BC; hide';
