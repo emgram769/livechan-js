@@ -32,7 +32,6 @@ module.exports = {
     video_formats: ['ogv', 'webm'],
     audio_formats: ['ogg'],
 
-    format_names: ['ogg', 'matroska,webm'],
     codec_names: {
         video: ['theora', 'vp8', 'vp9'],
         audio: ['vorbis', 'libopus']
