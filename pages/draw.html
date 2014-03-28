@@ -336,7 +336,7 @@ function draw_remote(element) {
 			break;
 		case "user_count":
 			user_count = element.count;
-			max_vote = Math.floor(0.75*user_count);
+			max_vote = Math.floor(0.6*user_count);
 			update_clear();
 			document.getElementById("user_count").textContent = element.count;
 			break;
@@ -499,6 +499,21 @@ window.addEventListener('load', function(){
 	}
 },false);
 
+function animate_to_middle(canvas){
+	var destx = Math.floor(Math.random()*canvas.width);
+	var desty = Math.floor(Math.random()*canvas.height);
+	var scale = 1.0*desty/destx;
+	for (var i=0; i<destx; i+=10){
+		(function(j){
+			setTimeout(function(){
+				displacement.y = -scale*j;
+				displacement.x = -j;
+				draw_canvas(canvas);
+			}, j);
+		})(i);
+	}
+}
+
 function initial_load(){
 
 	var canvas = document.getElementById('main_canvas'),
@@ -558,7 +573,9 @@ function initial_load(){
     				if (said_once.indexOf(word_obj.c) < 0){
 				        draw_char(context, word_obj);
 						draw_char(backCtx, word_obj, push_element);
-						said_once.push(word_obj.c);
+						if (!(/^\s*$/.test(word_obj.c))){
+							said_once.push(word_obj.c);
+						}
     				}
     
 					document.getElementById("main_text_input").value = '';
@@ -911,8 +928,9 @@ function initial_load(){
 	 */
  	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = "Loading...";
- 	toggle_chat();
  	//document.body.appendChild(loading_div);
+ 	image.src = "/draw.jpg";
+
 	image.onload = function() {
 		loading_div.innerHTML = "Scroll or use the arrow keys to move.<br>Drag images in to upload.<br>\
 								 Press F/R/G/B/Y/P/Q/N/W/U while drawing to change color.";
@@ -930,11 +948,15 @@ function initial_load(){
 		for (i in load_buffer) {
 			draw_remote(load_buffer[i]);
 		}
+		toggle_chat();
+		//animate_to_middle(canvas);
+
+
 	};
-	image.src = "/draw.jpg";
 	
 	update_quota();
 	setInterval(quota_loop, quota_interval);
+	
 	
 }
 

@@ -78,3 +78,11 @@ input,textarea{
 	border-color:rgb(214, 218, 240);
 	background:white;
 }
+
+.admin{
+	color:red;
+}
+
+.contrib{
+	color:blue;
+}
