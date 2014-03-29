@@ -51,7 +51,8 @@ var quota = 8000;
 var max_quota = 8000;
 var quota_interval = 100;
 var curr_downkey = '';
-var curr_color = 'F';
+var start_colors = "FRBGYPQNOU";
+var curr_color = start_colors[Math.floor(Math.random()*start_colors.length)-1];
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
@@ -63,9 +64,9 @@ function draw_pt(ctx, p, callback) {
 	var r = p.r ? p.r : '0';
 	var g = p.g ? p.g : '0';
     var b = p.b ? p.b : '0';
-	ctx.strokeStyle = "rgba("+r+", "+g+", "+b+", 0.5)";
+	ctx.strokeStyle = "rgba("+r+", "+g+", "+b+", 1.0)";
 	//ctx.lineJoin = ctx.lineCap = 'round';
-	
+	ctx.lineJoin = ctx.lineCap = 'round';
     ctx.lineWidth = 5;
 
     ctx.moveTo(x1, y1);
@@ -232,7 +233,8 @@ function push_element(element, x, y, r, g, b, x2, y2) {
 			break;
 	}
 	if (quota <= 0) {
-		//quota = 0;
+		quota -= 50;
+		update_quota();
 		return;
 	}
 	update_quota();
@@ -569,7 +571,38 @@ function initial_load(){
 				can_type = true;
 	    }
 	    if (res == 'move') {
-    		if (document.getElementById("main_text_input").value != '') {
+	    	var localCurrX, localCurrY;
+	    	if (e.targetTouches && e.targetTouches.length == 1) {
+			    var touch = e.targetTouches[0];
+			    // Place element where the finger is
+			    localCurrX = touch.pageX;
+			    localCurrY = touch.pageY;
+			} else if (e.targetTouches && e.targetTouches.length == 2) {
+				prevScrollX = currScrollX;
+				prevScrollY = currScrollY;
+				
+			    currScrollX = (e.targetTouches[0].pageX + e.targetTouches[1].pageX)/2;
+			    currScrollY = (e.targetTouches[0].pageY + e.targetTouches[1].pageY)/2;
+			    
+			    
+			    var wheelDeltaX = Math.floor(-(currScrollX - prevScrollX)),
+			    	wheelDeltaY =  Math.floor(-(currScrollY - prevScrollY));
+
+				wheelDeltaX = wheelDeltaX == 0 ? 1 : wheelDeltaX;
+				wheelDeltaY = wheelDeltaY == 0 ? 1 : wheelDeltaY;
+				if (prevScrollX+prevScrollY == 0)
+					return;
+			    mouseWheelHandler({
+				    wheelDeltaX: wheelDeltaX,
+				    wheelDeltaY: wheelDeltaY
+			    });
+			} else {
+            	localCurrX = e.clientX - canvas.offsetLeft;
+				localCurrY = e.clientY - canvas.offsetTop;
+            }
+
+    		if (document.getElementById("main_text_input").value != ''
+    			&& (Math.abs(prevX - localCurrX)+Math.abs(prevY - localCurrY)) > 100) {
     				if (said_once.indexOf(word_obj.c) < 0){
 				        draw_char(context, word_obj);
 						draw_char(backCtx, word_obj, push_element);
@@ -584,7 +617,9 @@ function initial_load(){
 	        if (flag) {
 	            prevX = currX;
 	            prevY = currY;
-		        if (e.targetTouches && e.targetTouches.length == 1) {
+	            currX = localCurrX;
+	            currY = localCurrY;
+		        /*if (e.targetTouches && e.targetTouches.length == 1) {
 				    var touch = e.targetTouches[0];
 				    // Place element where the finger is
 				    currX = touch.pageX;
@@ -611,7 +646,7 @@ function initial_load(){
 				} else {
 	            	currX = e.clientX - canvas.offsetLeft;
 					currY = e.clientY - canvas.offsetTop;
-	            }
+	            }*/
 
 	            if(quota-Math.abs(currX-prevX)+Math.abs(currY-prevY) >= 0)
 	            	draw_stroke();
@@ -634,6 +669,10 @@ function initial_load(){
 				r = 63;
 				g = 173;
 				b = 233;
+				break;
+			case 'O':
+				r = '255';
+				g = '165';
 				break;
 			case 'R':
 				r = '255';
@@ -776,7 +815,7 @@ function initial_load(){
     }, false);
 
 	function process_key() {
-		if ("FRGBYPQNWU".indexOf(curr_downkey) >= 0)
+		if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(curr_downkey) >= 0)
 			curr_color = curr_downkey;
 	}
 
