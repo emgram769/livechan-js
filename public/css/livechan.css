@@ -86,3 +86,8 @@ input,textarea{
 .contrib{
 	color:blue;
 }
+
+.alert_div{
+	background-color:rgba(236,236,236,1) !important;
+	border:none !important;
+}

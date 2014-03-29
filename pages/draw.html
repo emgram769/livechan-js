@@ -53,29 +53,44 @@ var quota_interval = 100;
 var curr_downkey = '';
 var start_colors = "FRBGYPQNOU";
 var curr_color = start_colors[Math.floor(Math.random()*start_colors.length)-1];
+var curr_stroke = "normal";
 
 function draw_pt(ctx, p, callback) {
 	var x1 = ctx === backCtx ? p.prevX - displacement.x : p.prevX;
 	var y1 = ctx === backCtx ? p.prevY - displacement.y : p.prevY;
 	var x2 = ctx === backCtx ? p.currX - displacement.x : p.currX;
 	var y2 = ctx === backCtx ? p.currY - displacement.y : p.currY;
-	ctx.beginPath();
-
+	var stroke_type = p.stroke_type ? p.stroke_type : "normal";
+	
 	var r = p.r ? p.r : '0';
 	var g = p.g ? p.g : '0';
     var b = p.b ? p.b : '0';
 	ctx.strokeStyle = "rgba("+r+", "+g+", "+b+", 1.0)";
-	//ctx.lineJoin = ctx.lineCap = 'round';
 	ctx.lineJoin = ctx.lineCap = 'round';
-    ctx.lineWidth = 5;
+	
+	switch (stroke_type) {
+		case "3dim":
+			ctx.lineWidth = 3;
+			for (var i = 0; i < 10; i++){
+				ctx.beginPath();
+				ctx.strokeStyle = "rgba("+r+", "+g+", "+b+", "+(1.0-0.1*i)+")";
+			    ctx.moveTo(x1+i, y1+i);
+			    ctx.lineTo(x2+i, y2+i);
+			    ctx.stroke();
+			}
+		case "normal":
+		default:
+			ctx.beginPath();
+		    ctx.lineWidth = 5;
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+			ctx.stroke();
+   			break;
+	}
 
-    ctx.moveTo(x1, y1);
-
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
 
     ctx.closePath();
-	if (callback) callback(p, x1,y1,r,g,b,x2,y2);
+	if (callback) callback(p, x1,y1,r,g,b,x2,y2,stroke_type);
 }
 
 function draw_file(file, type, x, y) {
@@ -205,7 +220,7 @@ function quota_loop(){
 	update_quota();
 }
 
-function push_element(element, x, y, r, g, b, x2, y2) {
+function push_element(element, x, y, r, g, b, x2, y2, stroke_type) {
 	var send_obj = {
 		type: element.type
 	}
@@ -216,7 +231,7 @@ function push_element(element, x, y, r, g, b, x2, y2) {
 			send_obj.c = element.c;
 			break;
 		case "stroke":
-			quota -= Math.abs(x2-x)+Math.abs(y2-y);
+			quota -= 2*(Math.abs(x2-x)+Math.abs(y2-y));
 			send_obj.prevX = x;
 			send_obj.prevY = y;
 			send_obj.currX = x2;
@@ -224,6 +239,7 @@ function push_element(element, x, y, r, g, b, x2, y2) {
 			send_obj.r = r;
 			send_obj.g = g;
 			send_obj.b = b;
+			send_obj.stroke_type = stroke_type;
 			break;
 		case "image":
 			quota -= 4000;
@@ -717,7 +733,8 @@ function initial_load(){
 					strokeStyle:"rgba(0, 0, 0, 0.3)",
 					lineWidth:5,
 					type:"stroke",
-					r:r, g:g, b:b
+					r:r, g:g, b:b,
+					stroke_type: curr_stroke
 		};
 		draw_pt(context, stroke_obj);
 		draw_pt(backCtx, stroke_obj, push_element);
@@ -833,6 +850,9 @@ function initial_load(){
 				process_key();
 		}
 		switch(code) {
+			case 16:
+				curr_stroke = "3dim";
+				break;
 			case 37:
 			// Key left.
 				document.getElementById("main_text_input").value = '';
@@ -865,6 +885,8 @@ function initial_load(){
 
 
 	document.body.addEventListener("keyup", function (e) {
+		curr_stroke = "normal";
+
 		curr_downkey = '';
 		if (!can_type) {
 			document.getElementById("main_text_input").value = '';
