@@ -32,6 +32,8 @@ try {
 }
 var submit_beta = false;
 
+var default_theme = "/style.css";
+
 /* stuff to do on load */
 $(document).ready(function () {
     "use strict";
@@ -39,7 +41,7 @@ $(document).ready(function () {
     /* set up socket */
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
-    socket.on('refresh', function() {setTimeout(function(){socket.disconnect();socket.socket.reconnect();},2000)});
+    socket.on('refresh', function() {setTimeout(function(){location.reload();},5000)});
 
 	/* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -124,7 +126,7 @@ $(document).ready(function () {
 
     $('#theme_select').change(function () {
         get_css($(this).val());
-        if (html5) localStorage.theme = $(this).val().replace("null", "/livechan.css");
+        if (html5) localStorage.theme = $(this).val().replace("null", default_theme);
         setTimeout(scroll, 300);
     });
 
@@ -211,7 +213,7 @@ function set_up_html(){
 	        localStorage.my_ids = "[0]";
 	        localStorage.contribs = "[\"0\"]";
 	        localStorage.name = "";
-	        localStorage.theme = "/livechan.css";
+	        localStorage.theme = default_theme;
 	        localStorage.clearConvo = "false";
 	        localStorage.reset = "false";
 	    }
@@ -245,7 +247,7 @@ function set_up_html(){
     if (cool_down_timer>0)
     	init_cool_down();
     if (!$("#theme_select").val() || $("#theme_select").val() === "null" || !$("#theme_select").val().replace(/^\s+|\s+$/gm, '')) {
-        $("#theme_select").val("/livechan.css");
+        $("#theme_select").val(default_theme);
     }
     get_css($("#theme_select").val());
 

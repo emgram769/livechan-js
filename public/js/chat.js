@@ -22,7 +22,7 @@ var quote_links_to = {};
 var convos = [];
 var highlighted_convos = [];
 var start_press; // for long press detection
-var longpress = 1000;
+var longpress = 400;
 
 var admins = ["!/b/suPrEmE", "!!3xVuTKubFw","!!rr1C6aJjtk"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
@@ -38,6 +38,8 @@ var title = "";
 
 var chat_id = "";
 var linked_post = "";
+
+var special_countries = ["AU-Brisbane", "AU-Canberra", "AU-Darwin", "AU-Gold Coast", "AU-Melbourne", "AU-Newcastle", "AU-Perth", "AU-Sunshine", "AU-Sydney", "US-AK", "US-AL", "US-AR", "US-AZ", "US-CA", "US-CO", "US-CT", "US-DC", "US-DE", "US-FL", "US-HI", "US-IA", "US-ID", "US-IL", "US-IN", "US-KS", "US-KY", "US-LA", "US-MA", "US-MD", "US-ME", "US-MI", "US-MN", "US-MO", "US-MS", "US-MT", "US-NC", "US-ND", "US-NE", "US-NH", "US-NJ", "US-NY", "US-OH", "US-OK", "US-OR", "US-PA", "US-RI", "US-SC", "US-SD", "US-TN", "US-TX", "US-UT", "US-VA", "US-VT", "US-WI", "US-WV", "US-WY"];
 
 var on_chat = function(d) {};
 
@@ -194,27 +196,28 @@ function show_sidebar(){
 function draw_convos(){
     $('.sidebar:first').empty();
 	
-    var div = $("<div class='sidebar_convo'>All</div>");
-    div.attr("data-convo","All");
-    div.on( 'mousedown', function( e ) {
+    var div_start = $("<div class='sidebar_convo'>All</div>");
+    div_start.attr("data-convo","All");
+    div_start.on( 'mousedown', function( e ) {
         start = new Date().getTime();
     });
 
-    div.on( 'mouseleave', function( e ) {
+    div_start.on( 'mouseleave', function( e ) {
         start = 0;
     });
 
-	div.on( 'mouseup', function( e ) {
+	div_start.on( 'mouseup', function( e ) {
         if ( new Date().getTime() >= ( start + longpress )  ) {
-            swap_to_convo("");
-            //alert('long press');
+            //swap_to_convo("");
+            alert('long press');
         } else {
             swap_to_convo("");
             //add_to_convos("");
         }
     });
-    $('.sidebar:first').append(div);
-
+    $('.sidebar:first').append(div_start);
+	var div;
+	var all_flag = 0;
     for (var i = 0; i < convos.length && i < 30; i++) {
         div = $("<div class='sidebar_convo'/>");
 
@@ -222,9 +225,10 @@ function draw_convos(){
         div.attr("data-convo",div.text());
 
         if($.inArray(div.text(),highlighted_convos)>-1){
-	        //div.css("background","blue");
+			div.toggleClass("sidebar_convo_dim",false);
         } else {
-	      	//div.css("background","none");
+        	all_flag++;
+			div.toggleClass("sidebar_convo_dim",true);
         }
         
         div.on( 'mousedown', function( e ) {
@@ -245,6 +249,9 @@ function draw_convos(){
         });
         
         $('.sidebar:first').append(div);
+    }
+    if (all_flag){
+	    div_start.toggleClass("sidebar_convo_dim",true);
     }
 }
 
@@ -516,7 +523,18 @@ function update_chat(new_data, first_load) {
         post.find(".name_part").text(data.name);
     }
     if (changed.country) {
-    	var country = $("<img src='/icons/countries/"+data.country+".png'/>");
+    	if (special_countries.indexOf(data.country)>-1) {
+			var state = $("<img src='/icons/countries/"+data.country+".png'/>");
+	    	state.css({
+	    		paddingLeft:'5px',
+		    	height:'22px',
+		    	margin:'0',
+		    	marginBottom:'-5px'
+	    	});
+			post.find(".flag").prepend(state);
+
+    	}
+    	var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
     	country.css({
     		paddingLeft:'5px',
 	    	height:'22px',
