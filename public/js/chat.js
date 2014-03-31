@@ -689,7 +689,7 @@ function update_chat(new_data, first_load) {
                 var main = $("<span/>");
                 var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
                 var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
-                var embed = $("<span>(embed)</span>").css("cursor", "pointer");
+                var embed = $("<span>(embed)</span>").css({cursor:"pointer", fontSize:'10px'});
                 main.append(elem, " ", embed);
                 o.push(main);
                 var embedded = false;
@@ -706,6 +706,7 @@ function update_chat(new_data, first_load) {
                     var post = main.parents(".chat");
                     post.toggleClass('chat_embed', post.find("iframe").length > 0);
                 });
+                get_youtube_data(m[1],elem);
             }],
             [/https?:\/\/\S+/g, function(m, o) {
                 o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
