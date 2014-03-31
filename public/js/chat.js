@@ -1,5 +1,5 @@
 /*
-	LiveChan is a live imageboard web application.
+    LiveChan is a live imageboard web application.
     Copyright (C) 2014 LiveChan Team
 
     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var chat = {};
@@ -24,7 +24,7 @@ var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 400;
 
-var admins = ["!/b/suPrEmE", "!!3xVuTKubFw","!!rr1C6aJjtk"];
+var admins = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!rr1C6aJjtk"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
@@ -83,18 +83,18 @@ function kill_excess() {
 }
 
 function toggle_sidebar(){
-	$('.sidebar').hide('slow');
+    $('.sidebar').hide('slow');
 }
 
 function board_link(dest,linked_chat){
     var link = $("<a class='board_link'/>");
     if(!linked_chat) {
-    	if (dest.split('/')[2]){
-    		linked_chat = dest.split('/')[2];
-    		dest = dest.split('/')[1];
-    	} else {
-			linked_chat = "";  
-    	}
+        if (dest.split('/')[2]){
+            linked_chat = dest.split('/')[2];
+            dest = dest.split('/')[1];
+        } else {
+            linked_chat = "";
+        }
     }
     dest = dest.replace(/\//g,"");
     linked_chat = linked_chat.replace(/\//g,"");
@@ -110,11 +110,11 @@ function board_link(dest,linked_chat){
     link.text(link_text);
     link.attr("href", link_url);
     link.click(function(e){
-   		e.stopPropagation();
+        e.stopPropagation();
         set_channel(dest, linked_chat);
         return false;
     });
-	return link;
+    return link;
 }
 
 function quote_link(dest) {
@@ -134,69 +134,69 @@ function quote_link(dest) {
 }
 
 function swap_to_convo(convo){
-	if(convo=="") {
-		$('#convo_filter').val('no-filter');
-		$("#convo").val('');
-		highlighted_convos = convos.slice(0);
-		$(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
-	} else {
-		$(".sidebar_convo").toggleClass("sidebar_convo_dim",true);
-		$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
+    if(convo=="") {
+        $('#convo_filter').val('no-filter');
+        $("#convo").val('');
+        highlighted_convos = convos.slice(0);
+        $(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
+    } else {
+        $(".sidebar_convo").toggleClass("sidebar_convo_dim",true);
+        $(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
 
-		highlighted_convos = [convo];
+        highlighted_convos = [convo];
 
-		$("#convo").val(convo);
-		$('#convo_filter').val('filter');
-	}
+        $("#convo").val(convo);
+        $('#convo_filter').val('filter');
+    }
     apply_filter();
     scroll();
     return;
 }
 
 function add_to_convo(convo){
-	//console.log(highlighted_convos,convo);
-	$('#convo_filter').val("filter");
-	if(convo=="") {
-		highlighted_convos = convos.slice(0);
-		$(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
-	} else {
-		var convo_index = $.inArray(convo,highlighted_convos);
-		if (convo_index > -1){
-			highlighted_convos.splice(convo_index,1);
-			$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",true);
-		} else {
-			highlighted_convos.push(convo);
-			$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
+    //console.log(highlighted_convos,convo);
+    $('#convo_filter').val("filter");
+    if(convo=="") {
+        highlighted_convos = convos.slice(0);
+        $(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
+    } else {
+        var convo_index = $.inArray(convo,highlighted_convos);
+        if (convo_index > -1){
+            highlighted_convos.splice(convo_index,1);
+            $(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",true);
+        } else {
+            highlighted_convos.push(convo);
+            $(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
 
-		}
-	}
+        }
+    }
     apply_filter();
     scroll();
     return;
 }
 
 function hide_sidebar(){
-	$('.chats_container').css({width:'100%'});
-	$('.create').css({right:'0'});
-	$('.sidebar').css({display:'none'});
-	$('#sidebar_hider').text('show sidebar');
-	$('#sidebar_hider').attr('onclick', 'show_sidebar();');
-	return;
+    $('.chats_container').css({width:'100%'});
+    $('.create').css({right:'0'});
+    $('.sidebar').css({display:'none'});
+    $('#sidebar_hider').text('show sidebar');
+    $('#sidebar_hider').attr('onclick', 'show_sidebar();');
+    return;
 }
 
 function show_sidebar(){
-	$('.chats_container').css({width:''});
-	$('.create').css({right:''});
-	$('.sidebar').css({display:'block'});
-	$('#sidebar_hider').text('hide sidebar');
-	$('#sidebar_hider').attr('onclick', 'hide_sidebar();');
+    $('.chats_container').css({width:''});
+    $('.create').css({right:''});
+    $('.sidebar').css({display:'block'});
+    $('#sidebar_hider').text('hide sidebar');
+    $('#sidebar_hider').attr('onclick', 'hide_sidebar();');
 
-	return;
+    return;
 }
 
 function draw_convos(){
     $('.sidebar:first').empty();
-	
+
     var div_start = $("<div class='sidebar_convo'>All</div>");
     div_start.attr("data-convo","All");
     div_start.on( 'mousedown', function( e ) {
@@ -207,7 +207,7 @@ function draw_convos(){
         start = 0;
     });
 
-	div_start.on( 'mouseup', function( e ) {
+    div_start.on( 'mouseup', function( e ) {
         if ( new Date().getTime() >= ( start + longpress )  ) {
             //swap_to_convo("");
             alert('long press');
@@ -217,8 +217,8 @@ function draw_convos(){
         }
     });
     $('.sidebar:first').append(div_start);
-	var div;
-	var all_flag = 0;
+    var div;
+    var all_flag = 0;
     for (var i = 0; i < convos.length && i < 30; i++) {
         div = $("<div class='sidebar_convo'/>");
 
@@ -226,33 +226,33 @@ function draw_convos(){
         div.attr("data-convo",div.text());
 
         if($.inArray(div.text(),highlighted_convos)>-1){
-			div.toggleClass("sidebar_convo_dim",false);
+            div.toggleClass("sidebar_convo_dim",false);
         } else {
-        	all_flag++;
-			div.toggleClass("sidebar_convo_dim",true);
+            all_flag++;
+            div.toggleClass("sidebar_convo_dim",true);
         }
-        
+
         div.on( 'mousedown', function( e ) {
-	        start = new Date().getTime();
-	    });
-
-	    div.on( 'mouseleave', function( e ) {
-	        start = 0;
-	    });
-
-		div.on( 'mouseup', function( e ) {
-	        if ( new Date().getTime() >= ( start + longpress )  ) {
-	            add_to_convo($(this).text());
-	        } else {
-	        	//add_to_convos($(this).text());
-	            swap_to_convo($(this).text());
-	        }
+            start = new Date().getTime();
         });
-        
+
+        div.on( 'mouseleave', function( e ) {
+            start = 0;
+        });
+
+        div.on( 'mouseup', function( e ) {
+            if ( new Date().getTime() >= ( start + longpress )  ) {
+                add_to_convo($(this).text());
+            } else {
+                //add_to_convos($(this).text());
+                swap_to_convo($(this).text());
+            }
+        });
+
         $('.sidebar:first').append(div);
     }
     if (all_flag){
-	    div_start.toggleClass("sidebar_convo_dim",true);
+        div_start.toggleClass("sidebar_convo_dim",true);
     }
 }
 
@@ -290,7 +290,7 @@ function generate_post(id) {
         .mouseover(quote_mouseover)
         .mouseout(kill_excess)
         .click(function (e) {
-        	e.stopPropagation();
+            e.stopPropagation();
             $("#convo").val(chat[id].convo);
             apply_filter();
         });
@@ -409,10 +409,10 @@ function generate_post(id) {
             }
         })
         .click(function (e) {
-        	e.stopPropagation();
+            e.stopPropagation();
         });
-	post
-	.click(function () {
+    post
+    .click(function () {
         if (chat_id === "all") {
             set_channel(chat[id].chat, chat[id].count);
         }
@@ -432,7 +432,7 @@ function Parser(text) {
 }
 
 function get_youtube_data(y_id, element){
-	$.ajax({
+    $.ajax({
             type: "GET",
             url: location.protocol+'//'+location.host+'/youtube_data/'+y_id,
             dataType: "json",
@@ -530,25 +530,25 @@ function update_chat(new_data, first_load) {
         post.find(".name_part").text(data.name);
     }
     if (changed.country) {
-    	if (special_countries.indexOf(data.country)>-1) {
-			var state = $("<img src='/icons/countries/"+data.country+".png'/>");
-	    	state.css({
-	    		paddingLeft:'5px',
-		    	height:'22px',
-		    	margin:'0',
-		    	marginBottom:'-5px'
-	    	});
-			post.find(".flag").prepend(state);
+        if (special_countries.indexOf(data.country)>-1) {
+            var state = $("<img src='/icons/countries/"+data.country+".png'/>");
+            state.css({
+                paddingLeft:'5px',
+                height:'22px',
+                margin:'0',
+                marginBottom:'-5px'
+            });
+            post.find(".flag").prepend(state);
 
-    	}
-    	var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
-    	country.css({
-    		paddingLeft:'5px',
-	    	height:'22px',
-	    	margin:'0',
-	    	marginBottom:'-5px'
-    	});
-	    post.find(".flag").prepend(country);
+        }
+        var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
+        country.css({
+            paddingLeft:'5px',
+            height:'22px',
+            margin:'0',
+            marginBottom:'-5px'
+        });
+        post.find(".flag").prepend(country);
     }
     if (changed.trip) {
         post.find(".trip_code").text(data.trip);
@@ -619,7 +619,7 @@ function update_chat(new_data, first_load) {
             if ($("#thumbnail_mode").val() === "static") img_container.find(".thumb_static").css("display", "inline");
             if ($("#thumbnail_mode").val() === "animated") img_container.find(".thumb_anim").css("display", "inline");
         }
-    } 
+    }
     if (changed.image || changed.image_filesize || changed.image_width || changed.image_height || changed.image_filename) {
         var data_items = [];
         if (data.image_filesize !== undefined) {
@@ -701,7 +701,7 @@ function update_chat(new_data, first_load) {
                 o.push(main);
                 var embedded = false;
                 embed.click(function(e) {
-                	e.stopPropagation();
+                    e.stopPropagation();
                     if (embedded) {
                         main.find("iframe").remove();
                     } else {
@@ -798,7 +798,7 @@ function draw_chat(data) {
     for (i = data.length - 1; i >= 0; i--) {
         update_chat(data[i], true);
     }
-	highlighted_convos = convos.slice(0);
+    highlighted_convos = convos.slice(0);
     draw_convos();
 }
 
@@ -807,18 +807,18 @@ function draw_chat(data) {
 function scroll(channel) {
     "use strict";
     if (chat_id=="home") return;
-	if (channel) {
-		scr = $(".chats[data-channel='"+channel+"'")[0].scrollHeight;
-		return;
+    if (channel) {
+        scr = $(".chats[data-channel='"+channel+"'")[0].scrollHeight;
+        return;
     }
     var i;
     for (i = 0; i < $('.chats').length; i++) {
-	    var scr = $('.chats')[i].scrollHeight;
-	    scr += 10;
-	    $('.chats').eq(i).animate({
-	        scrollTop: scr
-	    }, 200, 'swing', function () {
-		});
+        var scr = $('.chats')[i].scrollHeight;
+        scr += 10;
+        $('.chats').eq(i).animate({
+            scrollTop: scr
+        }, 200, 'swing', function () {
+        });
     }
 }
 
@@ -877,38 +877,38 @@ function apply_filter(posts) {
 function insert_post(post, channel) {
     "use strict";
     if ($('.chats').length == 1) {
-    	post.appendTo($(".chats:first"));
+        post.appendTo($(".chats:first"));
     }
     else {
-    	post.appendTo($(".chats[data-channel='"+channel+"']"));
+        post.appendTo($(".chats[data-channel='"+channel+"']"));
     }
-    
+
     var max_attempt = 10;
-    
+
     function expand_post(attempt){
-    	if (attempt>=max_attempt || post.height()>0) {
-			if (post[0].offsetHeight < post[0].scrollHeight) {
-			    var expand_button = $("<a>[+]</a>");
-			    expand_button.css({
-				   paddingLeft:"5px"
-			    });
-			    expand_button.click(function(e){
-			    	e.stopPropagation();
-			    	expand_button.parent().parent().toggleClass('chat_full');
-					var new_text = expand_button.text() == "[+]" ? "[-]" : "[+]";
-					expand_button.text(new_text);
-			    });
-			    post.find('.chat_header').append(expand_button);
-		    }  
-		    clearInterval(post_exists);
-		    return;
-	    } else {
-		    expand_post(attempt+1);
-	    }
+        if (attempt>=max_attempt || post.height()>0) {
+            if (post[0].offsetHeight < post[0].scrollHeight) {
+                var expand_button = $("<a>[+]</a>");
+                expand_button.css({
+                   paddingLeft:"5px"
+                });
+                expand_button.click(function(e){
+                    e.stopPropagation();
+                    expand_button.parent().parent().toggleClass('chat_full');
+                    var new_text = expand_button.text() == "[+]" ? "[-]" : "[+]";
+                    expand_button.text(new_text);
+                });
+                post.find('.chat_header').append(expand_button);
+            }
+            clearInterval(post_exists);
+            return;
+        } else {
+            expand_post(attempt+1);
+        }
     }
-    
+
     var post_exists = setInterval(function(){
-    	expand_post(0);
+        expand_post(0);
     }, 500); /* DOM takes forever */
 
     return;
@@ -916,16 +916,16 @@ function insert_post(post, channel) {
 
 /* ALPHA STAGES, this function is unstable and uncalled TODO: make it work */
 function split_channel(channel){
-	if ($('.chats').length == 2) return;
-	$('.chats_connected').toggleClass('chats_half',true);
-	$('.chats:first').attr('data-channel', chat_id);
-	var new_chats = $('.chats:first').clone();
-	new_chats.empty();
-	new_chats.css('left','50%');
-	new_chats.attr('data-channel', channel);
-	$('.chats_container').append(new_chats);
-	get_chat_data(channel);
-	socket.emit('subscribe', channel);
+    if ($('.chats').length == 2) return;
+    $('.chats_connected').toggleClass('chats_half',true);
+    $('.chats:first').attr('data-channel', chat_id);
+    var new_chats = $('.chats:first').clone();
+    new_chats.empty();
+    new_chats.css('left','50%');
+    new_chats.attr('data-channel', channel);
+    $('.chats_container').append(new_chats);
+    get_chat_data(channel);
+    socket.emit('subscribe', channel);
 }
 
 /* sets the channel and starts up the chat */
