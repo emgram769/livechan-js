@@ -55,7 +55,6 @@ ul {
         overflow: auto;
         word-wrap: break-word;
 		display: none;
-		border-left: 1px solid rgb(214, 218, 240);
 
 }
 
@@ -390,6 +389,7 @@ pre {
 .alert_div{
     background:white;
     color:black;
+    border: none;
     text-align:center;
     padding:5px;
     right:270px;
@@ -397,7 +397,8 @@ pre {
 }
 
 #alert_div_captcha{
-	background-color: #800000;
+	background-color: rgb(238, 242, 255);
+	border:1px rgb(214, 218, 240) solid;
 }
 
 .alert_message{

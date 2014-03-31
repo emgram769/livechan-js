@@ -259,7 +259,7 @@ function set_up_html(){
 /* give me captcha TODO: clean this up and make it work better */
 function captcha_div() {
     "use strict";
-    return '<img src="/captcha.jpg#' + new Date().getTime() + '" alt="Lynx is best browser" /><form action="/login" method="post" target="miframe"><br /><input type="text" name="digits" /></form>';
+    return '<span>Please enter the captcha</span><br><img src="/captcha.jpg#' + new Date().getTime() + '" alt="Lynx is best browser" /><form action="/login" method="post" target="miframe" style="padding:0;"><input type="text" name="digits" style="display:inline;" /><input style="display:inline;" type="submit"/></form>';
 }
 
 /* gets cookie, use this function instead of document.cookie */
@@ -297,11 +297,9 @@ function div_alert(message, add_button, div_id) {
     alert_div.innerHTML = button_html+"<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>";
     $(alert_div).css({
         position: 'fixed',
-        background: 'white',
-        width: '300px',
+        width: 'auto',
         bottom: '160px',
         left: document.width / 2 - 150,
-        border: '1px black solid',
         zIndex: 1000
     });
     $('.chats:first').append(alert_div);
