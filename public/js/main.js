@@ -1,5 +1,5 @@
 /*
-	LiveChan is a live imageboard web application.
+    LiveChan is a live imageboard web application.
     Copyright (C) 2014 LiveChan Team
 
     This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var auto_post = false;
@@ -41,9 +41,9 @@ $(document).ready(function () {
     /* set up socket */
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
-    socket.on('refresh', function() {setTimeout(function(){location.reload();},5000)});
+    socket.on('refresh', function() {setTimeout(function(){location.reload();},5000);});
 
-	/* key bindings for actions */
+    /* key bindings for actions */
     $("#name").keydown(function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -60,9 +60,9 @@ $(document).ready(function () {
 
     $("#body").keydown(function (e) {
         if (!e.shiftKey && e.keyCode === 13) {
-        	var msg = $("#body").val();
+            var msg = $("#body").val();
             if ($("#autosubmit").prop('checked') && cool_down_timer <= 0 && !($("#submit_button").prop("disabled"))
-            	|| msg.indexOf('//') !== 0 && msg.indexOf('/') === 0) { /* no delay if command */
+                || msg.indexOf('//') !== 0 && msg.indexOf('/') === 0) { /* no delay if command */
                 submit_chat();
             } else {
                 auto_post = true;
@@ -72,17 +72,17 @@ $(document).ready(function () {
         }
     });
 
-	/* hacky processing request responses */
+    /* hacky processing request responses */
     $('iframe#miframe').load(function () {
-    	var resp;
-    	try {
-        	resp = JSON.parse($($("#miframe").contents()[0].body).text());
+        var resp;
+        try {
+            resp = JSON.parse($($("#miframe").contents()[0].body).text());
         } catch (e) {
-	    	resp =  {failure:$($("#miframe").contents()[0].body).text()};
+            resp =  {failure:$($("#miframe").contents()[0].body).text()};
         }
         if (resp.failure && resp.failure === "session_expiry") {
-        	$("#body").val(last_post);
-			submit_captcha();
+            $("#body").val(last_post);
+            submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
             init_cool_down();
@@ -106,17 +106,17 @@ $(document).ready(function () {
             }
         }
     });
-    
+
     $(document).bind('click', function(e){
-	   	$('.settings_nav:first').hide('slow');
+        $('.settings_nav:first').hide('slow');
     });
-    
+
     $('#settings_button').bind('click', function(e){
-    	e.stopPropagation();
-	    $('.settings_nav:first').toggle('slow');
-	    $('.settings_nav').bind('click', function(e2){
-	    	 e2.stopPropagation();
-		});
+        e.stopPropagation();
+        $('.settings_nav:first').toggle('slow');
+        $('.settings_nav').bind('click', function(e2){
+             e2.stopPropagation();
+        });
 
     });
 
@@ -132,13 +132,13 @@ $(document).ready(function () {
 
     $('#spoilers').change(function () {
         if (html5) localStorage.spoilers = $(this).prop("checked");
-		$('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
+        $('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
     });
 
     $('#volume').change(function () {
         if (html5) localStorage.volume = $(this).val();
     });
-    
+
     $('#board_select').change(function () {
         var board = $(this).val();
         if (board=="")
@@ -151,7 +151,7 @@ $(document).ready(function () {
         var new_value = $(this).val();
         if (prev_thumbnail_mode === "links-only") {
             $('.chat_img_cont').show('slow', function(){
-	            scroll();
+                scroll();
             });
             if (new_value === "static") $('.thumb_static').show('slow');
             if (new_value === "animated") $('.thumb_anim').show('slow');
@@ -170,12 +170,12 @@ $(document).ready(function () {
 
     $('#clearconvo').change(function() {
         if (html5) {
-	        if($(this).prop("checked"))
-	            localStorage.clearConvo = "true";
-	        else
-	            localStorage.clearConvo = "false";
+            if($(this).prop("checked"))
+                localStorage.clearConvo = "true";
+            else
+                localStorage.clearConvo = "false";
         }
-	});
+    });
 });
 
 /* load up css into the page */
@@ -206,35 +206,35 @@ function get_css(file) {
 }
 
 function set_up_html(){
-	if (html5) {
+    if (html5) {
         /* set up only html5 local storage stuff */
-	    if (false || localStorage.reset === "true") {
-	        // set to true to reset local storage to defaults
-	        localStorage.my_ids = "[0]";
-	        localStorage.contribs = "[\"0\"]";
-	        localStorage.name = "";
-	        localStorage.theme = default_theme;
-	        localStorage.clearConvo = "false";
-	        localStorage.reset = "false";
-	    }
-	    my_ids = localStorage.my_ids;
-	    if (my_ids) {
-	        my_ids = JSON.parse(my_ids);
-	    } else {
-	        my_ids = [];
-	    }
-	
-	    contribs = localStorage.contribs;
-	    if (contribs) {
-	        contribs = JSON.parse(contribs);
-	    } else {
-	        contribs = default_contribs;
-	    }
-	
-	    /*if (!localStorage.theme || localStorage.theme === "null") {
-	        localStorage.theme = "/style.css";
-	    }*/
-	
+        if (false || localStorage.reset === "true") {
+            // set to true to reset local storage to defaults
+            localStorage.my_ids = "[0]";
+            localStorage.contribs = "[\"0\"]";
+            localStorage.name = "";
+            localStorage.theme = default_theme;
+            localStorage.clearConvo = "false";
+            localStorage.reset = "false";
+        }
+        my_ids = localStorage.my_ids;
+        if (my_ids) {
+            my_ids = JSON.parse(my_ids);
+        } else {
+            my_ids = [];
+        }
+
+        contribs = localStorage.contribs;
+        if (contribs) {
+            contribs = JSON.parse(contribs);
+        } else {
+            contribs = default_contribs;
+        }
+
+        /*if (!localStorage.theme || localStorage.theme === "null") {
+            localStorage.theme = "/style.css";
+        }*/
+
 
         if (localStorage.name !== undefined) $("#name").val(localStorage.name);
         if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
@@ -245,7 +245,7 @@ function set_up_html(){
     }
 
     if (cool_down_timer>0)
-    	init_cool_down();
+        init_cool_down();
     if (!$("#theme_select").val() || $("#theme_select").val() === "null" || !$("#theme_select").val().replace(/^\s+|\s+$/gm, '')) {
         $("#theme_select").val(default_theme);
     }
@@ -313,7 +313,7 @@ function clear_fields() {
     $("#sum").val('');
     if($("#clearconvo").prop("checked")
        && $('#convo_filter').val() !== 'filter') {
-    	$("#convo").val('');
+        $("#convo").val('');
     }
 }
 
@@ -321,8 +321,8 @@ function clear_fields() {
 function cool_down() {
     "use strict";
     if (html5) {
-    	localStorage.cool_down_timer = cool_down_timer;
-	}
+        localStorage.cool_down_timer = cool_down_timer;
+    }
     if (cool_down_timer <= 0) {
         clearInterval(cool_down_interval);
         $("#cool_down").text("");
@@ -355,16 +355,16 @@ function submit_captcha(){
 
 /* initial code for migration to socket.io data transfer */
 function submit_chat_beta(){
-	var file = $("input:file")[0].files[0];
+    var file = $("input:file")[0].files[0];
     var stream = ss.createStream();
 
     // upload a file to the server.
     ss(socket).emit('upload', stream, {
-    	size: file.size,
-    	name: file.name, 
-    	type: file.type
+        size: file.size,
+        name: file.name,
+        type: file.type
     });
-   
+
     ss.createBlobReadStream(file).pipe(stream);
 }
 
@@ -399,22 +399,22 @@ function prompt_password(callback) {
 /* this is currently a POST request TODO: adapt to socket.io websocket request */
 function submit_chat() {
     "use strict";
-	
+
     if($.inArray($("#convo").val(), convos) < 0 && $("#convo").val() !== "")
         cool_down_timer+=14;
-	
+
     last_post = $("#body").val();
     if (get_cookie("password_livechan") === '') {
-		submit_captcha();
+        submit_captcha();
         $("#submit_button").prop("value", "Submit (Auto)");
         auto_post = true;
         return false;
     }
-    
+
     $("#submit_button").prop("value", "Submit");
-    
+
     auto_post = false;
-    
+
     if (html5) {
         localStorage.name = $("#name").val();
         localStorage.theme = $("#theme_select").val();
@@ -423,7 +423,7 @@ function submit_chat() {
     if ($("#body").val() === '') {
         $("#body").val("  ");
     }
-    
+
     var msg = $("#body").val();
     if (msg.indexOf('//') !== 0 && msg.indexOf('/') === 0) {
         var cmdend = msg.indexOf(' ');
@@ -472,7 +472,7 @@ function submit_chat() {
             } else {
                 div_alert("usage: /switch /channel");
             }
-            break;    
+            break;
        case "split":
             if (param) {
                 split_channel(param.replace('/', ''))
@@ -490,7 +490,7 @@ function submit_chat() {
                     }).done(function (data_delete) {
                         if(data_delete.success)
                             div_alert("success");
-                        else 
+                        else
                             div_alert("failure");
                     });
                 }
@@ -507,7 +507,7 @@ function submit_chat() {
                     }).done(function (data_delete) {
                         if(data_delete.success)
                             div_alert("success");
-                        else 
+                        else
                             div_alert("failure");
                     });
                 }
@@ -523,7 +523,7 @@ function submit_chat() {
                     }).done(function (data_delete) {
                         if(data_delete.success)
                             div_alert("success");
-                        else 
+                        else
                             div_alert("failure");
                     });
                 }
@@ -540,7 +540,7 @@ function submit_chat() {
                     }).done(function (data_delete) {
                         if(data_delete.success)
                             div_alert(data_delete.success);
-                        else 
+                        else
                             div_alert("failure", data_delete.failure);
                     });
                 }
@@ -568,20 +568,20 @@ function submit_chat() {
         return;
     }
     if (submit_beta) {
-	    submit_chat_beta();
+        submit_chat_beta();
     } else {
-    	$("#comment-form").submit();
+        $("#comment-form").submit();
     }
 
     if (!admin_mode) {
         cool_down_timer += 7;
-	    $("#submit_button").prop("disabled", true);
+        $("#submit_button").prop("disabled", true);
     }
-    
+
     if (html5) {
         localStorage.cool_down_timer = cool_down_timer;
     }
-    
+
     return false;
 }
 
@@ -611,4 +611,3 @@ function quote(id) {
         apply_filter();
     }
 }
-
