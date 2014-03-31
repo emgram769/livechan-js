@@ -39,7 +39,7 @@ var title = "";
 var chat_id = "";
 var linked_post = "";
 
-var special_countries = ["AU-Brisbane", "AU-Canberra", "AU-Darwin", "AU-Gold Coast", "AU-Melbourne", "AU-Newcastle", "AU-Perth", "AU-Sunshine", "AU-Sydney", "US-AK", "US-AL", "US-AR", "US-AZ", "US-CA", "US-CO", "US-CT", "US-DC", "US-DE", "US-FL", "US-HI", "US-IA", "US-ID", "US-IL", "US-IN", "US-KS", "US-KY", "US-LA", "US-MA", "US-MD", "US-ME", "US-MI", "US-MN", "US-MO", "US-MS", "US-MT", "US-NC", "US-ND", "US-NE", "US-NH", "US-NJ", "US-NY", "US-OH", "US-OK", "US-OR", "US-PA", "US-RI", "US-SC", "US-SD", "US-TN", "US-TX", "US-UT", "US-VA", "US-VT", "US-WI", "US-WV", "US-WY"];
+var special_countries = ["AU-Brisbane", "AU-Canberra", "AU-Darwin", "AU-Gold Coast", "AU-Melbourne", "AU-Newcastle", "AU-Perth", "AU-Sunshine", "AU-Sydney", "US-AK", "US-AL", "US-AR", "US-AZ", "US-CA", "US-CO", "US-CT", "US-DC", "US-DE", "US-GA", "US-FL", "US-HI", "US-IA", "US-ID", "US-IL", "US-IN", "US-KS", "US-KY", "US-LA", "US-MA", "US-MD", "US-ME", "US-MI", "US-MN", "US-MO", "US-MS", "US-MT", "US-NC", "US-ND", "US-NE", "US-NH", "US-NJ", "US-NY", "US-OH", "US-OK", "US-OR", "US-PA", "US-RI", "US-SC", "US-SD", "US-TN", "US-TX", "US-UT", "US-VA", "US-VT", "US-WI", "US-WV", "US-WY"];
 
 var on_chat = function(d) {};
 
@@ -109,7 +109,8 @@ function board_link(dest,linked_chat){
     }
     link.text(link_text);
     link.attr("href", link_url);
-    link.click(function(){
+    link.click(function(e){
+   		e.stopPropagation();
         set_channel(dest, linked_chat);
         return false;
     });
@@ -288,19 +289,15 @@ function generate_post(id) {
     post.find(".chat_convo")
         .mouseover(quote_mouseover)
         .mouseout(kill_excess)
-        .click(function () {
+        .click(function (e) {
+        	e.stopPropagation();
             $("#convo").val(chat[id].convo);
             apply_filter();
         });
 
     post.find(".chat_number")
-        .text(id)
-        .click(function () {
-            if (chat_id === "all") {
-                set_channel(chat[id].chat, chat[id].count);
-            }
-            quote(id);
-        });
+        .text(id);
+
 
     if (future_ids[id] !== undefined) {
         post.find(".chat_refs").append(" ", future_ids[id].contents());
@@ -410,7 +407,17 @@ function generate_post(id) {
                 if (window.localStorage) localStorage.volume = volume;
                 event.preventDefault();
             }
+        })
+        .click(function (e) {
+        	e.stopPropagation();
         });
+	post
+	.click(function () {
+        if (chat_id === "all") {
+            set_channel(chat[id].chat, chat[id].count);
+        }
+        quote(id);
+    });
 
     return post;
 }
@@ -693,7 +700,8 @@ function update_chat(new_data, first_load) {
                 main.append(elem, " ", embed);
                 o.push(main);
                 var embedded = false;
-                embed.click(function() {
+                embed.click(function(e) {
+                	e.stopPropagation();
                     if (embedded) {
                         main.find("iframe").remove();
                     } else {
@@ -884,7 +892,8 @@ function insert_post(post, channel) {
 			    expand_button.css({
 				   paddingLeft:"5px"
 			    });
-			    expand_button.click(function(){
+			    expand_button.click(function(e){
+			    	e.stopPropagation();
 			    	expand_button.parent().parent().toggleClass('chat_full');
 					var new_text = expand_button.text() == "[+]" ? "[-]" : "[+]";
 					expand_button.text(new_text);

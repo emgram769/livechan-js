@@ -348,6 +348,7 @@ function init_cool_down(){
 /* simply ask for the captcha TODO: this is buggy, needs to be fixed */
 function submit_captcha(){
     div_alert(captcha_div(), false, "captcha");
+    $("#alert_div_captcha .alert_message form input")[0].focus();
     $("#submit_button").prop("disabled", true);
     cool_down_timer = 0;
 }
