@@ -427,8 +427,8 @@ function Parser(text) {
 function get_youtube_data(y_id, element){
 	$.ajax({
             type: "GET",
-            url: "https://gdata.youtube.com/feeds/api/videos/"+y_id+"?v=2&alt=jsonc",
-            dataType: "jsonp",
+            url: location.protocol+'//'+location.host+'/youtube_data/'+y_id,
+            dataType: "json",
             success: function (xml) {
                 element.text(xml.data.title);
             }
