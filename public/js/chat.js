@@ -417,6 +417,17 @@ function Parser(text) {
     this.position = 0;
 }
 
+function get_youtube_data(y_id, element){
+	$.ajax({
+            type: "GET",
+            url: "https://gdata.youtube.com/feeds/api/videos/"+y_id+"?v=2&alt=jsonc",
+            dataType: "jsonp",
+            success: function (xml) {
+                element.text(xml.data.title);
+            }
+        });
+}
+
 /*
 Parse the text according to the given markup rules.
 - rules is an array of markup rules in the form [start_tag, handler] where
@@ -508,9 +519,9 @@ function update_chat(new_data, first_load) {
     	var country = $("<img src='/icons/countries/"+data.country+".png'/>");
     	country.css({
     		paddingLeft:'5px',
-	    	height:'16px',
+	    	height:'22px',
 	    	margin:'0',
-	    	marginBottom:'-3px'
+	    	marginBottom:'-5px'
     	});
 	    post.find(".flag").prepend(country);
     }
@@ -655,6 +666,16 @@ function update_chat(new_data, first_load) {
             [/\[spoiler\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/spoiler\]/g);
                 o.push($("<span class='spoiler'/>").append(body));
+            }],
+            [/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(\S+)/g, function(m, o) {
+            	var main = $("<span/>");
+            	var yt = $("<iframe width='214' height='120' frameborder='0' allowfullscreen></iframe>").attr("src", 
+            		"https://www.youtube.com/embed/"+m[1]).css({float:"left",marginRight:'5px'});
+            	m[0] = m[0][0] == 'y' ? "https://"+m[0] : m[0];
+            	var elem = $("<a target='_blank'/>").attr("href", m[0]);
+            	main.prepend(elem).prepend(yt);
+            	o.push(main);
+            	get_youtube_data(m[1], elem);
             }],
             [/https?:\/\/\S+/g, function(m, o) {
                 o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));

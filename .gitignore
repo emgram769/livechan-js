@@ -8,6 +8,7 @@ Thumbs.db
 *~
 .buildpacks
 lib/.nohup.out.swn
+GeoLiteCity.dat
 public/draw*.jpg
 push
 logs.txt

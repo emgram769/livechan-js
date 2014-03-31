@@ -39,6 +39,7 @@ $(document).ready(function () {
     /* set up socket */
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
+    socket.on('refresh', function() {setTimeout(function(){socket.disconnect();socket.socket.reconnect();},2000)});
 
 	/* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -501,6 +502,22 @@ function submit_chat() {
                         type: "POST",
                         url: '/set',
                         data: {password: password, id: param[0], text: param.splice(1).join('/')}
+                    }).done(function (data_delete) {
+                        if(data_delete.success)
+                            div_alert("success");
+                        else 
+                            div_alert("failure");
+                    });
+                }
+            });
+            break;
+        case "refresh":
+            prompt_password(function(password) {
+                if (password) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/refresh',
+                        data: {password: password}
                     }).done(function (data_delete) {
                         if(data_delete.success)
                             div_alert("success");
