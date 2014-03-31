@@ -234,7 +234,7 @@ ul {
 	color:red;
 }
 
-.chat_full{
+.chat_full, .chat_embed {
 	max-height: none !important;
 }
 

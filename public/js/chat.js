@@ -686,14 +686,26 @@ function update_chat(new_data, first_load) {
                 o.push($("<span class='spoiler'/>").append(body));
             }],
             [/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(\S+)/g, function(m, o) {
-            	var main = $("<span/>");
-            	var yt = $("<iframe width='214' height='120' frameborder='0' allowfullscreen></iframe>").attr("src", 
-            		"https://www.youtube.com/embed/"+m[1]).css({float:"left",marginRight:'5px'});
-            	m[0] = m[0][0] == 'y' ? "https://"+m[0] : m[0];
-            	var elem = $("<a target='_blank'/>").attr("href", m[0]);
-            	main.prepend(elem).prepend(yt);
-            	o.push(main);
-            	get_youtube_data(m[1], elem);
+                var main = $("<span/>");
+                var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
+                var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
+                var embed = $("<span>(embed)</span>").css("cursor", "pointer");
+                main.append(elem, " ", embed);
+                o.push(main);
+                var embedded = false;
+                embed.click(function() {
+                    if (embedded) {
+                        main.find("iframe").remove();
+                    } else {
+                        var yt = $("<iframe width='560' height='315' frameborder='0' allowfullscreen></iframe>")
+                            .attr("src", "https://www.youtube.com/embed/"+m[1]).css({float:"left", marginRight:'5px'});
+                        main.append(yt);
+                    }
+                    embedded = !embedded;
+                    embed.text(embedded ? "(unembed)" : "(embed)");
+                    var post = main.parents(".chat");
+                    post.toggleClass('chat_embed', post.find("iframe").length > 0);
+                });
             }],
             [/https?:\/\/\S+/g, function(m, o) {
                 o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
