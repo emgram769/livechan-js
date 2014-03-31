@@ -61,7 +61,7 @@ $(document).ready(function () {
     $("#body").keydown(function (e) {
         if (!e.shiftKey && e.keyCode === 13) {
         	var msg = $("#body").val();
-            if ($("#autosubmit").prop('checked') && cool_down_timer <= 0 && !$("#submit_button").prop("disabled")
+            if ($("#autosubmit").prop('checked') && cool_down_timer <= 0 && !($("#submit_button").prop("disabled"))
             	|| msg.indexOf('//') !== 0 && msg.indexOf('/') === 0) { /* no delay if command */
                 submit_chat();
             } else {
@@ -82,7 +82,7 @@ $(document).ready(function () {
         }
         if (resp.failure && resp.failure === "session_expiry") {
         	$("#body").val(last_post);
-		submit_captcha();
+			submit_captcha();
         } else if (resp.failure) {
             div_alert(resp.failure);
             init_cool_down();
@@ -102,7 +102,7 @@ $(document).ready(function () {
             $("#submit_button").prop("disabled", false);
             $("#alert_div_captcha").remove();
             if (auto_post) {
-                submit_chat();
+                setTimeout(function(){submit_chat();}, 200);
             }
         }
     });
@@ -290,11 +290,11 @@ function div_alert(message, add_button, div_id) {
     var alert_div = document.createElement('aside');
     alert_div.setAttribute('class', 'alert_div ' + (chat_id !== 'home' && chat_id !== 'all' ? "shown" : ""));
     alert_div.setAttribute('id', 'alert_div_' + div_id);
-    var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();'>Close</button>";
+    var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();$(\"#submit_button\").prop(\"disabled\", false);'>X</button>";
     /*if (!add_button) {
         button_html = "";
     }*/
-    alert_div.innerHTML = "<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>" + button_html;
+    alert_div.innerHTML = button_html+"<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>";
     $(alert_div).css({
         position: 'fixed',
         background: 'white',
@@ -341,16 +341,17 @@ function cool_down() {
 
 /* start a cool down, resets the interval, so no worries about calling ti twice */
 function init_cool_down(){
-	    $("#submit_button").prop("disabled", true);
-        clearInterval(cool_down_timer);
-        cool_down();
-        cool_down_interval = setInterval(cool_down, 1000);
+    $("#submit_button").prop("disabled", true);
+    clearInterval(cool_down_timer);
+    cool_down();
+    cool_down_interval = setInterval(cool_down, 1000);
 }
 
 /* simply ask for the captcha TODO: this is buggy, needs to be fixed */
 function submit_captcha(){
-        div_alert(captcha_div(), false, "captcha");
-        $("#submit_button").prop("disabled", true);
+    div_alert(captcha_div(), false, "captcha");
+    $("#submit_button").prop("disabled", true);
+    cool_down_timer = 0;
 }
 
 /* initial code for migration to socket.io data transfer */

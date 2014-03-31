@@ -146,25 +146,26 @@ ul {
 }
 
 .comment{
-    padding:0;
+    padding:0 .5%;
+    padding-top: 5px;
     margin:0;
-    width:100%;
+    width:99%;
     max-width:100%;
 }
 
 .name{
-    padding:0;
+    padding:0 .5%;
     margin:0;
-    width:70%;
+    width:69%;
     float:left;
 }
 
 .convo{
-    padding:0;
+    padding:0 .5%;
     margin:0;
     margin-right:-2px;
     margin-left:-2px;
-    width:30%;
+    width:29%;
     float:right;
 }
 
