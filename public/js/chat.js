@@ -671,23 +671,22 @@ function update_chat(new_data, first_load) {
                 var main = $("<span/>");
                 var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
                 var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
-                var embed = $("<span>[embed]</span>").css("cursor", "pointer");
+                var embed = $("<span>(embed)</span>").css("cursor", "pointer");
                 main.append(elem, " ", embed);
                 o.push(main);
-                var yt;
                 var embedded = false;
                 embed.click(function() {
                     if (embedded) {
-                        yt.remove();
-                        embedded = false;
-                        embed.text("[embed]");
+                        main.find("iframe").remove();
                     } else {
-                        yt = $("<iframe width='214' height='120' frameborder='0' allowfullscreen></iframe>").attr("src",
-                            "https://www.youtube.com/embed/"+m[1]).css({float:"left",marginRight:'5px'});
+                        var yt = $("<iframe width='560' height='315' frameborder='0' allowfullscreen></iframe>")
+                            .attr("src", "https://www.youtube.com/embed/"+m[1]).css({float:"left", marginRight:'5px'});
                         main.append(yt);
-                        embedded = true;
-                        embed.text("[unembed]");
                     }
+                    embedded = !embedded;
+                    embed.text(embedded ? "(unembed)" : "(embed)");
+                    var post = main.parents(".chat");
+                    post.toggleClass('chat_embed', post.find("iframe").length > 0);
                 });
             }],
             [/https?:\/\/\S+/g, function(m, o) {
