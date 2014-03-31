@@ -21,6 +21,7 @@ var last_post = "";
 var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
+var admin_pass = ""; // pass to auth with server for admin commands, set by /admin command
 
 var socket = null;
 
@@ -42,6 +43,7 @@ $(document).ready(function () {
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
     socket.on('refresh', function() {setTimeout(function(){location.reload();},5000);});
+    socket.on('alert', function(data) {div_alert(data);});
 
     /* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -396,6 +398,76 @@ function prompt_password(callback) {
     pw_field.focus();
 }
 
+function enable_admin_mode(password)
+{
+    if(!password || password.length <= 0)
+        return;
+    $( "<style>.chat_mod_tools {display: inline}</style>" ).appendTo( "head" )
+    admin_pass = password;
+}
+
+function mod_delete_post(id, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0)
+    {
+        console.log("mod_delete_post: invalid param");
+        return;
+    }
+        
+    $.ajax({
+        type: "POST",
+        url: '/delete',
+        data: {password: password, id: id}
+    }).done(function (data_delete) {
+        if(data_delete.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
+function mod_warn_poster(id, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0)
+    {
+        console.log("mod_warn_poster: invalid param");
+        return;
+    }
+    
+    var reason = window.prompt("Warning reason","");
+    
+    $.ajax({
+        type: "POST",
+        url: '/warn',
+        data: {password: password, id: id, reason: reason}
+    }).done(function (data_warn) {
+        if(data_warn.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
+function mod_ban_poster(id, board, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0 || !board || board.length <= 0)
+    {
+        console.log("mod_ban_poster: invalid param");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: '/ban',
+        data: {password: password, board: board, id: id}
+    }).done(function (data_ban) {
+        if(data_ban.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
 /* this is currently a POST request TODO: adapt to socket.io websocket request */
 function submit_chat() {
     "use strict";
@@ -434,6 +506,13 @@ function submit_chat() {
         var param = msg.substring(cmdend + 1, msg.length).replace("\n", '');
         $("#body").val('');
         switch (cmd) {
+        case "admin":
+            if(param) {
+                enable_admin_mode(param);
+            } else {
+                prompt_password(enable_admin_mode);
+            }
+            break; 
         case "addtryp":
             if (param) {
                 contribs.push(param);
@@ -482,18 +561,17 @@ function submit_chat() {
             break;
         case "delete":
             prompt_password(function(password) {
-                if (password) {
-                    $.ajax({
-                        type: "POST",
-                        url: '/delete',
-                        data: {password: password, id: param}
-                    }).done(function (data_delete) {
-                        if(data_delete.success)
-                            div_alert("success");
-                        else
-                            div_alert("failure");
-                    });
-                }
+                mod_delete_post(param, password);
+            });
+            break;
+        case "warn":
+            prompt_password(function(password) {
+                mod_warn_poster(param, password);
+            });
+            break;
+        case "ban":
+            prompt_password(function(password) {
+                mod_ban_poster(param[0], param[1], password);
             });
             break;
         case "set":
@@ -525,23 +603,6 @@ function submit_chat() {
                             div_alert("success");
                         else
                             div_alert("failure");
-                    });
-                }
-            });
-            break;
-        case "ban":
-            prompt_password(function(password) {
-                if (password) {
-                    param = param.split('/');
-                    $.ajax({
-                        type: "POST",
-                        url: '/ban',
-                        data: {password: password, id: param[0], board: param[1]}
-                    }).done(function (data_delete) {
-                        if(data_delete.success)
-                            div_alert(data_delete.success);
-                        else
-                            div_alert("failure", data_delete.failure);
                     });
                 }
             });
