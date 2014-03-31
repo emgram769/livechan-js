@@ -409,7 +409,7 @@ function toggle_chat(){
     	if (test_string)
     		chat_channel = test_string[1];
     	else
-    		chat_channel = 'g';
+    		chat_channel = 'all';
     	chat_sidebar.style.position = "absolute";
     	chat_sidebar.style.top = document.width < 600 ? "20px" : '30%';
     	chat_sidebar.style.bottom = "0";
@@ -977,16 +977,6 @@ function initial_load(){
 		}
 	  });
 	  
-	  
-	  /*
-	 socket.on('init_draw', function (data) { 
-		image.onload = function() {
-		    backCtx.drawImage(image, 0, 0);
-		    draw_canvas(canvas);
-		};
-		image.src = data.image;
-	 });
-	 */
  	var loading_div = document.getElementById("alert_div");
  	loading_div.innerHTML = "Loading...";
  	//document.body.appendChild(loading_div);

@@ -255,7 +255,7 @@ function generate_post(id) {
         "<article class='chat'>" +
             "<header class='chat_header'>" +
                 "<a class='chat_label' style='display: none;'/>" +
-                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/></output>" +
+                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/><output class='flag'/></output>" +
                 "<output class='chat_convo'/>" +
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
@@ -503,6 +503,16 @@ function update_chat(new_data, first_load) {
     }
     if (changed.name) {
         post.find(".name_part").text(data.name);
+    }
+    if (changed.country) {
+    	var country = $("<img src='/icons/countries/"+data.country+".png'/>");
+    	country.css({
+    		paddingLeft:'5px',
+	    	height:'16px',
+	    	margin:'0',
+	    	marginBottom:'-3px'
+    	});
+	    post.find(".flag").prepend(country);
     }
     if (changed.trip) {
         post.find(".trip_code").text(data.trip);

@@ -398,7 +398,7 @@ function submit_chat() {
     "use strict";
 	
     if($.inArray($("#convo").val(), convos) < 0 && $("#convo").val() !== "")
-        cool_down_timer+=43;
+        cool_down_timer+=14;
 	
     last_post = $("#body").val();
     if (get_cookie("password_livechan") === '') {
