@@ -296,7 +296,13 @@ function generate_post(id) {
         });
 
     post.find(".chat_number")
-        .text(id);
+        .text(id)
+       	.click(function () {
+	        if (chat_id === "all") {
+	            set_channel(chat[id].chat, chat[id].count);
+	        }
+	        quote(id);
+	    });
 
 
     if (future_ids[id] !== undefined) {
@@ -411,13 +417,6 @@ function generate_post(id) {
         .click(function (e) {
         	e.stopPropagation();
         });
-	post
-	.click(function () {
-        if (chat_id === "all") {
-            set_channel(chat[id].chat, chat[id].count);
-        }
-        quote(id);
-    });
 
     return post;
 }
