@@ -268,6 +268,7 @@ function generate_post(id) {
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
                 "<output class='chat_refs'/>" +
+                "<output class='chat_mod_tools'> [<output class='delete_part'>delete</output> - <output class='warn_part'>warn</output> - <output class='ban_part'>ban</output>]</output>" +
             "</header>" +
             "<section class='chat_file' style='display: none;'>" +
                 "File: <a class='file_link' target='_blank'/>" +
@@ -279,7 +280,28 @@ function generate_post(id) {
         "</article>"
     );
     post.attr("id", "chat_" + id);
-
+    
+    post.find(".delete_part")
+        .click(function() {
+            if (!window.confirm("Are you sure you want to delete this post?"))
+                return;
+            mod_delete_post(id, admin_pass);
+        });
+        
+    post.find(".warn_part")
+        .click(function() {
+            if (!window.confirm("Are you sure you want to warn this poster?"))
+                return;
+            mod_warn_poster(id, admin_pass);
+        });
+        
+    post.find(".ban_part")
+        .click(function() {
+            if (!window.confirm("Are you sure you want to ban this poster?"))
+                return;
+            mod_ban_poster(id, chat_id, admin_pass);
+        });
+        
     post.find(".chat_label")
         .click(function() {
             set_channel(chat[id].chat, chat[id].count);
