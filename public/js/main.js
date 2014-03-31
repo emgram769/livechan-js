@@ -43,7 +43,7 @@ $(document).ready(function () {
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
     socket.on('refresh', function() {setTimeout(function(){location.reload();},5000);});
-    socket.on('alert', function(data) {div_alert(data);});
+    socket.on('alert', div_alert);
 
     /* key bindings for actions */
     $("#name").keydown(function (event) {
