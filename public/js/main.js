@@ -42,8 +42,10 @@ $(document).ready(function () {
     /* set up socket */
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
-    socket.on('refresh', function() {setTimeout(function(){location.reload();},5000);});
     socket.on('alert', div_alert);
+    
+    socket.on('disconnect', function(){create_server_post('You have been disconnected from the server, attempting to reconnect...');});
+    socket.on('reconnect', function(){var old_id = chat_id; chat_id = "home"; set_channel(old_id); setTimeout(function(){create_server_post('Reconnected!')}, 2*1000);});
 
     /* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -179,6 +181,20 @@ $(document).ready(function () {
         }
     });
 });
+
+function create_server_post(status)
+{
+    var data = {};
+    data.count = 0;
+    data.convo = "";
+    data.body = status;
+    data.name = "";
+    data.date = (new Date()).toString();
+    data.trip = admins[0];
+    console.log(data);
+    update_chat(data, true);
+    scroll();
+}
 
 /* load up css into the page */
 function get_css(file) {
