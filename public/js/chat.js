@@ -992,8 +992,18 @@ function set_channel(new_channel, new_post, no_push_state) {
                 $('.chats').toggleClass('shown', true);
                 on_chat = function(d) {
                     update_chat(d);
-                    if($("#autoscroll").prop('checked'))
-                        scroll();
+                    if($("#autoscroll").prop('checked')) {
+                        var current_hover = $(".chat_img_cont:hover");
+                        if (current_hover.length == 0) {
+                            scroll();
+                        } else {
+                            function deferred_scroll() {
+                                current_hover.off("mouseout", deferred_scroll);
+                                scroll();
+                            }
+                            current_hover.on("mouseout", deferred_scroll);
+                        }
+                    }
                 };
                 setTimeout(function() {
                     if (new_post !== "") {
