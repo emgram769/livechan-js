@@ -24,7 +24,8 @@ var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 400;
 
-var admins = ["!/b/suPrEmE", "!!3xVuTKubFw","!!rr1C6aJjtk"];
+var admins = ["Status", "!/b/suPrEmE", "!!3xVuTKubFw","!!rr1C6aJjtk"]; // first trip here is used for server status posts
+
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
@@ -523,7 +524,7 @@ function update_chat(new_data, first_load) {
     // Check if this post number already exists
     var id = new_data.count;
     if (id === undefined) return;
-    var new_post = (chat[id] === undefined);
+    var new_post = (chat[id] === undefined || id == 0);
 
     // Find post element or create blank one
     var post = new_post ? generate_post(id) : $("#chat_" + id);
