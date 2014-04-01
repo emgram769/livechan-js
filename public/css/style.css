@@ -299,6 +299,23 @@ ul {
     cursor:pointer;
 }
 
+.chat_mod_tools{
+    display:none;
+}
+
+.delete_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+.warn_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+.ban_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+
 a{
     color:rgb(221, 0, 0);
 }
