@@ -452,7 +452,7 @@ function mod_warn_poster(id, password)
     }
     
     var reason = window.prompt("Warning reason","");
-    
+    reason = "<div style='background:red;padding:30px;margin:0;'><b>Warning from admin:</b><br><br>"+reason+"<br></div>"
     $.ajax({
         type: "POST",
         url: '/warn',
