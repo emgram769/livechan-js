@@ -1019,7 +1019,7 @@ function set_channel(new_channel, new_post, no_push_state) {
                 $('.chats').toggleClass('shown', true);
                 on_chat = function(d) {
                     update_chat(d);
-                    if($("#autoscroll").prop('checked'))
+                    if($("#autoscroll").prop('checked') && $(".chat_img:hover").length == 0)
                         scroll();
                 };
                 setTimeout(function() {
