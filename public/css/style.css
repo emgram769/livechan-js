@@ -396,6 +396,10 @@ pre {
 }
 
 .admin{
+    color:rgba(181,0,181,1);
+}
+
+.dev{
     color:rgb(221, 0, 0);
 }
 

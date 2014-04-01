@@ -24,8 +24,8 @@ var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 400;
 
-var admins = ["Status", "!/b/suPrEmE", "!!3xVuTKubFw","!!rr1C6aJjtk"]; // first trip here is used for server status posts
-
+var admins = ["Status","!!rr1C6aJjtk"]; // first trip here is used for server status posts
+var devs = ["!/b/suPrEmE", "!!3xVuTKubFw"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
@@ -576,9 +576,14 @@ function update_chat(new_data, first_load) {
         post.find(".trip_code").text(data.trip);
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
+        var dev = ($.inArray(data.trip, devs) > -1);
+        var addend = dev ? " Developer" : "";
+        addend = admin ? " Admin" : addend;
         post.find(".chat_name")
             .toggleClass("contrib", contrib && !admin)
-            .toggleClass("admin", admin);
+            .toggleClass("admin", admin)
+            .toggleClass("dev", dev)
+            .append(addend);
     }
     if (changed.convo || changed.convo_id) {
         var is_op = (data.convo_id === data.count);
@@ -820,8 +825,7 @@ function draw_chat(data) {
     for (i = data.length - 1; i >= 0; i--) {
         update_chat(data[i], true);
     }
-	highlighted_convos = convos.slice(0);
-    draw_convos();
+    setup_convos(entry_hash);
 }
 
 
@@ -1081,9 +1085,30 @@ function scroll_to_post(new_post, no_push_state) {
     $("#autoscroll").prop('checked', new_post === "");
 }
 
+var entry_hash;
+function setup_convos(string){
+	if (string == null || string.match(/#[^+]+/g) == null) {
+		highlighted_convos = convos.slice(0);
+	    draw_convos();
+	    console.log("shit");
+	    return;
+    }
+    var convo_array = string.match(/#[^+]+/g);
+
+	convo_array = convo_array.map(function(elem){return elem.slice(1)});
+	swap_to_convo(convo_array[0]);
+	for (i in convo_array.slice(1)){
+		add_to_convo(convo_array.slice(1)[i]);
+	}
+	//highlighted_convos = convo_array;
+	console.log(convo_array);
+	entry_hash = null;
+	draw_convos();
+	
+}
+
 $(document).ready(function () {
     "use strict";
-
     // setup scrolling
     $('.chats').scroll(function() {
         var scrolled = $(this).height() + $(this).scrollTop();
@@ -1118,4 +1143,7 @@ $(document).ready(function () {
         var matched_link = window.location.hash.match(/^#(\d+)$/);
         if (matched_link) scroll_to_post(matched_link[1]);
     });
+    
+    entry_hash = window.location.hash;
+
 });
