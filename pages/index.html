@@ -61,7 +61,7 @@
 			<!--<option value="/blue.css">Blue</option>-->
 			<option value="/zenburn.css">Zenburn</option>
 		</select></li>
-		<li><button id='sidebar_hider' onclick='hide_sidebar();'>hide sidebar</button></li>
+		<li><button id='sidebar_hider'>hide sidebar</button></li>
 		</ul>
 	</nav>
 	<section class="home_screen">
@@ -168,9 +168,10 @@
 		<form id="comment-form" action="?" target="miframe" method="post" enctype="multipart/form-data">
 			<input id="name" name="name" placeholder="Anonymous" class="name" type="text" maxlength="200"/>
 			<input id="convo" name="convo" placeholder="General" class="convo" type="text" maxlength="39"/>
-			<textarea id="body" name="body" placeholder="Comment" class="comment" style="height:100px;" maxlength="1999"></textarea>
-			<input id="image" class="input_button" name="image" type="file" style="max-width:50%;"/>
-			<input id="submit_button" class="input_button" type="button" value="Submit" onclick="submit_chat();"/>
+			<textarea id="body" name="body" placeholder="Comment" class="comment" maxlength="1999"></textarea>
+			<span id="file_container"><input id="image" class="input_button" name="image" type="file"/></span>
+			<image id="clear_button" class="input_button" src="/icons/cancel.png" alt="clear" title="clear file field"/>
+			<input id="submit_button" class="input_button" type="button" value="Submit"/>
 			<output id="cool_down"></output>
 		</form>
 	</aside>

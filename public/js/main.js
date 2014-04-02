@@ -181,6 +181,14 @@ $(document).ready(function () {
                 localStorage.clearConvo = "false";
         }
     });
+
+    $('#sidebar_hider').click(toggle_sidebar);
+
+    $('#clear_button').click(function() {
+        $('#file_container').html('<input id="image" class="input_button" name="image" type="file"/>');
+    });
+
+    $('#submit_button').click(submit_chat);
 });
 
 function create_server_post(status)
@@ -306,15 +314,21 @@ function div_alert(message, add_button, div_id) {
     if (div_id === undefined) {
         div_id = "";
     }
-    var alert_div = document.createElement('aside');
-    alert_div.setAttribute('class', 'alert_div ' + (chat_id !== 'home' && chat_id !== 'all' ? "shown" : ""));
-    alert_div.setAttribute('id', 'alert_div_' + div_id);
-    var button_html = "<button class='alert_button' onclick='$(\"#alert_div_" + div_id + "\").remove();$(\"#submit_button\").prop(\"disabled\", false);'>X</button>";
+    var alert_div = $("<aside class='alert_div'/>");
+    alert_div.toggleClass("shown", chat_id !== 'home' && chat_id !== 'all');
+    alert_div.attr('id', 'alert_div_' + div_id);
+    var button = $("<button class='alert_button'>X</button>");
+    button.click(function() {
+        alert_div.remove();
+        $("#submit_button").prop("disabled", false);
+    });
     /*if (!add_button) {
-        button_html = "";
+        button = [];
     }*/
-    alert_div.innerHTML = button_html+"<article class='alert_message'>" + message.replace(/\r?\n/g, '<br />') + "</article>";
-    $(alert_div).css({
+    var alert_message = $("<article class='alert_message'/>");
+    alert_message.html(message.replace(/\r?\n/g, '<br />'));
+    alert_div.append(button, alert_message);
+    alert_div.css({
         position: 'fixed',
         width: 'auto',
         bottom: '160px',

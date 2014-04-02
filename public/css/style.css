@@ -353,11 +353,23 @@ textarea{
 
 }
 
+#body{
+    height:100px;
+}
+
+#image{
+    max-width:50%;
+}
+
 input{
     font-family: arial,helvetica,sans-serif;
     font-size:14px;
     border:1px solid rgb(153, 136, 238);
 
+}
+
+.input_button {
+    vertical-align: middle;
 }
 
 select{
