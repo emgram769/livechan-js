@@ -180,13 +180,17 @@ $(document).ready(function () {
             {audio: true},
             function(stream) {
                 audio_recorder = new MediaRecorder(stream);
+                var data = [];
                 audio_recorder.ondataavailable = function(e) {
+                    data.push(e.data);
+                };
+                audio_recorder.onstop = function(e) {
                     $("#image").val('').hide();
                     $('#stop_button').hide();
-                    submit_file = e.data;
+                    submit_file = new Blob(data, {type: 'audio/ogg'});
                     submit_filename = "recording.ogg";
                     var recording = $('<audio id="recording" controls class="input_button"/>');
-                    recording.attr("src", URL.createObjectURL(e.data));
+                    recording.attr("src", URL.createObjectURL(submit_file));
                     recording.insertAfter($("#image"));
                     audio_recorder = null;
                 };
@@ -366,7 +370,7 @@ function clear_fields() {
 /* clear file field */
 function clear_file_field() {
     if (audio_recorder) {
-        audio_recorder.ondataavailable = function(e) {};
+        audio_recorder.onstop = function(e) {};
         audio_recorder.stop();
         audio_recorder = null;
     }
