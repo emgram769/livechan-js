@@ -357,7 +357,7 @@ textarea{
     height:100px;
 }
 
-#image{
+#image,#recording{
     max-width:50%;
 }
 

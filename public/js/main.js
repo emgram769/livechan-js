@@ -35,6 +35,17 @@ var submit_beta = false;
 
 var default_theme = "/style.css";
 
+var submit_file = null;
+var submit_filename = "";
+var audio_recorder = null;
+
+navigator.getMedia = (
+    navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia
+);
+
 /* stuff to do on load */
 $(document).ready(function () {
     "use strict";
@@ -85,31 +96,7 @@ $(document).ready(function () {
         } catch (e) {
             resp =  {failure:$($("#miframe").contents()[0].body).text()};
         }
-        if (resp.failure && resp.failure === "session_expiry") {
-            $("#body").val(last_post);
-            submit_captcha();
-        } else if (resp.failure) {
-            div_alert(resp.failure);
-            init_cool_down();
-        } else if (resp.id && $.inArray(resp.id, my_ids) < 0) {
-            clear_fields();
-            init_cool_down();
-            my_ids.push(resp.id);
-            if (html5) {
-                localStorage.my_ids = JSON.stringify(my_ids);
-            }
-            if (quote_links_to[resp.id]) {
-                $.each(quote_links_to[resp.id], function() {
-                    $(this).text($(this).text() + " (You)");
-                });
-            }
-        } else if (resp.success === "captcha") {
-            $("#submit_button").prop("disabled", false);
-            $("#alert_div_captcha").remove();
-            if (auto_post) {
-                setTimeout(function(){submit_chat();}, 200);
-            }
-        }
+        handle_post_response(resp);
     });
 
     $(document).bind('click', function(e){
@@ -184,10 +171,36 @@ $(document).ready(function () {
 
     $('#sidebar_hider').click(toggle_sidebar);
 
-    $('#clear_button').click(function() {
-        $('#file_container').html('<input id="image" class="input_button" name="image" type="file"/>');
+    clear_file_field();
+
+    $('#record_button').click(function() {
+        $('#stop_button').show();
+        $('#record_button').hide();
+        navigator.getMedia(
+            {audio: true},
+            function(stream) {
+                audio_recorder = new MediaRecorder(stream);
+                audio_recorder.ondataavailable = function(e) {
+                    $("#image").val('').hide();
+                    $('#stop_button').hide();
+                    submit_file = e.data;
+                    submit_filename = "recording.ogg";
+                    var recording = $('<audio id="recording" controls class="input_button"/>');
+                    recording.attr("src", URL.createObjectURL(e.data));
+                    recording.insertAfter($("#image"));
+                    audio_recorder = null;
+                };
+                audio_recorder.start();
+            },
+            function(e) {}
+        );
     });
 
+    $('#stop_button').click(function() {
+        if (audio_recorder) audio_recorder.stop();
+    });
+
+    $('#clear_button').click(clear_file_field);
     $('#submit_button').click(submit_chat);
 });
 
@@ -341,13 +354,28 @@ function div_alert(message, add_button, div_id) {
 /* clear input fields */
 function clear_fields() {
     "use strict";
-    $("#image").val('');
+    clear_file_field();
     $("#body").val('');
     $("#sum").val('');
     if($("#clearconvo").prop("checked")
        && $('#convo_filter').val() !== 'filter') {
         $("#convo").val('');
     }
+}
+
+/* clear file field */
+function clear_file_field() {
+    if (audio_recorder) {
+        audio_recorder.ondataavailable = function(e) {};
+        audio_recorder.stop();
+        audio_recorder = null;
+    }
+    submit_file = null;
+    submit_filename = "";
+    $("#image").val('').show();
+    $("#recording").remove();
+    $('#record_button').toggle(navigator.getMedia != undefined && window.MediaRecorder != undefined);
+    $('#stop_button').hide();
 }
 
 /* the cool down function (DO NOT CALL THIS DIRECTLY) */
@@ -499,7 +527,6 @@ function mod_ban_poster(id, board, password)
     });
 }
 
-/* this is currently a POST request TODO: adapt to socket.io websocket request */
 function submit_chat() {
     "use strict";
 
@@ -661,6 +688,23 @@ function submit_chat() {
     }
     if (submit_beta) {
         submit_chat_beta();
+    } else if (FormData) {
+        if (submit_file != null) {
+            $("#image").prop("disabled", true);
+        }
+        var data = new FormData($("#comment-form")[0]);
+        if (submit_file != null) {
+            $("#image").prop("disabled", false);
+            data.append("image", submit_file, submit_filename);
+        }
+        $.ajax({
+            type: "POST",
+            url: $("#comment-form").attr("action"),
+            dataType: "json",
+            data: data,
+            contentType: false,
+            processData: false
+        }).done(handle_post_response);
     } else {
         $("#comment-form").submit();
     }
@@ -675,6 +719,34 @@ function submit_chat() {
     }
 
     return false;
+}
+
+function handle_post_response(resp) {
+    if (resp.failure && resp.failure === "session_expiry") {
+        $("#body").val(last_post);
+        submit_captcha();
+    } else if (resp.failure) {
+        div_alert(resp.failure);
+        init_cool_down();
+    } else if (resp.id && $.inArray(resp.id, my_ids) < 0) {
+        clear_fields();
+        init_cool_down();
+        my_ids.push(resp.id);
+        if (html5) {
+            localStorage.my_ids = JSON.stringify(my_ids);
+        }
+        if (quote_links_to[resp.id]) {
+            $.each(quote_links_to[resp.id], function() {
+                $(this).text($(this).text() + " (You)");
+            });
+        }
+    } else if (resp.success === "captcha") {
+        $("#submit_button").prop("disabled", false);
+        $("#alert_div_captcha").remove();
+        if (auto_post) {
+            setTimeout(function(){submit_chat();}, 200);
+        }
+    }
 }
 
 /* inserts quoted id at the cursor */
