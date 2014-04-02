@@ -83,10 +83,6 @@ function kill_excess() {
     $('.to_die').remove();
 }
 
-function toggle_sidebar(){
-	$('.sidebar').hide('slow');
-}
-
 function board_link(dest,linked_chat){
     var link = $("<a class='board_link'/>");
     if(!linked_chat) {
@@ -176,23 +172,20 @@ function add_to_convo(convo){
     return;
 }
 
-function hide_sidebar(){
-	$('.chats_container').css({width:'100%'});
-	$('.create').css({right:'0'});
-	$('.sidebar').css({display:'none'});
-	$('#sidebar_hider').text('show sidebar');
-	$('#sidebar_hider').attr('onclick', 'show_sidebar();');
-	return;
-}
-
-function show_sidebar(){
-	$('.chats_container').css({width:''});
-	$('.create').css({right:''});
-	$('.sidebar').css({display:'block'});
-	$('#sidebar_hider').text('hide sidebar');
-	$('#sidebar_hider').attr('onclick', 'hide_sidebar();');
-
-	return;
+function toggle_sidebar(){
+    if ($('.sidebar').css("display") === 'none') {
+        /* sidebar hidden, show it */
+        $('.chats_container').css({width:''});
+        $('.create').css({right:''});
+        $('.sidebar').css({display:'block'});
+        $('#sidebar_hider').text('hide sidebar');
+    } else {
+        /* sidebar visible, show it */
+        $('.chats_container').css({width:'100%'});
+        $('.create').css({right:'0'});
+        $('.sidebar').css({display:'none'});
+        $('#sidebar_hider').text('show sidebar');
+    }
 }
 
 function draw_convos(){
@@ -1090,7 +1083,6 @@ function setup_convos(string){
 	if (string == null || string.match(/#[^+]+/g) == null) {
 		highlighted_convos = convos.slice(0);
 	    draw_convos();
-	    console.log("shit");
 	    return;
     }
     var convo_array = string.match(/#[^+]+/g);
