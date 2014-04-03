@@ -20,6 +20,7 @@ var chat = {};
 var future_ids = {};
 var quote_links_to = {};
 var convos = [];
+var convo_map = {};
 var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 400;
@@ -78,6 +79,74 @@ function quote_mouseover() {
     $('body').append(display);
 }
 
+function image_mouseover(obj, event, id) {
+    if (!chat[id] || !chat[id].image || chat[id].image_width === undefined || chat[id].image_height === undefined) return;
+
+    // Find window to place fullsize image/video in
+    var targetWindow = window;
+    frameLeft = 0;
+    frameTop = 0;
+    try {
+        while (targetWindow.parent) {
+            var frameOffset = $(targetWindow.frameElement).offset();
+            frameLeft += frameOffset.left;
+            frameTop += frameOffset.top;
+            targetWindow = targetWindow.parent;
+        }
+    } catch(e) {}
+    windowWidth = $(targetWindow).width();
+    windowHeight = $(targetWindow).height();
+
+    // Use space to left or right of thumbnail, whichever is larger
+    var thumbLeft = frameLeft + $(obj).offset().left;
+    var thumbRight = windowWidth - (thumbLeft + $(obj).width());
+    var maxWidth, xPosition;
+    if (thumbLeft > thumbRight) {
+        // display to the left, set position of right side
+        displayAlign = "right";
+        maxWidth = thumbLeft - 10;
+        xPosition = windowWidth - (frameLeft + event.clientX - 10);
+    } else {
+        // display to the right, set position of left side
+        displayAlign = "left";
+        maxWidth = thumbRight - 10;
+        xPosition = frameLeft + event.clientX + 10;
+    }
+    if (maxWidth <= 0) return;
+    var scale = Math.min(maxWidth/chat[id].image_width, windowHeight/chat[id].image_height, 1);
+    var width = Math.round(chat[id].image_width * scale);
+    var height = Math.round(chat[id].image_height * scale);
+    var yTop = Math.round((windowHeight - height) * (frameTop + event.clientY) / windowHeight);
+
+    var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
+
+    var extension = base_name.match(/\w*$/)[0];
+    if ($.inArray(extension, ["ogv", "webm"]) > -1) {
+        if (display === undefined) {
+            display = $("<video/>");
+        }
+        display[0].loop = true;
+        var volume = parseFloat($("#volume").val() || 0);
+        display[0].volume = volume;
+        display[0].muted = (volume == 0);
+    } else {
+        display = $("<img>");
+    }
+    display.attr("src", "/tmp/uploads/" + base_name);
+    display.css({
+        display: 'inline',
+        position: 'fixed',
+        top: yTop + 'px',
+        width: width + 'px',
+        height: height + 'px',
+        zIndex: 1000,
+        'pointer-events': 'none'
+    });
+    display.css(displayAlign, xPosition);
+    $(targetWindow.document.body).append(display);
+    if (display.is("video") && display[0].play) display[0].play();
+}
+
 function kill_excess() {
     "use strict";
     $('.to_die').remove();
@@ -134,12 +203,18 @@ function quote_link(dest) {
     return link;
 }
 
+function remove_hash() { 
+    history.pushState("", document.title, window.location.pathname
+                                                       + window.location.search);
+}
+
 function swap_to_convo(convo){
 	if(convo=="") {
 		$('#convo_filter').val('no-filter');
 		$("#convo").val('');
 		highlighted_convos = convos.slice(0);
 		$(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
+		remove_hash();
 	} else {
 		$(".sidebar_convo").toggleClass("sidebar_convo_dim",true);
 		$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
@@ -148,6 +223,8 @@ function swap_to_convo(convo){
 
 		$("#convo").val(convo);
 		$('#convo_filter').val('filter');
+		var encoded_convos = highlighted_convos.map(function(e){return encodeURIComponent(e)});
+		window.location.hash = encoded_convos.join("+#");
 	}
     apply_filter();
     scroll();
@@ -160,6 +237,7 @@ function add_to_convo(convo){
 	if(convo=="") {
 		highlighted_convos = convos.slice(0);
 		$(".sidebar_convo").toggleClass("sidebar_convo_dim",false);
+		remove_hash();
 	} else {
 		var convo_index = $.inArray(convo,highlighted_convos);
 		if (convo_index > -1){
@@ -170,6 +248,9 @@ function add_to_convo(convo){
 			$(".sidebar_convo[data-convo='"+convo+"']").toggleClass("sidebar_convo_dim",false);
 
 		}
+		var encoded_convos = highlighted_convos.map(function(e){return encodeURIComponent(e)});
+		window.location.hash = encoded_convos.join("+#");
+
 	}
     apply_filter();
     scroll();
@@ -195,10 +276,15 @@ function show_sidebar(){
 	return;
 }
 
+var convo_hover = false;
+
 function draw_convos(){
+	if (convo_hover){
+		return;
+	}
     $('.sidebar:first').empty();
 	
-    var div_start = $("<div class='sidebar_convo'>All</div>");
+    var div_start = $("<div class='sidebar_convo' style='font-weight:bold'>All</div>");
     div_start.attr("data-convo","All");
     div_start.on( 'mousedown', function( e ) {
         start = new Date().getTime();
@@ -211,7 +297,6 @@ function draw_convos(){
 	div_start.on( 'mouseup', function( e ) {
         if ( new Date().getTime() >= ( start + longpress )  ) {
             //swap_to_convo("");
-            alert('long press');
         } else {
             swap_to_convo("");
             //add_to_convos("");
@@ -223,10 +308,71 @@ function draw_convos(){
     for (var i = 0; i < convos.length && i < 30; i++) {
         div = $("<div class='sidebar_convo'/>");
 
-        div.text(convos[convos.length - 1 - i]);
-        div.attr("data-convo",div.text());
+        var convo = (convos[convos.length - 1 - i]);
+        div.attr("data-convo",convo);
+        var op = convo_map[convo];
 
-        if($.inArray(div.text(),highlighted_convos)>-1){
+        var convo_html = $("<div/>")
+        	.attr("data-op", op);
+        var convo_body_html = $("<div/>");
+        var convo_title_html = $("<span/>");
+        var img_cont = $("<img/>");
+        img_cont.attr("src", $("#chat_"+op).find('.chat_img_cont').attr("href"));
+        var convo_body_picture = "";
+		if (img_cont.attr("src")) {
+			convo_body_picture = $("<div>");
+			convo_body_picture.append(img_cont
+				.toggleClass('hidden',true)
+				.toggleClass('convo_img',true)
+				.css({maxWidth:'100%'}));
+		}
+		
+		convo_body_html
+        .append(convo_body_picture)
+		.append($("#chat_" + op).find(".chat_body").html())
+        .css({
+	        fontSize:'12px',
+	        maxWidth:'100%',
+	        overflow: 'hidden'
+        });
+        
+        
+		convo_title_html.text(convo).css({
+			fontWeight:'bold',
+	        maxWidth:'100%'
+		});
+		convo_html.append(convo_body_html);
+		convo_html.prepend(convo_title_html);
+		convo_html.mouseover(function(e){
+			convo_hover = true;
+			image_mouseover(this, e, $(this).attr("data-op"));
+			//$(this).find('.convo_img').show();
+			//e.preventDefault();
+		}).mousemove(function(event) {
+            if (display === undefined) return;
+            var xCorrected = frameLeft + event.clientX;
+            var xPosition = (displayAlign === "left") ? xCorrected + 10 : windowWidth - (xCorrected - 10);
+            var yTop = Math.round((windowHeight - display.height()) * (frameTop + event.clientY) / windowHeight);
+            display.css(displayAlign, xPosition + 'px');
+            display.css("top", yTop + 'px');
+        }).mouseout(function(event){
+        	convo_hover = false;
+            if (display === undefined) return;
+            if (display.is("video")) {
+                if (display[0].pause) display[0].pause();
+                display.css("display", "none");
+            } else {
+                display.remove();
+                display = undefined;
+            }
+            draw_convos();
+        
+		});
+		div.append(convo_html);
+	
+
+
+        if($.inArray(convo,highlighted_convos)>-1){
 			div.toggleClass("sidebar_convo_dim",false);
         } else {
         	all_flag++;
@@ -243,10 +389,10 @@ function draw_convos(){
 
 		div.on( 'mouseup', function( e ) {
 	        if ( new Date().getTime() >= ( start + longpress )  ) {
-	            add_to_convo($(this).text());
+	            add_to_convo($(this).attr("data-convo"));
 	        } else {
 	        	//add_to_convos($(this).text());
-	            swap_to_convo($(this).text());
+	            swap_to_convo($(this).attr("data-convo"));
 	        }
         });
         
@@ -257,6 +403,13 @@ function draw_convos(){
     }
 }
 
+// Fullsize (if space allows) image/video displayed on hover
+// made global to prevent breaking on new chats
+var display;
+var windowWidth, windowHeight; // dimensions of window containing full image/video
+var frameLeft, frameTop;       // offset of subframe containing chat
+var displayAlign;              // CSS position attribute to set: "left" or "right"
+    
 // Generate blank post element
 function generate_post(id) {
     "use strict";
@@ -269,7 +422,7 @@ function generate_post(id) {
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
                 "<output class='chat_refs'/>" +
-                "<output class='chat_mod_tools'> [<output class='delete_part'>delete</output> - <output class='warn_part'>warn</output> - <output class='ban_part'>ban</output>]</output>" +
+                "<output class='chat_mod_tools'> [<output class='delete_part'>delete</output> - <output class='warn_part'>warn</output> - <output class='move_part'>move</output>  - <output class='ban_part'>ban</output>]</output>" +
             "</header>" +
             "<section class='chat_file' style='display: none;'>" +
                 "File: <a class='file_link' target='_blank'/>" +
@@ -296,6 +449,13 @@ function generate_post(id) {
             mod_warn_poster(id, admin_pass);
         });
         
+	post.find(".move_part")
+		.click(function() {
+		    if (!window.confirm("Are you sure you want to move this post?"))
+		        return;
+		    mod_move_post(id, admin_pass);
+		});   
+		     
     post.find(".ban_part")
         .click(function() {
             if (!window.confirm("Are you sure you want to ban this poster?"))
@@ -332,79 +492,10 @@ function generate_post(id) {
         post.find(".chat_refs").append(" ", future_ids[id].contents());
     }
 
-    // Fullsize (if space allows) image/video displayed on hover
-    var display;
-    var windowWidth, windowHeight; // dimensions of window containing full image/video
-    var frameLeft, frameTop;       // offset of subframe containing chat
-    var displayAlign;              // CSS position attribute to set: "left" or "right"
+
 
     post.find(".chat_img_cont")
-        .mouseover(function(event) {
-            if (!chat[id].image || chat[id].image_width === undefined || chat[id].image_height === undefined) return;
-
-            // Find window to place fullsize image/video in
-            var targetWindow = window;
-            frameLeft = 0;
-            frameTop = 0;
-            try {
-                while (targetWindow.parent) {
-                    var frameOffset = $(targetWindow.frameElement).offset();
-                    frameLeft += frameOffset.left;
-                    frameTop += frameOffset.top;
-                    targetWindow = targetWindow.parent;
-                }
-            } catch(e) {}
-            windowWidth = $(targetWindow).width();
-            windowHeight = $(targetWindow).height();
-
-            // Use space to left or right of thumbnail, whichever is larger
-            var thumbLeft = frameLeft + $(this).offset().left;
-            var thumbRight = windowWidth - (thumbLeft + $(this).width());
-            var maxWidth, xPosition;
-            if (thumbLeft > thumbRight) {
-                // display to the left, set position of right side
-                displayAlign = "right";
-                maxWidth = thumbLeft - 10;
-                xPosition = windowWidth - (frameLeft + event.clientX - 10);
-            } else {
-                // display to the right, set position of left side
-                displayAlign = "left";
-                maxWidth = thumbRight - 10;
-                xPosition = frameLeft + event.clientX + 10;
-            }
-            if (maxWidth <= 0) return;
-            var scale = Math.min(maxWidth/chat[id].image_width, windowHeight/chat[id].image_height, 1);
-            var width = Math.round(chat[id].image_width * scale);
-            var height = Math.round(chat[id].image_height * scale);
-            var yTop = Math.round((windowHeight - height) * (frameTop + event.clientY) / windowHeight);
-
-            var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
-            var extension = base_name.match(/\w*$/)[0];
-            if ($.inArray(extension, ["ogv", "webm"]) > -1) {
-                if (display === undefined) {
-                    display = $("<video/>");
-                }
-                display[0].loop = true;
-                var volume = parseFloat($("#volume").val() || 0);
-                display[0].volume = volume;
-                display[0].muted = (volume == 0);
-            } else {
-                display = $("<img>");
-            }
-            display.attr("src", "/tmp/uploads/" + base_name);
-            display.css({
-                display: 'inline',
-                position: 'fixed',
-                top: yTop + 'px',
-                width: width + 'px',
-                height: height + 'px',
-                zIndex: 1000,
-                'pointer-events': 'none'
-            });
-            display.css(displayAlign, xPosition);
-            $(targetWindow.document.body).append(display);
-            if (display.is("video") && display[0].play) display[0].play();
-        })
+        .mouseover(function(event){image_mouseover(this, event, id)})
         .mousemove(function(event) {
             if (display === undefined) return;
             var xCorrected = frameLeft + event.clientX;
@@ -587,6 +678,10 @@ function update_chat(new_data, first_load) {
     }
     if (changed.convo || changed.convo_id) {
         var is_op = (data.convo_id === data.count);
+        if (data.convo !== "" && data.convo !== "General" &&
+        	$.inArray(data.convo, Object.keys(convo_map)) < 0){
+	        convo_map[data.convo] = data.convo_id;
+        }
         post.toggleClass("convo_op", is_op);
         var chat_convo = post.find(".chat_convo");
         chat_convo.text(data.convo + (is_op ? " (OP)" : ""));
@@ -815,7 +910,7 @@ function update_chat(new_data, first_load) {
             });
         }
     }
-
+	
     $(".spoiler").toggleClass("spoiled", !$('#spoilers').prop("checked"));
 }
 
@@ -1087,10 +1182,10 @@ function scroll_to_post(new_post, no_push_state) {
 
 var entry_hash;
 function setup_convos(string){
+	string = decodeURIComponent(string);
 	if (string == null || string.match(/#[^+]+/g) == null) {
 		highlighted_convos = convos.slice(0);
 	    draw_convos();
-	    console.log("shit");
 	    return;
     }
     var convo_array = string.match(/#[^+]+/g);
@@ -1109,6 +1204,28 @@ function setup_convos(string){
 
 $(document).ready(function () {
     "use strict";
+    
+    // setup home
+/*    if (window.location.pathname === "/chat/home"){
+    	var all_frame = $("<iframe/>");
+    	all_frame.attr("src", "/all")
+		.attr("id", "all_frame")
+    	.css({
+    		border:'none',
+    		padding:'0',
+    		margin:'0',
+    		paddingRight:'50px',
+    		width:'50%',
+    		float:'left',
+    		height:'500px'
+    	});
+    	$('#chat_welcome').prepend(all_frame);
+    }
+    
+    if (self!=top){
+    	alert("shit");
+    }
+  */  
     // setup scrolling
     $('.chats').scroll(function() {
         var scrolled = $(this).height() + $(this).scrollTop();

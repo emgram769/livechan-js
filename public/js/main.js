@@ -465,6 +465,27 @@ function mod_warn_poster(id, password)
     });
 }
 
+function mod_move_post(id, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0)
+    {
+        console.log("mod_warn_poster: invalid param");
+        return;
+    }
+    
+    var chat_room = window.prompt("Channel to move to","");
+    $.ajax({
+        type: "POST",
+        url: '/move',
+        data: {password: password, id: id, chat_room: chat_room}
+    }).done(function (post_move) {
+        if(post_move.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
 function mod_ban_poster(id, board, password)
 {
     if(!password || password.length <= 0 || !id || id.length <= 0 || !board || board.length <= 0)

@@ -294,6 +294,9 @@ ul {
     padding-right:3px;
     color:grey;
 }
+.chat_refs{
+	font-size:12px;
+}
 
 .chat_convo:hover {
     cursor:pointer;
@@ -301,6 +304,8 @@ ul {
 
 .chat_mod_tools{
     display:none;
+    font-size: 12px;
+    padding-left:5px;
 }
 
 .delete_part:hover {
@@ -308,6 +313,10 @@ ul {
     cursor:pointer;
 }
 .warn_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+.move_part:hover {
     color:rgb(221, 0, 0);
     cursor:pointer;
 }
