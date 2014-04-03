@@ -1,4 +1,0 @@
-until PORT=5010 node /srv/node-srv/livechan/lib/draw-server.js; do
-    echo "Server 'draw' crashed with exit code $?.  Respawning.." >&2
-    sleep 1
-done
