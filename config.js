@@ -10,7 +10,7 @@ module.exports = {
     ],
 
     all_fields: 'chat name body convo convo_id count date trip',
-    board_fields: 'chat name body convo convo_id count date trip country image image_filename image_filesize image_width image_height duration thumb',
+    board_fields: 'chat name body convo convo_id count date trip country country_name image image_filename image_filesize image_width image_height duration thumb',
 
     admin_pw_file: 'admin_pw.txt',
     max_pw_attempts: 10,

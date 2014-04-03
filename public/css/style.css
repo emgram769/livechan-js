@@ -473,3 +473,26 @@ pre {
 .hidden{
     display:none;
 }
+	
+.tooltip{
+	display: inline;
+	position: relative;
+}
+
+.tooltip:hover:after{
+	background: #fff;
+	background: rgba(255,255,255,.8);
+	bottom: 12px;
+	color: black;
+	content: attr(data-country);
+	left:0;
+	font-size:12px;
+	text-align: center;
+	white-space:nowrap;
+	position: absolute;
+	z-index: 98;
+	width: auto;
+	width: fit-content;
+	border-radius:3px;
+}
+

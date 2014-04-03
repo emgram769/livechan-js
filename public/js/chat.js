@@ -26,7 +26,7 @@ var start_press; // for long press detection
 var longpress = 400;
 
 var admins = ["Status","!!rr1C6aJjtk"]; // first trip here is used for server status posts
-var devs = ["!/b/suPrEmE", "!!3xVuTKubFw"];
+var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
 var my_ids = [];
@@ -320,13 +320,15 @@ function draw_convos(){
 				.css({maxWidth:'100%'}));
 		}
 		
+		var maxHeight = 70;
 		convo_body_html
         .append(convo_body_picture)
 		.append($("#chat_" + op).find(".chat_body").html())
         .css({
 	        fontSize:'12px',
 	        maxWidth:'100%',
-	        overflow: 'hidden'
+	        overflow: 'hidden',
+	        maxHeight: maxHeight+'px'
         });
         
         
@@ -334,22 +336,18 @@ function draw_convos(){
 			fontWeight:'bold',
 	        maxWidth:'100%'
 		});
+		
 		convo_html.append(convo_body_html);
 		convo_html.prepend(convo_title_html);
 		convo_html.mouseover(function(e){
 			convo_hover = true;
 			image_mouseover(this, e, $(this).attr("data-op"));
-			//$(this).find('.convo_img').show();
-			//e.preventDefault();
-		}).mousemove(function(event) {
-            if (display === undefined) return;
-            var xCorrected = frameLeft + event.clientX;
-            var xPosition = (displayAlign === "left") ? xCorrected + 10 : windowWidth - (xCorrected - 10);
-            var yTop = Math.round((windowHeight - display.height()) * (frameTop + event.clientY) / windowHeight);
-            display.css(displayAlign, xPosition + 'px');
-            display.css("top", yTop + 'px');
-        }).mouseout(function(event){
-        	convo_hover = false;
+			$(this).find('div').css('max-height','');
+			if (display)
+				display.css(displayAlign, $('.sidebar').width() + 5 + 'px');
+		}).mouseout(function(event){
+			convo_hover = false;
+        	$(this).find('div').css('max-height', maxHeight+'px');
             if (display === undefined) return;
             if (display.is("video")) {
                 if (display[0].pause) display[0].pause();
@@ -410,7 +408,7 @@ function generate_post(id) {
         "<article class='chat'>" +
             "<header class='chat_header'>" +
                 "<a class='chat_label' style='display: none;'/>" +
-                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/><output class='flag'/></output>" +
+                "<output class='chat_name'><output class='name_part'/><output class='trip_code'/><output class='flag tooltip'/></output>" +
                 "<output class='chat_convo'/>" +
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
@@ -636,6 +634,7 @@ function update_chat(new_data, first_load) {
         post.find(".name_part").text(data.name);
     }
     if (changed.country) {
+    	var country_name = "";
     	if (special_countries.indexOf(data.country)>-1) {
 			var state = $("<img src='/icons/countries/"+data.country+".png'/>");
 	    	state.css({
@@ -645,6 +644,7 @@ function update_chat(new_data, first_load) {
 		    	marginBottom:'-5px'
 	    	});
 			post.find(".flag").prepend(state);
+			country_name += data.country.slice(3)+", ";
 
     	}
     	var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
@@ -654,6 +654,8 @@ function update_chat(new_data, first_load) {
 	    	margin:'0',
 	    	marginBottom:'-5px'
     	});
+    	country_name += data.country_name ? data.country_name : data.country;
+	    post.find(".flag").attr("data-country", country_name);
 	    post.find(".flag").prepend(country);
     }
     if (changed.trip) {
