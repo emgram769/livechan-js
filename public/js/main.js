@@ -252,15 +252,6 @@ function get_css(file) {
 function set_up_html(){
     if (html5) {
         /* set up only html5 local storage stuff */
-        if (false || localStorage.reset === "true") {
-            // set to true to reset local storage to defaults
-            localStorage.my_ids = "[0]";
-            localStorage.contribs = "[\"0\"]";
-            localStorage.name = "";
-            localStorage.theme = default_theme;
-            localStorage.clearConvo = "false";
-            localStorage.reset = "false";
-        }
         my_ids = localStorage.my_ids;
         if (my_ids) {
             my_ids = JSON.parse(my_ids);
