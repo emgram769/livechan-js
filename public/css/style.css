@@ -74,7 +74,27 @@ ul {
         cursor:pointer;
 }
 
-@media (max-width: 650px) {
+.sidebar_convo_body{
+	font-size:12px;
+	max-width:100%;
+	overflow: hidden;
+	max-height: 70px;
+}
+
+.livechan_banner{
+	max-width:100%;	
+}
+
+.homescreen{
+	color:white !important;
+}
+
+.homescreen:hover{
+	color:#016c71 !important;
+}
+
+
+@media (max-width: 900px) {
         .sidebar {
             display: none !important;
         }
@@ -109,6 +129,9 @@ ul {
         }
         .alert_div{
             	right:0px !important;
+        }
+        .all_frame{
+	        display:none;
         }
 }
 
@@ -308,6 +331,30 @@ ul {
     padding-left:5px;
 }
 
+.chat_plugin{
+	z-index: 100;
+	position:absolute;
+	top:0;
+	right:5px;
+	background-color: rgba(255,255,255,.7);
+	padding:10px;
+	border:2px outset black
+}
+
+.chat_plugin_close{
+	position:absolute;
+	top:0;
+	right:0;
+	margin-top:-7px;
+	margin-right:-5px;
+
+}
+
+.chat_plugin_link{
+	color:blue;
+	text-decoration: underline;
+}
+
 .delete_part:hover {
     color:rgb(221, 0, 0);
     cursor:pointer;
@@ -494,5 +541,12 @@ pre {
 	width: auto;
 	width: fit-content;
 	border-radius:3px;
+}
+
+.flag img{
+	height:22px;
+	padding-left:5px;
+    margin:0;
+    margin-bottom:-5px;
 }
 

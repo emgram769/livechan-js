@@ -273,8 +273,9 @@ function set_up_html(){
             contribs = JSON.parse(contribs);
         } else {
             contribs = default_contribs;
-        }
 
+        }
+        
         /*if (!localStorage.theme || localStorage.theme === "null") {
             localStorage.theme = "/style.css";
         }*/
@@ -354,6 +355,36 @@ function div_alert(message, add_button, div_id) {
     });
     $('.chats:first').append(alert_div);
 }
+
+/* spawns a plugin */
+var plugin;
+function spawn_plugin(script_text,elem_html){
+	if (!confirm("Livechan is not responsible for the scripts in this plugin. Are you sure you want to continue?")) return;
+	if (plugin) {
+		plugin.remove();
+	}
+	plugin = $('<div>');
+	plugin.addClass('chat_plugin');
+	var close = $('<div>');
+	close.addClass('chat_plugin_close link');
+	close.text('X');
+	close.click(function(){
+		plugin.remove();
+	})
+
+	var plugin_html = $('<div>');
+	var script = $('<script>');
+
+	script.html(script_text);
+	plugin_html.html(elem_html);
+	
+	plugin.prepend(script);
+	plugin.append(plugin_html);
+	plugin.append(close);
+
+	$('.chats_container').prepend(plugin);
+}
+
 
 /* clear input fields */
 function clear_fields() {
@@ -634,6 +665,13 @@ function submit_chat() {
             } else {
                 div_alert("usage: /switch /channel");
             }
+            break;
+        case "plugin":
+            var el = $("#body")[0];
+		    var text = "[plugin]\n[title]My Plugin[/title]\n"+
+		    "[script]\n\n[/script]\n"+
+		    "[html]\n\n[/html]\n[/plugin]";
+		    el.value = text;
             break;
        case "split":
             if (param) {

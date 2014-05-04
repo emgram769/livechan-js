@@ -164,7 +164,7 @@ function draw_image(ctx, image_data, callback) {
 }
 
 function cast_vote(clear_val) {
-	if (have_voted)
+	if (have_voted == clear_val)
 		return;
 	var vote_data = {
 		type:"vote",
@@ -173,7 +173,7 @@ function cast_vote(clear_val) {
 	socket.emit('client', [vote_data]);
 	vote += clear_val;
 	update_clear();
-	have_voted = true;
+	have_voted = clear_val;
 	return;
 }
 
@@ -714,6 +714,16 @@ function initial_load(){
 				r = '100';
 				g = '12';
 				b = '170';
+				break;
+			case 'S':
+				r = '255';
+				g = '223';
+				b = '196';
+				break;
+			case 'C':
+				r = '180';
+				g = '180';
+				b = '180';
 				break;
 			case 'U':
 				r = Math.floor(Math.sin(rainbow)*127+128)+'';

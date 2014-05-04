@@ -2,50 +2,70 @@ html,body{
 	background:white;
 }
 
-.chat_header{
-	padding:2px;
-	margin:-5px -5px 2px -5px;
-/*	border-bottom: 1px solid black;*/
-	font-size: 13px;
-	background:rgba(236,236,236,1);
-}
-
 .chats_container{
-        top:26px;
+    top:23px;
 }
 
 .header{
 	background:white;
 	border-bottom: 1px solid rgb(214, 218, 240);
+		border-bottom:1px solid rgba(0,147,10,1);
+
+}
+
+.chat_header{
+	padding:2px;
+	margin:-5px -5px 2px -5px;
+/*	border-bottom: 1px solid black;*/
+	font-size: 13px;
+	background:rgba(0,147,10,1);
+	color:white;
+	/*border-bottom: 1px solid rgb(214, 218, 240);*/
+	/*background:white;*/
 }
 
 .chat{
-	margin-top:4px;
 	padding:5px;
 	background: white;
 	border-radius: 2px;
-	border:1px solid rgba(236,236,236,1);
+	/*border:1px solid rgba(236,236,236,1);*/
+	/*border:1px solid rgba(0,147,10,1);*/
+}
+
+.chat:nth-child(odd){
+	/*background:rgba(236,236,236,1);*/
 }
 
 .settings_nav{
 	position:fixed;
 	background: white;
-	border-bottom: 1px solid rgb(214, 218, 240);
-	border-left: 1px solid rgb(214, 218, 240);
+	border-bottom: 1px solid rgba(0,147,10,1);
+	border-left: 1px solid rgba(0,147,10,1);
 	top:23px;
 }
 
 .chat_name{
-    color:black;
+    color:white;
+}
+
+.chat_label, .chat_convo{
+    color:#cccccc;
+}
+
+a{
+	color:#016c71;
 }
 
 .sidebar{
 	border-left:1px solid rgb(214, 218, 240);
+		border-left:1px solid rgba(0,147,10,1);
 	top:23px;
 }
 .sidebar_convo{
 	background: white;
 	border-top: 1px solid rgb(214, 218, 240);
+	border-top:1px solid rgba(0,147,10,1);
+
 }
 
 .sidebar_convo_dim{
@@ -70,12 +90,16 @@ html,body{
 .create{
 	background:white;
 	border-top:1px solid rgb(214, 218, 240);
-	background:rgba(236,236,236,1);
+	border-top:1px solid rgba(0,147,10,1);
 
+	background:rgba(236,236,236,1);
+	background:white;
+	right:250px;
 }
 
-input,textarea{
+input,textarea, .input_button{
 	border-color:rgb(214, 218, 240);
+	border:1px solid rgba(0,147,10,1);
 	background:white;
 }
 
@@ -90,4 +114,17 @@ input,textarea{
 .alert_div{
 	background-color:rgba(236,236,236,1) !important;
 	border:none !important;
+}
+
+.chat_number:hover{
+	color:#016c71;
+}
+
+.flag img{
+	height:18px;
+	margin-bottom: -4px;
+}
+
+.tooltip:hover:after{
+	bottom:5px;
 }

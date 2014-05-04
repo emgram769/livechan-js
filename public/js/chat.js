@@ -25,7 +25,7 @@ var highlighted_convos = [];
 var start_press; // for long press detection
 var longpress = 400;
 
-var admins = ["Status","!!rr1C6aJjtk"]; // first trip here is used for server status posts
+var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY"]; // first trip here is used for server status posts
 var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
@@ -41,7 +41,7 @@ var title = "";
 var chat_id = "";
 var linked_post = "";
 
-var special_countries = ["AU-Brisbane", "AU-Canberra", "AU-Darwin", "AU-Gold Coast", "AU-Melbourne", "AU-Newcastle", "AU-Perth", "AU-Sunshine", "AU-Sydney", "US-AK", "US-AL", "US-AR", "US-AZ", "US-CA", "US-CO", "US-CT", "US-DC", "US-DE", "US-GA", "US-FL", "US-HI", "US-IA", "US-ID", "US-IL", "US-IN", "US-KS", "US-KY", "US-LA", "US-MA", "US-MD", "US-ME", "US-MI", "US-MN", "US-MO", "US-MS", "US-MT", "US-NC", "US-ND", "US-NE", "US-NH", "US-NJ", "US-NY", "US-OH", "US-OK", "US-OR", "US-PA", "US-RI", "US-SC", "US-SD", "US-TN", "US-TX", "US-UT", "US-VA", "US-VT", "US-WI", "US-WV", "US-WY"];
+var special_countries = ["AU-Brisbane", "AU-Canberra", "AU-Darwin", "AU-Gold Coast", "AU-Melbourne", "AU-Newcastle", "AU-Perth", "AU-Sunshine", "AU-Sydney", "US-AK", "US-AL", "US-AR", "US-AZ", "US-CA", "US-CO", "US-CT", "US-DC", "US-DE", "US-GA", "US-FL", "US-HI", "US-IA", "US-ID", "US-IL", "US-IN", "US-KS", "US-KY", "US-LA", "US-MA", "US-MD", "US-ME", "US-MI", "US-MN", "US-MO", "US-MS", "US-MT", "US-NC", "US-ND", "US-NE", "US-NM", "US-NH", "US-NJ", "US-NY", "US-OH", "US-OK", "US-OR", "US-PA", "US-RI", "US-SC", "US-SD", "US-TN", "US-TX", "US-UT", "US-VA", "US-VT", "US-WI", "US-WV", "US-WY"];
 
 var on_chat = function(d) {};
 
@@ -324,12 +324,7 @@ function draw_convos(){
         convo_body_html
         .append(convo_body_picture)
         .append($("#chat_" + op).find(".chat_body").html())
-        .css({
-            fontSize:'12px',
-            maxWidth:'100%',
-            overflow: 'hidden',
-            maxHeight: maxHeight+'px'
-        });
+        .toggleClass('sidebar_convo_body', true);
         
         
         convo_title_html.text(convo).css({
@@ -342,13 +337,15 @@ function draw_convos(){
         convo_html.mouseover(function(e){
             convo_hover = true;
             image_mouseover(this, e, $(this).attr("data-op"));
-            $(this).find('div').css('max-height','');
+            $(this).find('div').animate({maxHeight:1000}, 200);
             if (display)
                 display.css(displayAlign, $('.sidebar').width() + 5 + 'px');
         }).mouseout(function(event){
             convo_hover = false;
-            $(this).find('div').css('max-height', maxHeight+'px');
-            if (display === undefined) return;
+            $(this).find('div').animate({maxHeight:maxHeight+'px'},200, function(){
+	            draw_convos();
+            });
+			if (display === undefined) return;
             if (display.is("video")) {
                 if (display[0].pause) display[0].pause();
                 display.css("display", "none");
@@ -356,7 +353,7 @@ function draw_convos(){
                 display.remove();
                 display = undefined;
             }
-            draw_convos();
+            
         
         });
         div.append(convo_html);
@@ -637,23 +634,11 @@ function update_chat(new_data, first_load) {
         var country_name = "";
         if (special_countries.indexOf(data.country)>-1) {
             var state = $("<img src='/icons/countries/"+data.country+".png'/>");
-            state.css({
-                paddingLeft:'5px',
-                height:'22px',
-                margin:'0',
-                marginBottom:'-5px'
-            });
             post.find(".flag").prepend(state);
             country_name += data.country.slice(3)+", ";
 
         }
         var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
-        country.css({
-            paddingLeft:'5px',
-            height:'22px',
-            margin:'0',
-            marginBottom:'-5px'
-        });
         country_name += data.country_name ? data.country_name : data.country;
         post.find(".flag").attr("data-country", country_name);
         post.find(".flag").prepend(country);
@@ -666,7 +651,7 @@ function update_chat(new_data, first_load) {
         var addend = dev ? " Developer" : "";
         addend = admin ? " Admin" : addend;
         post.find(".chat_name")
-            .toggleClass("contrib", contrib && !admin)
+            .toggleClass("contrib", contrib)
             .toggleClass("admin", admin)
             .toggleClass("dev", dev)
             .append(addend);
@@ -805,6 +790,43 @@ function update_chat(new_data, first_load) {
                     o.push($("<pre class='code'/>").text(body));
                 }
             }],
+            [/\[plugin\](?:\r?\n)?/g, function(m, o) {
+                var body = this.no_parse(/\[\/plugin\]/g);
+                var title = body.match(/\[title\]([^]+)\[\/title\]/);
+                title = title && title.length >= 2 ? title[1] : 'plugin';
+                var script_text = body.match(/\[script\]([^]+)\[\/script\]/);
+                script_text = script_text && script_text.length >= 2 ? script_text[1] : '';
+                var elem_html = body.match(/\[html\]([^]+)\[\/html\]/);
+                elem_html = elem_html && elem_html.length >= 2 ? elem_html[1] : '<div></div>';
+				
+				
+				var plugin_link = $("<a class='chat_plugin_link'/>")
+                	.text(title)
+                	.data('script_text', script_text)
+                	.data('elem_html', elem_html)
+                	.click(function(){spawn_plugin(script_text, elem_html)});
+				
+				var reveal_code = $('<span>')
+					.text('[show code]')
+					.css({cursor:"pointer", fontSize:'12px'})
+					.addClass('link')
+					.click(function(event){
+						plugin_code.toggleClass('hidden');
+						var inner_text = $(this).text() == '[show code]' ? '[hide code]' : '[show code]';
+						$(this).text(inner_text);
+					});
+				
+				var plugin_code = $('<div>')
+					.text('<script>'+script_text+'</script>\r\n<div>'+elem_html+'</div>');
+				plugin_code.toggleClass('hidden', true);
+                
+                var plugin_object = $('<span>')
+                	.append(plugin_link)
+                    .append(reveal_code)
+                    .append(plugin_code);
+
+                o.push(plugin_object);
+            }],
             [/\[spoiler\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/spoiler\]/g);
                 o.push($("<span class='spoiler'/>").append(body));
@@ -822,7 +844,7 @@ function update_chat(new_data, first_load) {
                     if (embedded) {
                         main.find("iframe").remove();
                     } else {
-                        var yt = $("<iframe width='560' height='315' frameborder='0' allowfullscreen></iframe>")
+                        var yt = $("<iframe width='560' height='315' style='max-width:100%;' frameborder='0' allowfullscreen></iframe>")
                             .attr("src", "https://www.youtube.com/embed/"+m[1]).css({float:"left", marginRight:'5px'});
                         main.append(yt);
                     }
@@ -1200,27 +1222,33 @@ function setup_convos(string){
 $(document).ready(function () {
     "use strict";
     
-    // setup home
-/*    if (window.location.pathname === "/chat/home"){
+    // setup home * HACKY HACKY HACKY *
+    if (window.location.pathname === "/chat/home"){
         var all_frame = $("<iframe/>");
         all_frame.attr("src", "/all")
-        .attr("id", "all_frame")
+        .attr("class", "all_frame")
         .css({
             border:'none',
             padding:'0',
             margin:'0',
-            paddingRight:'50px',
-            width:'50%',
-            float:'left',
-            height:'500px'
+            position:'absolute',
+            width:'350px',
+            right:'0',
+            height:'100%',
+            zIndex: '0'
         });
-        $('#chat_welcome').prepend(all_frame);
+        $('body').prepend(all_frame);
+        
+        $('.chats_container')
+        .css({
+        	right:'345px'
+        });
     }
     
-    if (self!=top){
-        alert("shit");
+    if (self!=top && parent.document.location.pathname === "/chat/home"){
+        $('.header').remove();
     }
-  */  
+  
     // setup scrolling
     $('.chats').scroll(function() {
         var scrolled = $(this).height() + $(this).scrollTop();
