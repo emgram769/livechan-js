@@ -1,8 +1,8 @@
-LiveChan
+[livechan](http://livechan.net)
 ====
 
 
-LiveChan is a live IRC like image board written in node.js.
+livechan is a live IRC like image board written in node.js.
 
 Please donate bitcoin for server costs!
 1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr
