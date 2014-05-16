@@ -1,2 +1,2 @@
-sudo kill $(pgrep -f "sudo PORT=80 node lib/index.js");
-nohup sudo PORT=80 node lib/index.js &
+sudo kill $(pgrep -f "node lib/index.js");
+PORT=9000 nohup node lib/index.js &

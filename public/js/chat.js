@@ -1223,7 +1223,7 @@ $(document).ready(function () {
     "use strict";
     
     // setup home * HACKY HACKY HACKY *
-    if (window.location.pathname === "/chat/home"){
+/*    if (window.location.pathname === "/chat/home"){
         var all_frame = $("<iframe/>");
         all_frame.attr("src", "/all")
         .attr("class", "all_frame")
@@ -1247,7 +1247,7 @@ $(document).ready(function () {
     
     if (self!=top && parent.document.location.pathname === "/chat/home"){
         $('.header').remove();
-    }
+    }*/
   
     // setup scrolling
     $('.chats').scroll(function() {

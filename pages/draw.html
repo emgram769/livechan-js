@@ -419,7 +419,7 @@ function toggle_chat(){
 		chat_sidebar.style.display = 'block';
 		chat_sidebar.innerHTML = "<div style='margin-top:-20px;'>\
 								  <div onclick='toggle_chat();'\
-								  	style='height:20px;width:100%;background:#ECECEC;margin-top:0px;margin-left:0px;\
+								  	style='height:20px;width:100%;background:#00930a;color:white;margin-top:0px;margin-left:0px;\
 								  	border-top-left-radius:3px;\
 								  	margin-right:-1px;'>\
 								  <div style='float:left;' id='chat_button'>&#x25BC; hide</div><br>\
@@ -1033,9 +1033,10 @@ function initial_load(){
 	<button onclick="cast_vote(-1);">don't</button>
 	<button onclick="cast_vote(1);">clear</button>
 </div>
-<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;z-index:10;"><div id="alert_div" style="display:inline-block;background:white;border-radius:5px;padding:3px;">Loading...</div></div>
-<div id="corner" style="position:absolute;top:10px;right:10px;background:#ECECEC;color:black;padding:5px;border-radius:3px;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;z-index:9; ">
-<a href="/chat/home" style="float:right;text-decoration:none;color:inherit;">livechan</a><br>
+<div id="alert_div_container" style="text-align:center;width:100%;position:absolute;top:10px;z-index:10;"><div id="alert_div" style="display:inline-block;background:#00930a;border-radius:5px;color:white;padding:3px;">Loading...</div></div>
+<div id="corner" style="position:absolute;top:10px;right:10px;background:#00930a;color:white;padding:5px;border-radius:3px;-moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;z-index:9; text-align:center;">
+<a href="/chat/home" style="float:right;text-decoration:none;color:inherit;background-image:url('https://livechan.net/images/livechanbanner-template.png');background-size:200px 24px;background-position:-4px -3px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a><br>
 <span id="user_count"># of</span> users
 </div>
 <canvas id="main_canvas" height="100%" width="100%"></canvas>
