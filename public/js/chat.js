@@ -1,6 +1,6 @@
 /*
-    LiveChan is a live imageboard web application.
-    Copyright (C) 2014 LiveChan Team
+    livechan is a live imageboard web application.
+    Copyright (C) 2014 livechan Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -1085,7 +1085,7 @@ function set_channel(new_channel, new_post, no_push_state) {
     // indicate new channel
     $('#board_select').val(new_channel);
     $('#comment-form').attr('action', '/chat/' + new_channel);
-    title = "LiveChan" + (new_channel === "home" ? "" : " - /" + new_channel);
+    title = "livechan" + (new_channel === "home" ? "" : " - /" + new_channel);
     window.document.title = title;
 
     // hide form, sidebar on /home, /all pages

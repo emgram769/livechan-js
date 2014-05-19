@@ -58,7 +58,10 @@ $(document).ready(function () {
     
     socket.on('disconnect', function(){create_server_post('You have been disconnected from the server, attempting to reconnect...');});
     socket.on('reconnect', function(){var old_id = chat_id; chat_id = "home"; set_channel(old_id); setTimeout(function(){create_server_post('Reconnected!')}, 2*1000);});
-
+    socket.on('user_count', function(data){
+        var s = data == 1 ? "" : "s";
+        $("#user_count").text(data+" user"+s+" online");
+     });
     /* key bindings for actions */
     $("#name").keydown(function (event) {
         if (event.keyCode === 13) {
@@ -526,8 +529,11 @@ function mod_warn_poster(id, password)
         url: '/warn',
         data: {password: password, id: id, reason: reason}
     }).done(function (data_warn) {
+        console.log(data_warn);
         if(data_warn.success)
             div_alert("success");
+        else if (data_warn.failure)
+            div_alert("failure:", data_warn.failure);
         else
             div_alert("failure");
     });

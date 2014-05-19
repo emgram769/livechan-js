@@ -6,7 +6,7 @@ module.exports = {
         'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit',
         'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy',
         'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog',
-        'dogecoin', 'fedoracoin', 'coin', 'q', 'cats'
+        'dogecoin', 'fedoracoin', 'coin', 'q', 'cats', 'draw'
     ],
 
     all_fields: 'chat name body convo convo_id count date trip',
