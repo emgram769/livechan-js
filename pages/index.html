@@ -1,183 +1,183 @@
 <!DOCTYPE html>
 <html>
-<head>
-        <meta charset="UTF-8">
-        <title>livechan - chatroom</title>
-        <meta name="description" content="livechan is a live anonymous chatroom with an imageboard twist. Join us and post images and comments to other people on one of our many discussion boards.">
-        <meta name="viewport" content="width=device-width,user-scalable=no">
-        <link type="text/css" rel="stylesheet" href="/css/style.css">
-
-        <!--<link media="all" href="/css/livechan.css" type="text/css" rel="stylesheet" id="css_new">-->
-        <link rel="shortcut icon" href="/favicon.png" />
-        <!--[if lt IE 9]>
-        <script src="/js/html5shiv.min.js"></script>
-        <![endif]-->
-
-</head>
-<body>
-	<header class="header">
-		<select id="board_select" class="input_select left_float">
-			<option value="home">Home</option>
-			<option value="g">/g - (tech general)</option>
-			<option value="int">/int - (internat.)</option>
-			<option value="draw">/draw - (draw)</option>
-			<!--
-			<option value="t">/t - (tech)</option>
-			<option value="a">/a - (anime)</option>
-			<option value="r">/r - (random NSFW)</option>
-			<option value="p">/p - (18+ NSFW)</option>
-			<option value="sp">/sp - (sports)</option>
-			<option value="soc">/soc - (social)</option>
-			<option value="prog">/prog - (programming)</option>
-			-->
-
-		</select>
-        <span id="user_count" class="left_float" style="padding-left:5px;"></span>
-		<button id="settings_button" class="right_float">Settings</button>
-	</header>
-	<nav class="settings_nav hidden">
-		<ul class="settings_list">
-		<li><input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label></li>
-		<li><input type="checkbox" id="clearconvo" class="input_checkbox" checked value="checked"/> <label for="clearconvo" style="font-size:14px" >Clear convo on submit</label></li>
-		<li><input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on enter</label></li>
-		<li><input type="checkbox" id="spoilers" class="input_checkbox" checked value="checked"/> <label for="spoilers" style="font-size:14px" >Spoilers</label></li>
-		<li><input type="range" id="volume" class="input_range" min="0" max="1" step="0.01" value="1"/> <label for="volume" style="font-size:14px" >Volume</label></li>
-        <li><select id="thumbnail_mode" class="input_select">
-                    <option value="links-only">Image links only</option>
-                    <option value="static" selected>Static thumbnails</option>
-                    <option value="animated">Animated thumbnails</option>
-        </select></li>
-		<li><select id="convo_filter" class="input_select">
-			<option value="no-filter" >No Conversation Filter</option>
-			<option value="highlight">Highlight</option>
-			<option value="filter">Full Filter</option>
-		</select></li>
-		<li><select id="theme_select" class="input_select">
-			<option value="/style.css">Blue</option>
-			<option value="/livechan.css">Livechan</option>
-			<option value="/red.css">Red</option>
-			<option value="/tomorrow.css">Tomorrow</option>
-			<option value="/zenburn.css">Zenburn</option>
-		</select></li>
-		<li><button id='sidebar_hider'>hide sidebar</button></li>
-		</ul>
-	</nav>
-	<section class="home_screen">
-			<article class="chat" id="chat_boards" style="opacity: 1;">
-	        <section class="chat_file" style="display: none;">File:
-	            <a class="file_link" target="_blank"></a>
-	            <output class="file_data"></output>
-	        </section>
-	        <a target="_blank" class="chat_img_cont"></a>
-	        <output class="chat_body" style="text-align: center;display: block;background:#00930a;">
-	        	            <br>
-
-	         <img src='https://livechan.net/images/livechanbanner-template.png' class='livechan_banner'></img>
-	        <nav class="container" style="text-align:center;">
-	        	         	   <a class="link homescreen" href="/chat/g">tech general - /g </a>
-	         	               <a class="link homescreen" href="/chat/int">international - /int </a>
-	         	               <a class="link homescreen" href="/draw">drawing space - /draw </a>
-	                           <!-- You have found the hidden boards!
-	        	         	   <a class="link homescreen" href="/chat/t">technology - /t</a>
-	         	               <a class="link homescreen" href="/chat/a">anime - /a </a>
-	         	               <a class="link homescreen" href="/chat/r">random (nsfw) - /r </a>
-	         	               <a class="link homescreen" href="/chat/p">18+ (nsfw) - /p</a>
-	         	               <a class="link homescreen" href="/chat/all">all (passive) - /all </a>
-	                           <a class="link" href="/chat/prog">programming - /prog </a>
-	         	               <a class="link" href="/chat/sp">sports - /sp</a>
-	                           <a class="link" href="/chat/soc">social - /soc</a>
-	                           <a class="link" href="/chat/a">/a/</a>
-	                           <a class="link" href="/chat/coin">cryptocoins - /coin </a>
-	                           <a class="link" href="/chat/b">/b/</a>
-	                           <a class="link" href="/chat/gif">/gif/</a>
-	                           <a class="link" href="/chat/v">/v/</a>
-	                           <a class="link" href="/chat/r9k">/r9k/</a>
-	                           <a class="link" href="/chat/s4s">/s4s/</a>
-	                           <a class="link" href="/chat/diy">/diy/</a>
-	                           <a class="link" href="/chat/fa">/fa/</a>
-	                           <a class="link" href="/chat/fit">/fit/</a>
-	                           <a class="link" href="/chat/gd">/gd/</a>
-	                           <a class="link" href="/chat/mlp">/mlp/</a>
-	                           <a class="link" href="/chat/mu">/mu/</a>
-	                           <a class="link" href="/chat/n">/n/</a>
-	                           <a class="link" href="/chat/pol">/pol/</a>
-	                           <a class="link" href="/chat/sci">/sci/</a>
-	                           <a class="link" href="/chat/sp">/sp/</a>-->
-	                  </nav>
-	              <br>
-	        </output>
-	    </article>
-	    
-	    <article class="chat" id="chat_welcome" style="opacity: 1;">
-	        <section class="chat_file" style="display: none;">File:
-	            <a class="file_link" target="_blank"></a>
-	            <output class="file_data"></output>
-	        </section>
-	        <a target="_blank" class="chat_img_cont"></a>
-	    	<output class="chat_body" style="text-align: center;display: block;padding:50px;">
-	             We're a small growing community that uses our own open-source <a href="https://github.com/emgram769/live4chan">node.js server (GitHub)</a> to post images and chats to each other over different channels and "conversations".
-	            <br>
-	            <br>The server is open to contributions from anyone willing to help out.
-	            <br>
-	            <br>New conversations (the livechan version of threads) can be made by setting the second field (General by default), or you can join an existing conversation by choosing one from the list on the right once you've joined a board.
-	            <br>
-	            <br>
-	            <a href="/chat/all">Hide this message</a> to join the "All" channel and watch chat messages posted in realtime, or choose a channel from the dropdown box on the top left to start chatting.
-	            <br>
-	            <br>
-	            <b>Please note there is a strict 7 second cool down time shared through all boards for new chat messages. New conversations have a 50 second cool down time to help prevent spamming.</b>
-	            <br>
-	            
-	        </output>
-	    </article>
+	<head>
+	        <meta charset="UTF-8">
+	        <title>livechan - chatroom</title>
+	        <meta name="description" content="livechan is a live anonymous chatroom with an imageboard twist. Join us and post images and comments to other people on one of our many discussion boards.">
+	        <meta name="viewport" content="width=device-width,user-scalable=no">
+	        <link type="text/css" rel="stylesheet" href="/css/style.css">
 	
-	    
+	        <!--<link media="all" href="/css/livechan.css" type="text/css" rel="stylesheet" id="css_new">-->
+	        <link rel="shortcut icon" href="/favicon.png" />
+	        <!--[if lt IE 9]>
+	        <script src="/js/html5shiv.min.js"></script>
+	        <![endif]-->
 	
-	    <article class="chat" id="chat_shill" style="opacity: 1;">
-	        <section class="chat_file" style="display: none;">File:
-	            <a class="file_link" target="_blank"></a>
-	            <output class="file_data"></output>
-	        </section>
-	        <a target="_blank" class="chat_img_cont"></a>
-	        <output class="chat_body" style="text-align: center;display: block">
-	            Feature suggestions? <a href="https://code.stypi.com/emgram/livechan">https://code.stypi.com/emgram/livechan</a>
-	            <br>
-	            <br>Donations toward server hosting? (anything is appreciated!) 
-	            <br>Bitcoin:<a href="bitcoin:1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr">1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr</a> 
-	            <br>Dogecoin: <a>DCSmbH2turiUVHP5AJcmKZzRTyfe8kib7j</a>
-	        </output>
-	    </article>
-	    
-	</section> <!-- home_screen -->
-
-	<section class="chats_container">
-	<section class="chats">
-	</section>
-	</section>
-
+	</head>
+	<body>
+		<header class="header">
+			<select id="board_select" class="input_select left_float">
+				<option value="home">Home</option>
+				<option value="g">/g - (tech general)</option>
+				<option value="int">/int - (internat.)</option>
+				<option value="draw">/draw - (draw)</option>
+				<!--
+				<option value="t">/t - (tech)</option>
+				<option value="a">/a - (anime)</option>
+				<option value="r">/r - (random NSFW)</option>
+				<option value="p">/p - (18+ NSFW)</option>
+				<option value="sp">/sp - (sports)</option>
+				<option value="soc">/soc - (social)</option>
+				<option value="prog">/prog - (programming)</option>
+				-->
 	
-	<aside class="create">
-		<form id="comment-form" action="?" target="miframe" method="post" enctype="multipart/form-data">
-			<input id="name" name="name" placeholder="Anonymous" class="name" type="text" maxlength="200"/>
-			<input id="convo" name="convo" placeholder="General" class="convo" type="text" maxlength="39"/>
-			<textarea id="body" name="body" placeholder="Comment" class="comment" maxlength="1999"></textarea>
-			<input id="image" class="input_button" name="image" type="file"/>
-			<img id="record_button" class="input_button" src="/icons/record.png" alt="clear" title="record audio" style="display: none;"/>
-			<img id="stop_button" class="input_button" src="/icons/stop.png" alt="clear" title="stop recording" style="display: none;"/>
-			<img id="clear_button" class="input_button" src="/icons/cancel.png" alt="clear" title="clear file field"/>
-			<input id="submit_button" class="input_button" type="button" value="Submit"/>
-			<output id="cool_down"></output>
-		</form>
-	</aside>
-	<aside class="sidebar">
-	</aside>
-	<iframe style="visibility:hidden;" id="miframe" name="miframe"></iframe>
-	    <link rel="stylesheet" href="/plugins/code_highlight/css/default.css">
-		<script src="/plugins/code_highlight/highlight.min.js"></script>
-		<script src="/socket.io/socket.io.js"></script>
-		<script src="/js/socket.io-stream.min.js"></script>
-        <script src="/js/jquery.min.js"></script>
-        <script src="/js/chat.js"></script>
-        <script src="/js/main.js"></script>
-</body>
+			</select>
+	        <span id="user_count" class="left_float" style="padding-left:5px;"></span>
+			<button id="settings_button" class="right_float">Settings</button>
+		</header>
+		<nav class="settings_nav hidden">
+			<ul class="settings_list">
+			<li><input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label></li>
+			<li><input type="checkbox" id="clearconvo" class="input_checkbox" checked value="checked"/> <label for="clearconvo" style="font-size:14px" >Clear convo on submit</label></li>
+			<li><input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on enter</label></li>
+			<li><input type="checkbox" id="spoilers" class="input_checkbox" checked value="checked"/> <label for="spoilers" style="font-size:14px" >Spoilers</label></li>
+			<li><input type="range" id="volume" class="input_range" min="0" max="1" step="0.01" value="1"/> <label for="volume" style="font-size:14px" >Volume</label></li>
+	        <li><select id="thumbnail_mode" class="input_select">
+	                    <option value="links-only">Image links only</option>
+	                    <option value="static" selected>Static thumbnails</option>
+	                    <option value="animated">Animated thumbnails</option>
+	        </select></li>
+			<li><select id="convo_filter" class="input_select">
+				<option value="no-filter" >No Conversation Filter</option>
+				<option value="highlight">Highlight</option>
+				<option value="filter">Full Filter</option>
+			</select></li>
+			<li><select id="theme_select" class="input_select">
+				<option value="/style.css">Blue</option>
+				<option value="/livechan.css">Livechan</option>
+				<option value="/red.css">Red</option>
+				<option value="/tomorrow.css">Tomorrow</option>
+				<option value="/zenburn.css">Zenburn</option>
+			</select></li>
+			<li><button id='sidebar_hider'>hide sidebar</button></li>
+			</ul>
+		</nav>
+		<section class="home_screen">
+				<article class="chat" id="chat_boards" style="opacity: 1;">
+		        <section class="chat_file" style="display: none;">File:
+		            <a class="file_link" target="_blank"></a>
+		            <output class="file_data"></output>
+		        </section>
+		        <a target="_blank" class="chat_img_cont"></a>
+		        <output class="chat_body" style="text-align: center;display: block;background:#00930a;">
+		        	            <br>
+	
+		         <img src='https://livechan.net/images/livechanbanner-template.png' class='livechan_banner'></img>
+		        <nav class="container" style="text-align:center;">
+		        	         	   <a class="link homescreen" href="/chat/g">tech general - /g </a>
+		         	               <a class="link homescreen" href="/chat/int">international - /int </a>
+		         	               <a class="link homescreen" href="/draw">drawing space - /draw </a>
+		                           <!-- You have found the hidden boards!
+		        	         	   <a class="link homescreen" href="/chat/t">technology - /t</a>
+		         	               <a class="link homescreen" href="/chat/a">anime - /a </a>
+		         	               <a class="link homescreen" href="/chat/r">random (nsfw) - /r </a>
+		         	               <a class="link homescreen" href="/chat/p">18+ (nsfw) - /p</a>
+		         	               <a class="link homescreen" href="/chat/all">all (passive) - /all </a>
+		                           <a class="link" href="/chat/prog">programming - /prog </a>
+		         	               <a class="link" href="/chat/sp">sports - /sp</a>
+		                           <a class="link" href="/chat/soc">social - /soc</a>
+		                           <a class="link" href="/chat/a">/a/</a>
+		                           <a class="link" href="/chat/coin">cryptocoins - /coin </a>
+		                           <a class="link" href="/chat/b">/b/</a>
+		                           <a class="link" href="/chat/gif">/gif/</a>
+		                           <a class="link" href="/chat/v">/v/</a>
+		                           <a class="link" href="/chat/r9k">/r9k/</a>
+		                           <a class="link" href="/chat/s4s">/s4s/</a>
+		                           <a class="link" href="/chat/diy">/diy/</a>
+		                           <a class="link" href="/chat/fa">/fa/</a>
+		                           <a class="link" href="/chat/fit">/fit/</a>
+		                           <a class="link" href="/chat/gd">/gd/</a>
+		                           <a class="link" href="/chat/mlp">/mlp/</a>
+		                           <a class="link" href="/chat/mu">/mu/</a>
+		                           <a class="link" href="/chat/n">/n/</a>
+		                           <a class="link" href="/chat/pol">/pol/</a>
+		                           <a class="link" href="/chat/sci">/sci/</a>
+		                           <a class="link" href="/chat/sp">/sp/</a>-->
+		                  </nav>
+		              <br>
+		        </output>
+		    </article>
+		    
+		    <article class="chat" id="chat_welcome" style="opacity: 1;">
+		        <section class="chat_file" style="display: none;">File:
+		            <a class="file_link" target="_blank"></a>
+		            <output class="file_data"></output>
+		        </section>
+		        <a target="_blank" class="chat_img_cont"></a>
+		    	<output class="chat_body" style="text-align: center;display: block;padding:50px;">
+		             We're a small growing community that uses our own open-source <a href="https://github.com/emgram769/live4chan">node.js server (GitHub)</a> to post images and chats to each other over different channels and "conversations".
+		            <br>
+		            <br>The server is open to contributions from anyone willing to help out.
+		            <br>
+		            <br>New conversations (the livechan version of threads) can be made by setting the second field (General by default), or you can join an existing conversation by choosing one from the list on the right once you've joined a board.
+		            <br>
+		            <br>
+		            <a href="/chat/all">Hide this message</a> to join the "All" channel and watch chat messages posted in realtime, or choose a channel from the dropdown box on the top left to start chatting.
+		            <br>
+		            <br>
+		            <b>Please note there is a strict 7 second cool down time shared through all boards for new chat messages. New conversations have a 50 second cool down time to help prevent spamming.</b>
+		            <br>
+		            
+		        </output>
+		    </article>
+		
+		    
+		
+		    <article class="chat" id="chat_shill" style="opacity: 1;">
+		        <section class="chat_file" style="display: none;">File:
+		            <a class="file_link" target="_blank"></a>
+		            <output class="file_data"></output>
+		        </section>
+		        <a target="_blank" class="chat_img_cont"></a>
+		        <output class="chat_body" style="text-align: center;display: block">
+		            Feature suggestions? <a href="https://code.stypi.com/emgram/livechan">https://code.stypi.com/emgram/livechan</a>
+		            <br>
+		            <br>Donations toward server hosting? (anything is appreciated!) 
+		            <br>Bitcoin:<a href="bitcoin:1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr">1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr</a> 
+		            <br>Dogecoin: <a>DCSmbH2turiUVHP5AJcmKZzRTyfe8kib7j</a>
+		        </output>
+		    </article>
+		    
+		</section> <!-- home_screen -->
+	
+		<section class="chats_container">
+		<section class="chats">
+		</section>
+		</section>
+	
+		
+		<aside class="create">
+			<form id="comment-form" action="?" target="miframe" method="post" enctype="multipart/form-data">
+				<input id="name" name="name" placeholder="Anonymous" class="name" type="text" maxlength="200"/>
+				<input id="convo" name="convo" placeholder="General" class="convo" type="text" maxlength="39"/>
+				<textarea id="body" name="body" placeholder="Comment" class="comment" maxlength="1999"></textarea>
+				<input id="image" class="input_button" name="image" type="file"/>
+				<img id="record_button" class="input_button" src="/icons/record.png" alt="clear" title="record audio" style="display: none;"/>
+				<img id="stop_button" class="input_button" src="/icons/stop.png" alt="clear" title="stop recording" style="display: none;"/>
+				<img id="clear_button" class="input_button" src="/icons/cancel.png" alt="clear" title="clear file field"/>
+				<input id="submit_button" class="input_button" type="button" value="Submit"/>
+				<output id="cool_down"></output>
+			</form>
+		</aside>
+		<aside class="sidebar">
+		</aside>
+		<iframe style="visibility:hidden;" id="miframe" name="miframe"></iframe>
+		    <link rel="stylesheet" href="/plugins/code_highlight/css/default.css">
+			<script src="/plugins/code_highlight/highlight.min.js"></script>
+			<script src="/socket.io/socket.io.js"></script>
+			<script src="/js/socket.io-stream.min.js"></script>
+	        <script src="/js/jquery.min.js"></script>
+	        <script src="/js/chat.js"></script>
+	        <script src="/js/main.js"></script>
+	</body>
 </html>
