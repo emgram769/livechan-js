@@ -1,59 +1,61 @@
 body,html{
-  padding:0;
-  margin:0;
-  font-family: arial,helvetica,sans-serif;
+    padding:0;
+    margin:0;
+    background:rgb(238, 242, 255);
+    font-family: arial,helvetica,sans-serif;
+    font-size: 14px;
 }
 
 .header{
-  z-index: 1;
-  background-color: #EEEEEE;
-  color: black;
-  left:0;
-  right:0;
-  text-align: right;
-  font-size: 14px;
-  padding:3px;
-  width: 100%;
-  height: 75px;
+        position:fixed;
+        z-index: 1;
+        background: rgba(255,255,255,0.78);
+        color: black;
+        left:0;
+        right:0;
+        text-align: right;
+        font-size: 14px;
+        padding:3px;
 }
 
 .settings_list{
-  display:block;
+	display:block;
 }
 
 ul {
-  list-style-type:none;
-  padding:0;
-  margin:0;
+	list-style-type:none;
+	padding:0;
+	margin:0;
 }
 
 .settings_nav{
-  position:fixed;
-  z-index: 2;
-  top:27px;
-  right:0px;
-  padding:10px;
-  background: rgb(238, 242, 255);
-  border-bottom: 1px solid rgb(214, 218, 240);
-  border-left: 1px solid rgb(214, 218, 240);
+	position:fixed;
+	z-index: 2;
+	top:27px;
+	right:0px;
+	padding:10px;
+	background: rgb(238, 242, 255);
+	border-bottom: 1px solid rgb(214, 218, 240);
+	border-left: 1px solid rgb(214, 218, 240);
 }
 
 .sidebar_shower{
-  position:fixed;
-  top:32px;
-  right:0;
+	position:fixed;
+	top:32px;
+	right:0;
 }
 
 .sidebar{
-  margin:0;
-  position: absolute;
-  right:0px;
-  width:250px;
-  top:26px;
-  bottom:0px;
-  overflow: auto;
-  word-wrap: break-word;
-  display: none;
+        margin:0;
+        position: absolute;
+        right:0px;
+        width:250px;
+        top:26px;
+        bottom:0px;
+        overflow: auto;
+        word-wrap: break-word;
+		display: none;
+
 }
 
 .sidebar_convo_dim {
@@ -434,19 +436,9 @@ select{
 }
 
 button{
-  font-size: 14px;
-  padding:none;
-  background-color: #2ECC71;
-  color: #FFFFFF;
-  border: none;
-}
-
-#settings_button{
-  background-color: #2ECC71;
-  width: 150px;
-  height: 50px;
-  border: none;
-  border-radius: 5px;
+    font-size: 10px;
+	padding:none;
+	max-height: 20px;
 }
 
 .input_range{
