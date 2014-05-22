@@ -28,7 +28,7 @@ var longpress = 400;
 var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY"]; // first trip here is used for server status posts
 var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
-var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps"];
+var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps", "!!Tia6BuxIxc"];
 var my_ids = [];
 var contribs = default_contribs;
 
@@ -41,8 +41,7 @@ var title = "";
 var chat_id = "";
 var linked_post = "";
 
-var special_countries = ["AU-Brisbane", "AU-Canberra", "AU-Darwin", "AU-Gold Coast", "AU-Melbourne", "AU-Newcastle", "AU-Perth", "AU-Sunshine", "AU-Sydney", "US-AK", "US-AL", "US-AR", "US-AZ", "US-CA", "US-CO", "US-CT", "US-DC", "US-DE", "US-GA", "US-FL", "US-HI", "US-IA", "US-ID", "US-IL", "US-IN", "US-KS", "US-KY", "US-LA", "US-MA", "US-MD", "US-ME", "US-MI", "US-MN", "US-MO", "US-MS", "US-MT", "US-NC", "US-ND", "US-NE", "US-NM", "US-NH", "US-NJ", "US-NY", "US-OH", "US-OK", "US-OR", "US-PA", "US-RI", "US-SC", "US-SD", "US-TN", "US-TX", "US-UT", "US-VA", "US-VT", "US-WI", "US-WV", "US-WY"];
-
+var special_countries;
 var on_chat = function(d) {};
 
 function humanFileSize(bytes, si) {
@@ -631,20 +630,35 @@ function update_chat(new_data, first_load) {
         post.find(".name_part").text(data.name);
     }
     if (changed.country) {
-        var country_name = "";
-        if (special_countries.indexOf(data.country)>-1) {
-            var state = $("<img src='/icons/countries/"+data.country+".png'/>");
-            post.find(".flag").prepend(state);
-            country_name += data.country.slice(3)+", ";
-
+    	if (data.trip == "!!SxKC741YKw") {
+    		var country = $("<img src='/icons/irc.png' style='height:10px;margin-bottom:1px;'/>");
+	        country_name = "IRC";
+	        post.find(".flag").attr("data-country", country_name);
+	        post.find(".flag").prepend(country);
+    	}
+		else {
+	        var country_name = "";
+	        //if (special_countries.indexOf(data.country)>-1) {
+	        if (data.country[2] == "-") {
+	            var state = $("<img src='/icons/countries/"+data.country+".png'/>");
+	            post.find(".flag").prepend(state);
+				if (special_countries && data.country in special_countries) {
+					country_name += special_countries[data.country]+", ";
+				} else {
+	            	country_name += data.country.slice(3)+", ";
+	            }
+	        }
+	        var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
+	        country_name += data.country_name ? data.country_name : data.country;
+	        post.find(".flag").attr("data-country", country_name);
+	        post.find(".flag").prepend(country);
         }
-        var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
-        country_name += data.country_name ? data.country_name : data.country;
-        post.find(".flag").attr("data-country", country_name);
-        post.find(".flag").prepend(country);
     }
     if (changed.trip) {
-        post.find(".trip_code").text(data.trip);
+        var irc = (data.trip == "!!SxKC741YKw");
+        post.find(".trip_code")
+			.text(data.trip)
+            .toggleClass("hidden", irc);
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
         var dev = ($.inArray(data.trip, devs) > -1);
@@ -877,6 +891,10 @@ function update_chat(new_data, first_load) {
             [/\[color=([#\w]+)\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/color\]/g);
                 o.push($("<span/>").css("color", m[1]).append(body));
+            }],
+            [/\[flag\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/flag\]/g);
+                o.push($("<img/>").attr("src", encodeURI("/icons/countries/"+body[0].data.toUpperCase()+".png")));
             }],
             [/\[noparse\]/g, function(m, o) {
                 var body = this.no_parse(/\[\/noparse\]/g);
@@ -1248,6 +1266,12 @@ $(document).ready(function () {
     if (self!=top && parent.document.location.pathname === "/chat/home"){
         $('.header').remove();
     }*/
+    
+    if (window.location.pathname === "/chat/int"){
+    	$.getJSON('/json/regioncodes.json', function (data) {
+		    special_countries = data;
+		});
+    }
   
     // setup scrolling
     $('.chats').scroll(function() {

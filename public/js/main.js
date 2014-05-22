@@ -176,6 +176,32 @@ $(document).ready(function () {
 
     clear_file_field();
 
+	$('#camera_button').click(function(){
+		var cam = $('<div id="my_camera" style="width:320px; height:240px;"></div>');
+		cam.css({
+			zIndex:1000,
+			position:'absolute',
+			top:0,
+			left:0
+		});
+		cam.click(function(){
+			var data_uri = Webcam.snap();
+			var raw_image_data = data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
+			submit_file = data_URI_to_Blob(data_uri, 'image/jpeg');
+			submit_filename = "webcam.jpeg";
+			var recording = $('<img id="recording" controls class="input_button"/>');
+            recording.attr("src", data_uri);
+            recording.css({height:"25px"});
+            recording.insertAfter($("#image"));
+			  Webcam.reset();
+			cam.remove();
+		});
+		$('body').append(cam);
+		Webcam.attach('#my_camera');
+		cam.prepend($("<span>Click the image to take a picture</span>")
+			.css({background:"white",textAlign:"center",position:"absolute",top:0,width:"100%"}));
+	});
+
     $('#record_button').click(function() {
         $('#stop_button').show();
         $('#record_button').hide();
@@ -225,6 +251,13 @@ function create_server_post(status)
     scroll();
 }
 
+/* convert uri to blob */
+function data_URI_to_Blob(dataURI, dataTYPE) {
+    var binary = atob(dataURI.split(',')[1]), array = [];
+    for(var i = 0; i < binary.length; i++) array.push(binary.charCodeAt(i));
+    return new Blob([new Uint8Array(array)], {type: dataTYPE});
+}
+
 /* load up css into the page */
 function get_css(file) {
     "use strict";
@@ -267,7 +300,6 @@ function set_up_html(){
             contribs = JSON.parse(contribs);
         } else {
             contribs = default_contribs;
-
         }
         
         /*if (!localStorage.theme || localStorage.theme === "null") {

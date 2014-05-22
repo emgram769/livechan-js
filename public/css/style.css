@@ -473,7 +473,7 @@ pre {
 }
 
 .contrib{
-    color:blue;
+    color:rgb(0, 40, 221);
 }
 
 .alert_div{
@@ -530,7 +530,7 @@ pre {
 .tooltip:hover:after{
 	background: #fff;
 	background: rgba(255,255,255,.8);
-	bottom: 12px;
+	bottom: 2px;
 	color: black;
 	content: attr(data-country);
 	left:0;
