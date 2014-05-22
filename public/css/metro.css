@@ -1,0 +1,141 @@
+/* metro.css */
+
+body,html {
+  background: none repeat scroll 0% 0% #7f8c8d;
+  color: #C5C8C6;
+}
+
+.settings_nav{
+  color: #C5C8C6;
+  background: none repeat scroll 0% 0% #7f8c8d;
+}
+
+.create {
+  /* the input box */
+  background: #282A2E;
+  background: none repeat scroll 0% 0% #7f8c8d;
+  border: none;
+}
+
+textarea{
+  background-color: #7f8c8d6;
+  color: #282A2E;
+}
+
+input{
+  background: #C5C8C6;
+  color: #282A2E;
+  border:1px solid #1D1F21;
+}
+
+.input_button {
+  background-color: #2980b9;
+}
+
+.input_select {
+
+}
+
+.input_checkbox {
+
+}
+
+.chat {
+  background-color: #7f8c8d;
+  border: 1px solid #2980b9;
+}
+
+.chat a, span.link, .chat .chat_header .chat_number {
+  color: #5F89AC;
+}
+
+.chat a:hover, span.link:hover, .chat .chat_header .chat_number:hover {
+  color: #81A2BE;
+}
+
+.chat_name {
+  color: inherit;
+}
+
+.chat_name .trip_code {
+  color: #3498db;         
+}
+
+.chat_name.contrib {
+  color: #3498db;
+}
+
+.chat_name.admin .trip_code {
+  color: #3498db;
+}
+
+.chat_name.admin {
+  color: #3498db;
+}
+
+.chat_name.contrib .trip_code {
+  color: #3498db;
+}
+
+.chat_header {
+  background: transparent;
+  width:100%;
+}
+
+.greentext {
+  color: #B5BD68;
+}
+
+/* raw positioning stuff */
+
+
+.chat {
+  margin: 8px 8px 0 8px;
+  padding: 6px 8px 8px 8px;
+
+  clear: both;
+  overflow: hidden;
+}
+
+.chat .chat_header {
+  margin-bottom: 4px;
+}
+
+.chat .chat_img {
+  float: left;
+  clear: left;
+
+  padding: 4px 8px 8px 0px;
+}
+
+.create {/*
+  width: auto;
+  padding: 8px 8px 0 8px;
+  left: 8px;
+  right: 0;
+
+  overflow: auto;*/
+  
+}
+
+  .create .name {
+
+  }
+
+  .create .convo {
+
+  }
+
+.chat_name .trip_code {
+  padding-left: 3px;
+}
+
+
+.sidebar_convo {
+  padding:3px;
+  background: #7f8c8d;
+}
+
+.alert_div {
+  background-color: #7f8c8d !important;
+}
