@@ -64,9 +64,13 @@ If you do not want audio/video support, you should edit your [config.js](https:/
 
     git clone https://github.com/emgram769/live4chan.git
 
-8) Install the dependencies with npm install
+8.a) Install the dependencies with npm install
 
     cd live4chan; npm install
+
+8.b) Download a country lookup database
+
+    wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz; gunzip GeoLiteCity.dat.gz
 
 9) Restore the changes to the captcha module which were overwritten by npm install:
 
