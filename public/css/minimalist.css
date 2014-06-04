@@ -169,8 +169,7 @@ input{
 }
 
 .chat_body{
-  padding-top: 15px;
-
+  padding-top: 0px;
 }
 
 #thumbnail_mode{
