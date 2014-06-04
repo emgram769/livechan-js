@@ -44,6 +44,32 @@ var linked_post = "";
 var special_countries;
 var on_chat = function(d) {};
 
+function ajaxTranslate(textToTranslate, fromLanguage, toLanguage, callback) {
+	var p = {};
+	var apikeys = ['68D088969D79A8B23AF8585CC83EBA2A05A97651','9BEE70120363E77B0528A0E24953BFD00F59D58E',
+	'98BAFD350ACBE1FE601ABF6274820CC03BAAC1D4', '8E54095330F0B7E7CB73527A50437E6110A64730'];
+	p.appid = apikeys[Math.floor(Math.random()*apikeys.length)];
+	p.to = toLanguage;
+	p.from = fromLanguage;
+	p.text = textToTranslate;
+	$.ajax({
+		url: 'https://api.microsofttranslator.com/V2/Ajax.svc/Translate',
+		data: p,
+		dataType: 'jsonp',
+		jsonp: 'oncomplete',
+		//jsonpCallback: callback,
+		complete: function(request, status) {
+			//alert('complete: '+status);
+		},
+		success: function(data, status) {
+			callback(data);
+		},
+		error: function(request, status, error) {
+			console.log('error: status-'+status+',desc-'+error);
+		}
+	});
+} 
+
 function humanFileSize(bytes, si) {
     "use strict";
     var thresh = si ? 1000 : 1024;
@@ -629,7 +655,7 @@ function update_chat(new_data, first_load) {
     if (changed.name) {
         post.find(".name_part").text(data.name);
     }
-    if (changed.country) {
+    if (changed.country || (data.trip == "!!SxKC741YKw")) {
     	if (data.trip == "!!SxKC741YKw") {
     		var country = $("<img src='/icons/irc.png' style='height:10px;margin-bottom:1px;'/>");
 	        country_name = "IRC";
@@ -653,6 +679,12 @@ function update_chat(new_data, first_load) {
 	        post.find(".flag").attr("data-country", country_name);
 	        post.find(".flag").prepend(country);
         }
+        post.find(".flag").click(function(){
+        	ajaxTranslate(post.find(".chat_body").text(), "", "en", function(data){
+	        	post.find(".chat_body").append($("<span>").text(data).prepend($("<br>")));
+        	});	
+        	post.find(".flag").unbind("click");
+        })
     }
     if (changed.trip) {
         var irc = (data.trip == "!!SxKC741YKw");

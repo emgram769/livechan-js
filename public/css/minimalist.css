@@ -1,6 +1,6 @@
 body,html {
   background: none repeat scroll 0% 0% #FFFFFF;
-  color: grey;
+  color: #222;
 }
 
 .settings_nav{
@@ -11,10 +11,16 @@ body,html {
 #comment-form{
 	
 }
+
+.chats_container{
+	top:0;
+}
+.chats{
+	padding-top:20px;
+}
 .create.shown{
   background: none repeat scroll 0% 0% #FFFFFF;
   border: none;
-  width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -46,11 +52,8 @@ input{
 .chat {
   background: #FFFFFF;
   border: none;
-  height: 15%;
-  width: 55%;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
  	
 }
 
@@ -120,9 +123,8 @@ input{
 
 
 .sidebar_convo {
-  padding:3px;
+  padding:10px;
   background: #FFFFFF;
-  padding: 15px;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
