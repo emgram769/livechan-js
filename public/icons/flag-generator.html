@@ -1,0 +1,49 @@
+<html>
+<head>
+<title> Flag Icon Generator </title>
+</head>
+<body>
+<canvas id="canvas" width="64px" height="64px"></canvas>
+<input type="file" id="file-input">
+<div class="save"><br>Upload multiple images and they will be converted and placed below.  Simply drag them to your computer and save them according to these <a target="_blank" href="https://livechan.net/json/regioncodes.json">guidelines</a><br></div>
+<script src="/js/jquery.min.js"></script>
+<script>
+$(function() {
+    $('#file-input').change(function(e) {
+        var file = e.target.files[0],
+            imageType = /image.*/;
+
+        if (!file.type.match(imageType))
+            return;
+
+        var reader = new FileReader();
+        reader.onload = fileOnload;
+        reader.readAsDataURL(file);        
+    });
+
+    function fileOnload(e) {
+        var $img = $('<img>', { src: e.target.result });
+        console.log(e);
+        var canvas = $('#canvas')[0];
+        var context = canvas.getContext('2d');
+
+        $img.load(function(d) {
+        	console.log(d);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = "#00FFFF";
+			context.fillRect(2,11,60,42);
+        	var scale = 60/this.width;
+        	var new_height = scale*this.height;
+        	var height_offset = (64-new_height)/2;
+        	context.imageSmoothingEnabled = true;
+            context.drawImage(this, 2, height_offset, 60, new_height);
+            var img = canvas.toDataURL("image/png");
+			$('.save').append($('<img src="'+img+'"/>'));
+			$('.save').append($('<a href="'+img+'" download="fffff.png">download</a>'));
+        });
+
+    }
+});
+</script>
+</body>
+</html>

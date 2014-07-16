@@ -15,13 +15,15 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
+// for tabs
+var all_chats = {};
 
 var chat = {};
 var future_ids = {};
 var quote_links_to = {};
-var convos = [];
+var convos = ["General"];
 var convo_map = {};
-var highlighted_convos = [];
+var highlighted_convos = ["General"];
 var start_press; // for long press detection
 var longpress = 400;
 
@@ -29,6 +31,10 @@ var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY"]; // first trip here is us
 var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps", "!!Tia6BuxIxc"];
+var bots = ["!!.w5vzYxkv6","!!RG5a8fLuMM"];
+var irc = ["!!SxKC741YKw"];
+var hidden = ["!RQ1r/nUdfw"];
+var special_trips = bots.concat(irc).concat(hidden);
 var my_ids = [];
 var contribs = default_contribs;
 
@@ -46,8 +52,7 @@ var on_chat = function(d) {};
 
 function ajaxTranslate(textToTranslate, fromLanguage, toLanguage, callback) {
 	var p = {};
-	var apikeys = ['68D088969D79A8B23AF8585CC83EBA2A05A97651','9BEE70120363E77B0528A0E24953BFD00F59D58E',
-	'98BAFD350ACBE1FE601ABF6274820CC03BAAC1D4', '8E54095330F0B7E7CB73527A50437E6110A64730'];
+	var apikeys =['98BAFD350ACBE1FE601ABF6274820CC03BAAC1D4', '8E54095330F0B7E7CB73527A50437E6110A64730']; //['9BEE70120363E77B0528A0E24953BFD00F59D58E',
 	p.appid = apikeys[Math.floor(Math.random()*apikeys.length)];
 	p.to = toLanguage;
 	p.from = fromLanguage;
@@ -88,6 +93,54 @@ function humanFileSize(bytes, si) {
 function quote_click() {
     scroll_to_post(this.href.match(/\d*$/)[0]);
     return false;
+}
+
+function seededRandom(seed) {
+	if (typeof(seed) === "undefined") seed = 0x2F6E2B1;
+
+	// Robert Jenkins’ 32 bit integer hash function
+	seed = ((seed + 0x7ED55D16) + (seed << 12))  & 0xFFFFFFFF;
+	seed = ((seed ^ 0xC761C23C) ^ (seed >>> 19)) & 0xFFFFFFFF;
+	seed = ((seed + 0x165667B1) + (seed << 5))   & 0xFFFFFFFF;
+	seed = ((seed + 0xD3A2646C) ^ (seed << 9))   & 0xFFFFFFFF;
+	seed = ((seed + 0xFD7046C5) + (seed << 3))   & 0xFFFFFFFF;
+	seed = ((seed ^ 0xB55A4F09) ^ (seed >>> 16)) & 0xFFFFFFFF;
+	return (seed & 0xFFFFFFF) / 0x10000000;
+}
+
+function hashString(str) {
+  var hash = 0, i, chr, len;
+  if (str.length == 0) return hash;
+  for (i = 0, len = str.length; i < len; i++) {
+    chr   = str.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
+function getRandomColor(seed) {
+	var palette = ["#FFCCCC", "#FFE0CC", "#FFEACC", "#FFF4CC", "#FFFECC", "#EFFAC8", "#C7F5C4", "#C4F0F4", "#C4DAF4", "#C9C4F4", "#E1C4F4", "#F6C6E6"];
+    var letters = '456789ABCD'.split('');
+    //var color = '#';
+    //for (var i = 0; i < 6; i++ ) {
+        color = palette[Math.floor(seededRandom(seed) * palette.length)];
+    //}
+    return color;
+}
+
+document.head = document.head || document.getElementsByTagName('head')[0];
+
+function changeFavicon(src) {
+	var link = document.createElement('link'),
+	oldLink = document.getElementById('dynamic-favicon');
+	link.id = 'dynamic-favicon';
+	link.rel = 'shortcut icon';
+	link.href = src;
+	if (oldLink) {
+		document.head.removeChild(oldLink);
+	}
+	document.head.appendChild(link);
 }
 
 function quote_mouseover() {
@@ -284,12 +337,14 @@ function toggle_sidebar(){
         $('.chats_container').css({width:''});
         $('.create').css({right:''});
         $('.sidebar').css({display:'block'});
+        $('.sidebar_banner').css({display:'block'});
         $('#sidebar_hider').text('hide sidebar');
     } else {
         /* sidebar visible, show it */
         $('.chats_container').css({width:'100%'});
         $('.create').css({right:'0'});
         $('.sidebar').css({display:'none'});
+        $('.sidebar_banner').css({display:'none'});
         $('#sidebar_hider').text('show sidebar');
     }
 }
@@ -362,14 +417,14 @@ function draw_convos(){
         convo_html.mouseover(function(e){
             convo_hover = true;
             image_mouseover(this, e, $(this).attr("data-op"));
-            $(this).find('div').animate({maxHeight:1000}, 200);
+            //$(this).find('div').animate({maxHeight:1000}, 200);
             if (display)
                 display.css(displayAlign, $('.sidebar').width() + 5 + 'px');
         }).mouseout(function(event){
             convo_hover = false;
-            $(this).find('div').animate({maxHeight:maxHeight+'px'},200, function(){
-	            draw_convos();
-            });
+            //$(this).find('div').animate({maxHeight:maxHeight+'px'},200, function(){
+	        //    draw_convos();
+            //});
 			if (display === undefined) return;
             if (display.is("video")) {
                 if (display[0].pause) display[0].pause();
@@ -378,9 +433,8 @@ function draw_convos(){
                 display.remove();
                 display = undefined;
             }
-            
-        
         });
+
         div.append(convo_html);
     
 
@@ -414,6 +468,7 @@ function draw_convos(){
     if (all_flag){
         div_start.toggleClass("sidebar_convo_dim",true);
     }
+
 }
 
 // Fullsize (if space allows) image/video displayed on hover
@@ -435,7 +490,13 @@ function generate_post(id) {
                 "<output class='chat_date'/>" +
                 "<output class='chat_number'/>" +
                 "<output class='chat_refs'/>" +
-                "<output class='chat_mod_tools'> [<output class='delete_part'>delete</output> - <output class='warn_part'>warn</output> - <output class='move_part'>move</output>  - <output class='ban_part'>ban</output>]</output>" +
+                "<output class='chat_mod_tools'>" +
+                    "<code><output class='chat_identifier'></output></code> "+
+                	"[<output class='delete_part'>delete</output> - "+
+                	"<output class='warn_part'>warn</output> - "+
+                	"<output class='move_part'>move</output> - "+
+                	"<output class='ban_part'>ban</output>]"+
+                "</output>" +
             "</header>" +
             "<section class='chat_file' style='display: none;'>" +
                 "File: <a class='file_link' target='_blank'/>" +
@@ -447,7 +508,7 @@ function generate_post(id) {
         "</article>"
     );
     post.attr("id", "chat_" + id);
-    
+   
     post.find(".delete_part")
         .click(function() {
             if (!window.confirm("Are you sure you want to delete this post?"))
@@ -652,17 +713,36 @@ function update_chat(new_data, first_load) {
             .attr("href", "/chat/" + data.chat + "#" + id)
             .text("/" + data.chat);
     }
+    
     if (changed.name) {
         post.find(".name_part").text(data.name);
     }
-    if (changed.country || (data.trip == "!!SxKC741YKw")) {
+    
+    if (changed.identifier) {
+    	post.find(".chat_identifier")
+        .text(data.identifier.slice(50))
+        .css({
+	        background:'white'
+        });
+    }
+    
+    if (changed.country || (special_trips.indexOf(data.trip)>-1)) {
     	if (data.trip == "!!SxKC741YKw") {
     		var country = $("<img src='/icons/irc.png' style='height:10px;margin-bottom:1px;'/>");
 	        country_name = "IRC";
 	        post.find(".flag").attr("data-country", country_name);
 	        post.find(".flag").prepend(country);
-    	}
-		else {
+	    } else if (data.trip == "!RQ1r/nUdfw") {
+    		var country = $("<img src='/icons/countries/GAY.png'/>");
+	        country_name = "Hidden With Pride";
+	        post.find(".flag").attr("data-country", country_name);
+	        post.find(".flag").prepend(country);
+    	} else if (bots.indexOf(data.trip)>-1 ) {
+    		var country = $("<img src='/icons/bot.png' style='height:10px;margin-bottom:1px;'/>");
+	        country_name = "Bot";
+	        post.find(".flag").attr("data-country", country_name);
+	        post.find(".flag").prepend(country);
+    	} else {
 	        var country_name = "";
 	        //if (special_countries.indexOf(data.country)>-1) {
 	        if (data.country[2] == "-") {
@@ -680,17 +760,21 @@ function update_chat(new_data, first_load) {
 	        post.find(".flag").prepend(country);
         }
         post.find(".flag").click(function(){
-        	ajaxTranslate(post.find(".chat_body").text(), "", "en", function(data){
+        	var language;
+        	if (window.navigator) language = window.navigator.userLanguage || window.navigator.language;
+        	if (!language) language = "en";
+        	language = language.slice(0,2);
+        	ajaxTranslate(post.find(".chat_body").text(), "", language, function(data){
 	        	post.find(".chat_body").append($("<span>").text(data).prepend($("<br>")));
         	});	
         	post.find(".flag").unbind("click");
         })
     }
     if (changed.trip) {
-        var irc = (data.trip == "!!SxKC741YKw");
+        var special = ($.inArray(data.trip, special_trips)>-1);
         post.find(".trip_code")
 			.text(data.trip)
-            .toggleClass("hidden", irc);
+            .toggleClass("hidden", special);
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
         var dev = ($.inArray(data.trip, devs) > -1);
@@ -710,7 +794,11 @@ function update_chat(new_data, first_load) {
         }
         post.toggleClass("convo_op", is_op);
         var chat_convo = post.find(".chat_convo");
-        chat_convo.text(data.convo + (is_op ? " (OP)" : ""));
+        chat_convo
+		.text(data.convo + (is_op ? " (OP)" : ""))
+        .css({
+        	background:getRandomColor(hashString(data.convo))
+        });
         if (!is_op) chat_convo.data("dest", data.convo_id);
     }
     if (changed.convo || new_post) {
@@ -901,7 +989,7 @@ function update_chat(new_data, first_load) {
                 });
                 get_youtube_data(m[1],elem);
             }],
-            [/https?:\/\/\S+/g, function(m, o) {
+            [/https?:\/\/\S+()/g, function(m, o) { // stupid extra () is for some syntax highlighters to play nice.
                 o.push($("<a target='_blank'/>").attr("href", m[0]).text(m[0]));
             }],
             [/\[b\]/g, function(m, o) {
@@ -922,11 +1010,19 @@ function update_chat(new_data, first_load) {
             }],
             [/\[color=([#\w]+)\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/color\]/g);
-                o.push($("<span/>").css("color", m[1]).append(body));
+                if ($('#spoilers').prop("checked")) {
+                	o.push($("<span/>").css("color", m[1]).append(body));
+                } else {
+                	o.push($("<span/>").append(body));
+                }
             }],
             [/\[flag\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/flag\]/g);
-                o.push($("<img/>").attr("src", encodeURI("/icons/countries/"+body[0].data.toUpperCase()+".png")));
+                if (special_countries) {
+                	o.push($("<img/>").attr("src", encodeURI("/icons/countries/"+body[0].data.toUpperCase()+".png")).css({height:"44px"}));
+                } else {
+                	o.push($("<span>").text(body[0].data.toUpperCase()));
+                }
             }],
             [/\[noparse\]/g, function(m, o) {
                 var body = this.no_parse(/\[\/noparse\]/g);
@@ -935,6 +1031,22 @@ function update_chat(new_data, first_load) {
         ];
         var body = new Parser(data.body).parse(rules);
         post.find(".chat_body").empty().append(body);
+        
+        var for_you = /\(You\)/.test(post.find(".quote_link").text());
+        
+        if (for_you) {
+			post.toggleClass("chat_highlight", true);
+		}
+		
+		if (admin_pass != "" && /(admin|dev(eloper)?)/.test(post.find(".chat_body").text().toLowerCase())) {
+			post.toggleClass("chat_highlight", true);
+			for_you = true;
+		}
+		
+		if (highlight_regex && highlight_regex.test(post.find(".chat_body").text().toLowerCase())) {
+			post.toggleClass("chat_highlight", true);
+			for_you = true;
+		}
 
         // Create new backlinks
         $(ref_ids).each(function () {
@@ -955,7 +1067,7 @@ function update_chat(new_data, first_load) {
         var convo_index = $.inArray(data.convo, convos);
         if (convo_index < 0) {
             convos.push(data.convo);
-            highlighted_convos.push(data.convo);
+            //highlighted_convos.push(data.convo);
         } else {
             convos.splice(convo_index,1);
             convos.push(data.convo);
@@ -963,12 +1075,37 @@ function update_chat(new_data, first_load) {
         if (!first_load) draw_convos();
 
         // Activate blinking title to notify user of new posts
-        if (!first_load) notifications(data.convo);
+        if (!first_load) notifications(data.convo, for_you);
 
         // Insert post into chat (with fade-in animation if not first load)
         if (!first_load) {
             post.css('opacity', '0');
         }
+        
+        if (!first_load) {
+	        var keys = Object.keys(chat);
+	        var count_convo = 0;
+	        for (var k in keys) {
+	        	if (data.convo === chat[keys[k]].convo)
+	        		count_convo++;
+	        }
+	        if ($("#autoscroll").prop('checked')) {
+		        while (count_convo > 100) {
+				    var i = 0;
+				    while (data.convo !== chat[keys[i]].convo || chat[keys[i]].convo_id === chat[keys[i]].count) {
+				    	i++;
+				    }
+				    
+				    var old_chat = keys[i];
+				    $("#chat_"+old_chat).remove();
+				    delete chat[old_chat];
+					keys = Object.keys(chat);
+				    count_convo--;
+			    }
+		    }
+	    }
+	    
+        
         insert_post(post, data.chat);
         if (!first_load) {
             post.animate({
@@ -1011,9 +1148,12 @@ function scroll(channel) {
 }
 
 /* window blinker (DONT CALL THIS DIRECTLY) */
-function notifications(post_convo) {
+function notifications(post_convo, for_you) {
     "use strict";
     if (window_focus === false && ($('#convo_filter').val() !== 'filter' || post_convo === get_convo())) {
+    	if (for_you) {
+    		changeFavicon("/favicon-blue.png");
+    	}
         unread_chats++;
         clearInterval(window_alert);
         window_alert = setInterval(function () {
@@ -1042,23 +1182,21 @@ function apply_filter(posts) {
         posts = $('.chats_container .chat');
     }
     var convo = get_convo();
-    var value = $('#convo_filter').val();
+//    var value = $('#convo_filter').val();
     posts.toggleClass('chat_dim', false);
     posts.toggleClass('chat_hidden', false);
 
-    if (value === "highlight"){
+/*    if (value === "highlight"){
         posts.toggleClass(function () {
             var id = parseInt(this.id.match(/\d+/)[0], 10);
-            //return (convo === chat[id].convo) ? '' : 'chat_dim';
-            return ($.inArray(chat[id].convo,highlighted_convos) > -1) ? '' : 'chat_dim';
+            return ($.inArray(chat[id].convo, highlighted_convos) > -1) ? '' : 'chat_dim';
         }, true);
-    } else if (value === "filter"){
+    } else if (value === "filter"){*/
         posts.toggleClass(function () {
             var id = parseInt(this.id.match(/\d+/)[0], 10);
-            //return (convo === chat[id].convo) ? '' : 'chat_hidden';
-            return ($.inArray(chat[id].convo,highlighted_convos) > -1) ? '' : 'chat_hidden';
+            return ($.inArray(chat[id].convo, highlighted_convos) > -1) ? '' : 'chat_hidden';
         }, true);
-    }
+   // }
 }
 
 /* adds post to chats div, based on channel if more than one chat */
@@ -1071,6 +1209,7 @@ function insert_post(post, channel) {
         post.appendTo($(".chats[data-channel='"+channel+"']"));
     }
     
+
     var max_attempt = 10;
     
     function expand_post(attempt){
@@ -1117,20 +1256,61 @@ function split_channel(channel){
 }
 
 /* sets the channel and starts up the chat */
-function set_channel(new_channel, new_post, no_push_state) {
+function set_channel(new_channel, new_post, no_push_state, tab) {
     if (!new_post) new_post = "";
 
-    // unsubscribe from any previous channel
-    if (chat_id && chat_id !== "home") {
-        socket.emit('unsubscribe', chat_id);
-    }
+	// save old stuff
+	if (tab){
+		var tab = $("<span>")
+			.click(function(){
+				set_channel(new_channel, null, null, true);
+			})
+			.attr("id", "tab_"+new_channel)
+			.toggleClass("chat_tab",true)
+			.text(new_channel);
+		if (new_channel in all_chats){
+			$("#tab_"+new_channel).remove()
+		}
+		$("#tabs").prepend(tab)
+
+		
+		all_chats[chat_id] = {
+			sidebar:$('.sidebar').html(),
+			convo:$('#convo').html(),
+			chats:$('.chats').html(),
+			chat:chat,
+			convos:convos
+		};
+		if (all_chats['current_chat']){
+			$("#tab_"+all_chats['current_chat']).toggleClass("chat_tab_dim",true);
+		} else {
+/*			$("#tabs").append(
+				$("<span>")
+				.click(function(){
+					set_channel(chat_id, null, null, true);
+				})
+				.attr("id", "tab_"+chat_id)
+				.toggleClass("chat_tab",true)
+				.toggleClass("chat_tab_dim",true)
+				.text(chat_id)
+			);*/
+		}
+		
+		all_chats['current_chat'] = new_channel;
+		
+	} else {
+	    // unsubscribe from any previous channel
+	    if (chat_id && chat_id !== "home") {
+	        socket.emit('unsubscribe', chat_id);
+	    }
+	}
 
     // clear old stuff
     $('.sidebar').empty();
     $('#convo').val('');
     $('.chats').empty();
     chat = {};
-    convos = [];
+    convos = ["General"];
 
     // indicate new channel
     $('#board_select').val(new_channel);
@@ -1162,7 +1342,15 @@ function set_channel(new_channel, new_post, no_push_state) {
     chat_id = new_channel;
     linked_post = new_post;
 
-    if (new_channel !== "home") {
+	if (new_channel in all_chats) {	
+	    // restore old stuff
+	    $('.sidebar').html(all_chats[new_channel].sidebar);
+	    $('#convo').val(all_chats[new_channel].convo);
+	    $('.chats').html(all_chats[new_channel].chats);
+	    chat = all_chats[new_channel].chat;
+	    convos = all_chats[new_channel].convos;
+
+	} else if (new_channel !== "home") {
         // subscribe to new channel
         socket.emit('subscribe', new_channel);
 
@@ -1251,8 +1439,9 @@ var entry_hash;
 function setup_convos(string){
     string = decodeURIComponent(string);
     if (string == null || string.match(/#[^+]+/g) == null) {
-        highlighted_convos = convos.slice(0);
+        highlighted_convos = ["General"];//convos.slice(0);
         draw_convos();
+                apply_filter();
         return;
     }
     var convo_array = string.match(/#[^+]+/g);
@@ -1299,11 +1488,11 @@ $(document).ready(function () {
         $('.header').remove();
     }*/
     
-    if (window.location.pathname === "/chat/int"){
+    //if (window.location.pathname === "/chat/int"){
     	$.getJSON('/json/regioncodes.json', function (data) {
 		    special_countries = data;
 		});
-    }
+    //}
   
     // setup scrolling
     $('.chats').scroll(function() {
@@ -1315,6 +1504,7 @@ $(document).ready(function () {
     $(window)
         .focus(function () {
             unread_chats = 0;
+            changeFavicon("/favicon.png");
             window.document.title = title;
             clearInterval(window_alert);
             window_focus = true;

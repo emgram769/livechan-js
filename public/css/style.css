@@ -51,11 +51,21 @@ ul {
         right:0px;
         width:250px;
         top:26px;
-        bottom:0px;
+        bottom:169px;
         overflow: auto;
         word-wrap: break-word;
 		display: none;
+}
 
+.sidebar_banner{
+	background:#AAA;
+    margin:0;
+	position: absolute;
+    right:0px;
+    width:255px;
+    bottom:0px;
+    height:169px;
+    text-align: center;
 }
 
 .sidebar_convo_dim {
@@ -101,6 +111,9 @@ ul {
         }
         .sidebar_convo {
         	display: none;
+		}
+		.sidebar_banner {
+			display: none;
 		}
 		.create{
 			right:0 !important;
@@ -266,8 +279,27 @@ ul {
     background:inherit;
 }
 
+.chat_highlight{
+	border-left: 4px solid rgb(221, 0, 0);
+}
+
 .chat_hidden{
     display:none;
+}
+
+.chat_tab{
+	background:rgb(214, 218, 240);
+	margin:0 2px;
+	padding:0 2px;
+	border-radius: 2px;
+}
+
+.chat_tab:hover{
+	cursor:pointer;
+}
+
+.chat_tab_dim{
+	background:none;
 }
 
 .chat_img{
@@ -316,7 +348,10 @@ ul {
 
 .chat_convo{
     padding-right:3px;
-    color:grey;
+    color:black;
+    border-radius:3px;
+    padding: 0 2px;
+    margin: 0 5px;
 }
 .chat_refs{
 	font-size:12px;
@@ -530,7 +565,7 @@ pre {
 .tooltip:hover:after{
 	background: #fff;
 	background: rgba(255,255,255,.8);
-	bottom: 2px;
+	bottom: 10px;
 	color: black;
 	content: attr(data-country);
 	left:0;
@@ -538,7 +573,7 @@ pre {
 	text-align: center;
 	white-space:nowrap;
 	position: absolute;
-	z-index: 98;
+	z-index: 1000;
 	width: auto;
 	width: fit-content;
 	border-radius:3px;

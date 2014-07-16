@@ -1,0 +1,5 @@
+until PORT=9000 node lib/index.js; do
+    echo "livechan crashed with exit code $?.  Respawning.." >&2
+    pkill python
+    sleep 1
+done

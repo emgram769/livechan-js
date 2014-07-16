@@ -1,35 +1,54 @@
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 200;
+  src: local('Source Code Pro ExtraLight'), local('SourceCodePro-ExtraLight'), url(https://themes.googleusercontent.com/static/fonts/sourcecodepro/v4/leqv3v-yTsJNC7nFznSMqS-IiwWNzQT_LXAtr-Ee9Pw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Source Code Pro Light'), local('SourceCodePro-Light'), url(https://themes.googleusercontent.com/static/fonts/sourcecodepro/v4/leqv3v-yTsJNC7nFznSMqcVNtom4QlEDNJaqqqzqdSs.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Code Pro'), local('SourceCodePro-Regular'), url(https://themes.googleusercontent.com/static/fonts/sourcecodepro/v4/mrl8jkM18OlOQN8JLgasD9Hq-FFgoDNV3GTKpHwuvtI.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Source Code Pro Medium'), local('SourceCodePro-Medium'), url(https://themes.googleusercontent.com/static/fonts/sourcecodepro/v4/leqv3v-yTsJNC7nFznSMqbIHYkLmgtPJP77jcqN9P08.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Source Code Pro Bold'), local('SourceCodePro-Bold'), url(https://themes.googleusercontent.com/static/fonts/sourcecodepro/v4/leqv3v-yTsJNC7nFznSMqYqjGYJUyOXcBwUQbRaNH6c.woff) format('woff');
+}
+
 html,body{
-	background:white;
+	font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace;
+	font-size: 12px;
+	background:rgb(238,255, 242);
 }
 
 .chats_container{
-    top:23px;
 }
 
 .header{
-	background:white;
-	border-bottom: 1px solid rgb(214, 218, 240);
-		border-bottom:1px solid rgba(0,147,10,1);
+
 
 }
 
 .chat_header{
-	padding:2px;
-	margin:-5px -5px 2px -5px;
-/*	border-bottom: 1px solid black;*/
-	font-size: 13px;
-	background:rgba(0,147,10,1);
-	color:white;
-	/*border-bottom: 1px solid rgb(214, 218, 240);*/
-	/*background:white;*/
+
 }
 
 .chat{
-	padding:5px;
-	background: white;
-	border-radius: 2px;
-	/*border:1px solid rgba(236,236,236,1);*/
-	/*border:1px solid rgba(0,147,10,1);*/
+	background:rgb(214, 240, 218);
 }
 
 .chat:nth-child(odd){
@@ -37,70 +56,51 @@ html,body{
 }
 
 .settings_nav{
-	position:fixed;
-	background: white;
-	border-bottom: 1px solid rgba(0,147,10,1);
-	border-left: 1px solid rgba(0,147,10,1);
-	top:23px;
+
 }
 
 .chat_name{
-    color:white;
 }
 
 .chat_label, .chat_convo{
-    color:#cccccc;
+
 }
 
 a{
-	color:#016c71;
+
 }
 
 .sidebar{
-	border-left:1px solid rgb(214, 218, 240);
-		border-left:1px solid rgba(0,147,10,1);
-	top:23px;
+
 }
 .sidebar_convo{
-	background: white;
-	border-top: 1px solid rgb(214, 218, 240);
-	border-top:1px solid rgba(0,147,10,1);
-
+	background:rgb(214, 240, 218);
 }
 
 .sidebar_convo_dim{
-	color:gray;
 }
 
 #body{
-	border-top: 0px;
-	border-bottom-left-radius: 2px;
-	border-bottom-right-radius: 2px;
+
 }
 
 #convo{
-	border-top-right-radius: 2px;
+
 }
 
 #name{
-	border-top-left-radius: 2px;
 
 }
 
 .create{
-	background:white;
-	border-top:1px solid rgb(214, 218, 240);
-	border-top:1px solid rgba(0,147,10,1);
-
-	background:rgba(236,236,236,1);
-	background:white;
-	right:250px;
+	font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace;
+	background:rgba(158,180,180,1);
+	
 }
 
-input,textarea, .input_button{
-	border-color:rgb(214, 218, 240);
-	border:1px solid rgba(0,147,10,1);
-	background:white;
+input, textarea, .input_button{
+	font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace;
+	border:1px solid rgba(158,180,180,1);
 }
 
 .admin{
@@ -112,19 +112,14 @@ input,textarea, .input_button{
 }
 
 .alert_div{
-	background-color:rgba(236,236,236,1) !important;
-	border:none !important;
+
 }
 
 .chat_number:hover{
-	color:#016c71;
 }
 
 .flag img{
-	height:18px;
-	margin-bottom: -4px;
 }
 
 .tooltip:hover:after{
-	bottom:5px;
 }

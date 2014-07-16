@@ -22,6 +22,8 @@ var cool_down_timer = 0;
 var cool_down_interval;
 var admin_mode = false;
 var admin_pass = ""; // pass to auth with server for admin commands, set by /admin command
+var highlight_regex = /.^/; // matches nothing
+var hidden = {tripcodes:false,users:[]};
 
 var socket = null;
 
@@ -101,6 +103,14 @@ $(document).ready(function () {
         }
         handle_post_response(resp);
     });
+
+	// ensure files are no greater than 5mb
+    $("#image").bind('change', function() {
+		if (this.files[0].size > 5000000){
+			div_alert("File too large. 5MB is the maximum file size.");
+			clear_file_field();
+		}
+	});
 
     $(document).bind('click', function(e){
         $('.settings_nav:first').hide('slow');
@@ -312,6 +322,9 @@ function set_up_html(){
         if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
+		if (localStorage.hidden !== undefined) hidden = localStorage.hidden;
+		if (localStorage.highlight_regex !== undefined) highlight_regex = localStorage.highlight_regex;
+
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
     }
 
@@ -321,6 +334,23 @@ function set_up_html(){
         $("#theme_select").val(default_theme);
     }
     get_css($("#theme_select").val());
+
+	// set up banners
+	var banners = ["1.png", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
+				   "9.jpg", "10.jpg", "11.png", "12.jpg", "13.jpg", "14.png", "15.png",
+				   "16.jpg", "17.gif", "18.jpg", "19.gif", "20.jpg", "21.jpg", "22.jpg",
+				   "23.png", "24.gif"];
+	
+	$(".sidebar_banner").html(
+			$("<img>").attr("src",
+				"/images/banners/"+
+				banners[(new Date).getTime() % banners.length])
+			.css({width:"100%",height:"100%",marginBottom:"-3px"})
+		)
+		.click(function(){
+			$(this).find("img")
+			.attr("src", "/images/banners/"+banners[(new Date).getTime() % banners.length])	
+		});
 
     var board = window.location.pathname.match(/[^\/]*$/)[0];
     var matched_link = window.location.hash.match(/^#(\d+)$/);
@@ -475,21 +505,6 @@ function submit_captcha(){
     cool_down_timer = 0;
 }
 
-/* initial code for migration to socket.io data transfer */
-function submit_chat_beta(){
-    var file = $("input:file")[0].files[0];
-    var stream = ss.createStream();
-
-    // upload a file to the server.
-    ss(socket).emit('upload', stream, {
-        size: file.size,
-        name: file.name,
-        type: file.type
-    });
-
-    ss.createBlobReadStream(file).pipe(stream);
-}
-
 /* prompt for admin password */
 function prompt_password(callback) {
     var pw_div = $("<div style='position: absolute; z-index: 1000; text-align: center; background: white;'>Admin password:<br><input type='password'></div>");
@@ -635,8 +650,8 @@ function submit_chat() {
         localStorage.theme = $("#theme_select").val();
     }
 
-    if ($("#body").val() === '') {
-        $("#body").val("  ");
+    if ($("#body").val() === '' && $("#image").val() === '') {
+        return;
     }
 
     var msg = $("#body").val();
@@ -690,7 +705,26 @@ function submit_chat() {
         case "s":
         case "switch":
             if (param) {
-                set_channel(param.replace('/', ''))
+                set_channel(param.replace('/', ''));
+            } else {
+                div_alert("usage: /switch /channel");
+            }
+            break;
+        case "h":
+        case "highlight":
+            if (param) {
+                highlight_regex = new RegExp(param);
+                if (localStorage) {
+	                localStorage.highlight_regex = highlight_regex;
+                }
+            } else {
+                div_alert("usage: /highlight [javascript regex]");
+            }
+            break;
+        case "t":
+        case "tab":
+            if (param) {
+                set_channel(param.replace('/', ''),null,null,true);
             } else {
                 div_alert("usage: /switch /channel");
             }
@@ -701,13 +735,6 @@ function submit_chat() {
 		    "[script]\n\n[/script]\n"+
 		    "[html]\n\n[/html]\n[/plugin]";
 		    el.value = text;
-            break;
-       case "split":
-            if (param) {
-                split_channel(param.replace('/', ''))
-            } else {
-                div_alert("usage: /split /channel");
-            }
             break;
         case "delete":
             prompt_password(function(password) {
@@ -725,22 +752,25 @@ function submit_chat() {
             });
             break;
         case "set":
-            prompt_password(function(password) {
-                if (password) {
-                    param = param.split('/');
-                    $.ajax({
-                        type: "POST",
-                        url: '/set',
-                        data: {password: password, id: param[0], text: param.splice(1).join('/')}
-                    }).done(function (data_delete) {
-                        if(data_delete.success)
-                            div_alert("success");
-                        else
-                            div_alert("failure");
-                    });
-                }
+            param = param.split(' ');
+            $.ajax({
+                type: "POST",
+                url: '/set',
+                data: {id: param[0], text: param.splice(1).join(' ')}
+            }).done(function (data_delete) {
+                if(data_delete.success)
+                    div_alert("success");
+                else
+                    div_alert("failure");
             });
             break;
+        case "hide":
+        	if (param[0] == "trips") {
+	        	
+        	} else if (parseInt(param[0]) !== NaN) {
+	        	
+        	}
+			break;
         case "refresh":
             prompt_password(function(password) {
                 if (password) {
@@ -777,9 +807,6 @@ function submit_chat() {
             );
         }
         return;
-    }
-    if (submit_beta) {
-        submit_chat_beta();
     } else if (FormData) {
         if (submit_file != null) {
             $("#image").prop("disabled", true);
@@ -817,6 +844,9 @@ function handle_post_response(resp) {
     if (resp.failure && resp.failure === "session_expiry") {
         $("#body").val(last_post);
         submit_captcha();
+    } else if (resp.failure && resp.failure === "ban_violation") {
+        div_alert("You've been banned.<br><br>  To appeal the ban send an email to <a href='mailto:mod.livechan@gmail.com'>a moderator</a>.  Please include your IP.");
+        init_cool_down();
     } else if (resp.failure) {
         div_alert(resp.failure);
         init_cool_down();

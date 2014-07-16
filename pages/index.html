@@ -8,7 +8,7 @@
         <link type="text/css" rel="stylesheet" href="/css/style.css">
 
         <!--<link media="all" href="/css/livechan.css" type="text/css" rel="stylesheet" id="css_new">-->
-        <link rel="shortcut icon" href="/favicon.png" />
+        <link id="dynamic-favicon" rel="shortcut icon" href="/favicon.png" />
         <!--[if lt IE 9]>
         <script src="/js/html5shiv.min.js"></script>
         <![endif]-->
@@ -33,6 +33,7 @@
 
 		</select>
         <span id="user_count" class="left_float" style="padding-left:5px;"></span>
+        <span id="tabs"class="left_float"></span>
 		<button id="settings_button" class="right_float">Settings</button>
 	</header>
 	<nav class="settings_nav hidden">
@@ -40,7 +41,7 @@
 		<li><input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label></li>
 		<li><input type="checkbox" id="clearconvo" class="input_checkbox" checked value="checked"/> <label for="clearconvo" style="font-size:14px" >Clear convo on submit</label></li>
 		<li><input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on enter</label></li>
-		<li><input type="checkbox" id="spoilers" class="input_checkbox" checked value="checked"/> <label for="spoilers" style="font-size:14px" >Spoilers</label></li>
+		<li><input type="checkbox" id="spoilers" class="input_checkbox" checked value="checked"/> <label for="spoilers" style="font-size:14px" >BBCode</label></li>
 		<li><input type="range" id="volume" class="input_range" min="0" max="1" step="0.01" value="1"/> <label for="volume" style="font-size:14px" >Volume</label></li>
         <li><select id="thumbnail_mode" class="input_select">
                     <option value="links-only">Image links only</option>
@@ -48,9 +49,9 @@
                     <option value="animated">Animated thumbnails</option>
         </select></li>
 		<li><select id="convo_filter" class="input_select">
+			<option value="filter">Full Filter</option>
 			<option value="no-filter" >No Conversation Filter</option>
 			<option value="highlight">Highlight</option>
-			<option value="filter">Full Filter</option>
 		</select></li>
 		<li><select id="theme_select" class="input_select">
 			<option value="/style.css">Blue</option>
@@ -161,7 +162,7 @@
 		<form id="comment-form" action="?" target="miframe" method="post" enctype="multipart/form-data">
 			<input id="name" name="name" placeholder="Anonymous" class="name" type="text" maxlength="200"/>
 			<input id="convo" name="convo" placeholder="General" class="convo" type="text" maxlength="39"/>
-			<textarea id="body" name="body" placeholder="Comment" class="comment" maxlength="1999"></textarea>
+			<textarea id="body" name="body" placeholder="Comment" class="comment" autocomplete="off" maxlength="1999"></textarea>
 			<input id="image" class="input_button" name="image" type="file"/>
 			<img id="record_button" class="input_button" src="/icons/record.png" alt="clear" title="record audio" style="display: none;"/>
 			<img id="stop_button" class="input_button" src="/icons/stop.png" alt="clear" title="stop recording" style="display: none;"/>
@@ -172,6 +173,18 @@
 		</form>
 	</aside>
 	<aside class="sidebar">
+	</aside>
+	<aside class="sidebar_banner">
+		<br>
+		Make banners for livechan!<br>
+		[255px X 169p]<br>
+		<a href="/chat/dev#Banner" target="_blank">upload images here</a>
+		<br>
+		<br>
+		Please include "livechan" <br> somewhere in the image.
+		<br>
+		<br>
+		Current submissions <a href="/images/banners/banners.html" target="_blank>">here</a>
 	</aside>
 	<iframe style="visibility:hidden;" id="miframe" name="miframe"></iframe>
 	    <link rel="stylesheet" href="/plugins/code_highlight/css/default.css">

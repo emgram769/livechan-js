@@ -14,6 +14,7 @@ push
 logs.txt
 salt.txt
 admin_pw.txt
+no_limit_cookie.txt
 node_modules/*
 !node_modules/captcha/captcha.js
 bower_components/*
