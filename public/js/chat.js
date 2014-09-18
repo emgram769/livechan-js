@@ -1255,6 +1255,41 @@ function split_channel(channel){
     socket.emit('subscribe', channel);
 }
 
+/* pulls the data */
+function pull_chats(channel, convo) {
+	$.ajax({
+        type: "GET",
+        url: "/data/" + channel
+    }).done(function (data_chat) {
+        draw_data = draw_data.concat(data_convo, data_chat);
+        draw_data.sort(function(a, b) {return b.count - a.count;});
+        draw_chat(draw_data);
+        $('.chats').toggleClass('shown', true);
+        on_chat = function(d) {
+            update_chat(d);
+            if($("#autoscroll").prop('checked')) {
+                var current_hover = $(".chat_img_cont:hover");
+                if (current_hover.length == 0) {
+                    scroll();
+                } else {
+                    function deferred_scroll() {
+                        current_hover.off("mouseout", deferred_scroll);
+                        scroll();
+                    }
+                    current_hover.on("mouseout", deferred_scroll);
+                }
+            }
+        };
+        setTimeout(function() {
+            if (new_post !== "") {
+                if ($("#chat_"+linked_post).length) $("#chat_"+linked_post)[0].scrollIntoView();
+            } else {
+                scroll();
+            }
+        }, 100);
+    });
+}
+
 /* sets the channel and starts up the chat */
 function set_channel(new_channel, new_post, no_push_state, tab) {
     if (!new_post) new_post = "";
@@ -1437,7 +1472,7 @@ function scroll_to_post(new_post, no_push_state) {
 
 var entry_hash;
 function setup_convos(string){
-    string = decodeURIComponent(string);
+    //string = decodeURIComponent(string);
     if (string == null || string.match(/#[^+]+/g) == null) {
         highlighted_convos = ["General"];//convos.slice(0);
         draw_convos();
@@ -1446,7 +1481,7 @@ function setup_convos(string){
     }
     var convo_array = string.match(/#[^+]+/g);
 
-    convo_array = convo_array.map(function(elem){return elem.slice(1)});
+    convo_array = convo_array.map(function(elem){return decodeURIComponent(elem.slice(1))});
     swap_to_convo(convo_array[0]);
     for (i in convo_array.slice(1)){
         add_to_convo(convo_array.slice(1)[i]);

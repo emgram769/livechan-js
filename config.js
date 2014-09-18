@@ -1,12 +1,13 @@
 module.exports = {
     boards: [
-        'all', 'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k',
+        'all', 'g', 'int', 'draw', 'hotel', 'r', 'v',
+        's4s', 'dev' /*'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k',
         'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i',
         'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp',
         'cgl', 'ck', 'co', 'diy', 'fa', 'fit', 'gd', 'hc', 'int', 'jp', 'lit',
         'mlp', 'mu', 'n', 'out', 'po', 'pol', 'sci', 'soc', 'sp', 'tg', 'toy',
         'trv', 'tv', 'vp', 'waifu', 'wsg', 'x', 'dev', 'tech', 'prog',
-        'dogecoin', 'fedoracoin', 'coin', 'q', 'cats', 'draw', 'hotel'
+        'dogecoin', 'fedoracoin', 'coin', 'q', 'cats', 'draw', 'hotel'*/
     ],
 
     all_fields: 'chat name body convo convo_id count date trip',

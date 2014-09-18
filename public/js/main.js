@@ -339,7 +339,7 @@ function set_up_html(){
 	var banners = ["1.png", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
 				   "9.jpg", "10.jpg", "11.png", "12.jpg", "13.jpg", "14.png", "15.png",
 				   "16.jpg", "17.gif", "18.jpg", "19.gif", "20.jpg", "21.jpg", "22.jpg",
-				   "23.png", "24.gif"];
+				   "23.png", "24.gif", "25.png"];
 	
 	$(".sidebar_banner").html(
 			$("<img>").attr("src",

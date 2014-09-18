@@ -1,0 +1,229 @@
+body, html {
+	background: #3c6197;
+	padding: 0;
+	margin: 0;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 14px;
+}
+
+.chats_container {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 250px; /* RIGHT WIDTH */
+	background: blue;
+	font-size: 0;
+}
+
+.chat_container {
+	position: relative;
+	background: white;
+	height: 100%;
+	display: inline-block;
+	margin: 0px;
+	padding: 0px;
+	font-size: medium;
+	background: #3c6197;
+}
+
+.chat_section {
+	position: absolute;
+	bottom: 115px;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: #3c6197;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.chat_element_container {
+	width: 100%;
+}
+
+.chat_element {
+	background: rgba(255, 255, 255, .7);
+	margin: 4px 0px 4px 4px;
+	box-shadow: 0px 0px 3px rgba(0,0,0,.3);
+	padding: 6px;
+	font-size: 14px;
+}
+
+.flag img {
+	height: 22px;
+	padding-left: 5px;
+    margin: 0;
+    margin-bottom: -5px;
+}
+
+.tooltip {
+	display: inline;
+	position: relative;
+}
+
+.tooltip:hover:after {
+	background: #fff;
+	background: rgba(255,255,255,.8);
+	bottom: 10px;
+	color: black;
+	content: attr(data-country);
+	left:0;
+	font-size:12px;
+	text-align: center;
+	white-space:nowrap;
+	position: absolute;
+	z-index: 1000;
+	width: auto;
+	width: fit-content;
+	border-radius:3px;
+}
+
+.chat_header {
+	margin-top: -3px;
+	padding-bottom: 2px;
+}
+
+.chat_convo {
+    padding-right: 3px;
+    color: black;
+    border-radius: 3px;
+    padding: 0 2px;
+    margin: 0 5px;
+}
+
+.chat_number {
+    padding-left: 5px;
+}
+
+.chat_number:hover {
+    color: rgb(221, 0, 0);
+    cursor: pointer;
+}
+
+.chat_name {
+    color:green;
+    font-weight: bold;
+    padding-right: 4px;
+}
+
+.trip_code {
+    font-weight:normal;
+}
+
+.chat_convo_element {
+	margin: 4px;
+	padding: 3px;
+	font-size: 14px;
+}
+
+.chat_convo_element:hover {
+	cursor: pointer;
+}
+
+.chat_convo_highlighted {
+	background: rgba(255, 255, 255, .7);
+	box-shadow: 0px 0px 4px rgba(0,0,0,.2);
+}
+
+.chat_input {
+	position: absolute;
+	height: 115px; /* INPUT HEIGHT */
+	bottom: 0px; /* INPUT HEIGHT */
+	left: 4px;
+	right: 0px;
+	font-size: 0;
+}
+
+.chat_section_unfocused {
+	bottom: 0px;	
+}
+
+.chat_input_unfocused {
+	display: none;
+}
+
+.chats_convo_bar {
+	position: absolute;
+	width: 250px;
+	top: 20px;
+	right: 0;
+	bottom: 0;
+}
+
+.input_name {
+    outline: none;
+	border: 0px solid #3c6197;
+	border-bottom: 1px solid #3c6197;
+	border-right: 1px solid #3c6197;
+	padding: 1px 2px;
+	margin: 0;
+	position: absolute;
+	left: 0px;
+	right: 50%;
+	width:50%;
+	top: 0px;
+	height: 20px;
+}
+
+.input_convo {
+    outline: none;
+	border: 0px solid #3c6197;
+	border-bottom: 1px solid #3c6197;
+	border-left: 1px solid #3c6197;
+	padding: 1px 2px;
+	margin: 0;
+	position: absolute;
+	left: 50%;
+	right: 0px;
+	width:50%;
+	top: 0px;
+	height: 20px;
+}
+
+.input_body {
+    outline: none;
+	border: 0px solid #3c6197;
+	position:absolute;
+	resize: none;
+	padding: 2px;
+	top: 21px;
+	left: 0px;
+	right: 0px;
+	bottom: 0;
+	width: 100%;
+	height: 70px;
+}
+
+.input_button {
+	position: absolute;
+	bottom: 2px;
+}
+
+.input_image {
+	left: 4px;
+}
+
+.input_submit {
+	right: 0;
+}
+
+.width_1 {
+	width: 25%;
+}
+
+.width_2 {
+	width: 50%;
+}
+
+.width_3 {
+	width: 75%;
+}
+
+.width_4 {
+	width: 100%;
+}
+
+.chat_mod_tools {
+	display: none;
+}
