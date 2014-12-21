@@ -324,6 +324,7 @@ function set_up_html(){
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
 		if (localStorage.hidden !== undefined) hidden = localStorage.hidden;
 		if (localStorage.highlight_regex !== undefined) highlight_regex = localStorage.highlight_regex;
+        if (localStorage.max_chats !== undefined) max_chats = localStorage.max_chats;
 
         cool_down_timer = localStorage.cool_down_timer ? parseInt(localStorage.cool_down_timer) : 0;
     }
@@ -702,6 +703,21 @@ function submit_chat() {
                 div_alert("usage: /join /channel");
             }
             break;
+        case "stream":
+        		var tempName = Math.random().toString(36).substring(2);
+        		var options = "";
+        		if (param) {
+	        		if (param == "webcam") {
+		        		options = "&type=1";
+	        		} else if (param == "desktop") {
+		        		options = "&type=0";
+	        		}
+        		}
+        		window.open('https://' + document.location.host + '/js/stream/cam.html?name=' + tempName + options, tempName, "width=800, height=600");
+        		var el = $("#body")[0];
+        		var tempHash = Sha256.hash(tempName);
+		    		el.value += 'stream: '+'https://' + document.location.host + '/js/stream/cam.html?hash=' + tempHash;
+        		break;
         case "s":
         case "switch":
             if (param) {
@@ -716,6 +732,18 @@ function submit_chat() {
                 highlight_regex = new RegExp(param);
                 if (localStorage) {
 	                localStorage.highlight_regex = highlight_regex;
+                }
+            } else {
+                div_alert("usage: /highlight [javascript regex]");
+            }
+            break;
+        case "c":
+        case "cache":
+            if (param) {
+                max_chats = parseInt(param);
+                if (!(max_chats > 0)) { max_chats = 100; }
+                if (localStorage) {
+	                localStorage.max_chats = max_chats;
                 }
             } else {
                 div_alert("usage: /highlight [javascript regex]");

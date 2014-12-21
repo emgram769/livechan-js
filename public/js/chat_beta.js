@@ -34,11 +34,14 @@ $('document').ready(function(){
 			drawConvoList(data[i]);
 		}
 	});
-
+	submitCaptcha();
 });
 
 function drawConvoList(data) {
-	if (typeof(data) !== "undefined" && !(data.convo in convos)) convos.push(data.convo);
+	if (typeof(data) !== "undefined" && (convos.indexOf(data.convo) < 0)) {
+		console.log(data.convo);
+		convos.push(data.convo);
+	}
 	
 	$(".chats_convo_bar").empty();
 	for (var i in convos) {
@@ -84,7 +87,7 @@ function sectionProto(channel) {
 }
 
 sectionProto.prototype.addConvo = function(convo) {
-	if (convo in this.convos) {
+	if (this.convos.indexOf(convo) >= 0) {
 		return;
 	} else {
 		this.convos.push(convo);
@@ -93,7 +96,7 @@ sectionProto.prototype.addConvo = function(convo) {
 };
 
 sectionProto.prototype.removeConvo = function(convo) {
-	if (convo in this.convos) {
+	if (this.convos.indexOf(convo) >= 0) {
 		var index = array.indexOf(convo);
 		this.convos.splice(index, 1);
 		return;
@@ -103,6 +106,10 @@ sectionProto.prototype.removeConvo = function(convo) {
 };
 
 sectionProto.prototype.drawChat = function(chat) {
+	if (this.convos.indexOf(chat.convo) < 0) {
+		return;
+	}
+	
 	var chatElement = createChatElement(chat);
 	
 	if (this.chats.length == 0) {
@@ -130,13 +137,13 @@ sectionProto.prototype.getSubscription = function(channel, convo) {
 	section.addConvo(convo);
 
     socket.emit('subscribe', channel);
-
+	console.log("/data/" + channel + "_" + encodeURIComponent(convo));
 	// Get convo data
 	$.ajax({
         type: "GET",
-        url: "/data/" + channel + "_" + convo
+        url: "/data/" + channel + "_" + encodeURIComponent(convo)
     }).done(function (data) {
-        for (i in data) {
+        for (var i in data) {
 	        section.drawChat(data[i]);
         }
     });
@@ -520,17 +527,18 @@ function createChatElement(chat) {
 }
 
 function submitCaptcha() {
-	var captchaDiv = $("<div>");
-	captchaDiv.css({
-		position: "absolute",
-		bottom: "2px",
-		right: 0,
-		top: 0,
-		left: 0,
-		background: "white",
-		zIndex: 2
-	});
-	captchaDiv.text("woot");
+	var captchaDiv = $("<div class='captcha_div'>");
+	var captchaImg = $("<img src='/captcha.jpg' alt='type in the captcha' style='height:100%;float:left'>");
+	var captchaSpan = $("<span/>");
+	captchaSpan.text("Enter the captcha below to prove you are not a robot.");
+	var captchaForm = $("<form method='post' target='ghostframe' action='/login'>");
+	var captchaInput = $("<input type='text' name='digits' style='display:inline;'>");
+	var captchaSubmit = $("<input type='submit' style='display:inline;'>");
+
+	captchaDiv
+		.append(captchaImg)
+		.append(captchaSpan)
+		.append(captchaForm.append(captchaInput).append(captchaSubmit));
 	$(".chat_input").prepend(captchaDiv);
 }
 

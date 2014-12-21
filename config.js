@@ -1,6 +1,6 @@
 module.exports = {
     boards: [
-        'all', 'g', 'int', 'draw', 'hotel', 'r', 'v',
+        'all', 'g', 'int', 'draw', 'hotel', 'r', 'v', 'pol', 'fit', 'cult',
         's4s', 'dev' /*'a', 'b', 'c', 'd', 'e', 'f', 'film', 'g', 'gif', 'h', 'hr', 'k',
         'm', 'o', 'p', 'r', 's', 't', 'u', 'v', 'vg', 'vr', 'w', 'wg', 'i',
         'ic', 'r9k', 's4s', 'cm', 'hm', 'lgbt', 'y', '3', 'adv', 'an', 'asp',

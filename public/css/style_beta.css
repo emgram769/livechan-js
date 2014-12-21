@@ -227,3 +227,30 @@ body, html {
 .chat_mod_tools {
 	display: none;
 }
+
+.captcha_div {
+	position: absolute;
+	bottom: 4px;
+	width: 380px;
+	right:0;
+	top: 0;
+	left: 0;
+	background: green;
+	z-Index: 2;
+}
+
+.captcha_div img {
+	width: 185px;
+}
+.captcha_div span {
+	position: absolute;
+	top:0;
+	right:0;
+	width: 185px;
+}
+
+.captcha_div form {
+	position: absolute;
+	left: 188px;
+	bottom: 0;
+}

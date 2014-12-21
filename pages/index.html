@@ -82,6 +82,7 @@
 	         	               <a class="link homescreen" href="/draw">drawing space - /draw </a>
 	         	               <a class="link homescreen" href="/chat/v">vidya - /v </a>
 	         	               <a class="link homescreen" href="/chat/r">random (nsfw) - /r </a>
+
 	                           <!-- You have found the hidden boards!
 	        	         	   <a class="link homescreen" href="/chat/t">technology - /t</a>
 	         	               <a class="link homescreen" href="/chat/a">anime - /a </a>
@@ -119,18 +120,16 @@
 	        </section>
 	        <a target="_blank" class="chat_img_cont"></a>
 	    	<output class="chat_body" style="text-align: center;display: block;padding:50px;">
-	             We're a small growing community that uses our own open-source <a href="https://github.com/emgram769/live4chan">node.js server (GitHub)</a> to post images and chats to each other over different channels and "conversations".
-	            <br>
-	            <br>The server is open to contributions from anyone willing to help out.
-	            <br>
-	            <br>New conversations (the livechan version of threads) can be made by setting the second field (General by default), or you can join an existing conversation by choosing one from the list on the right once you've joined a board.
-	            <br>
-	            <br>
-	            <a href="/chat/all">Hide this message</a> to join the "All" channel and watch chat messages posted in realtime, or choose a channel from the dropdown box on the top left to start chatting.
-	            <br>
-	            <br>
-	            <b>Please note there is a strict 7 second cool down time shared through all boards for new chat messages. New conversations have a 50 second cool down time to help prevent spamming.</b>
-	            <br>
+
+	             <b>Rules</b>
+	             <ul>
+	             <li>Nothing that violates U.S. or international law may be posted on this site.</li>
+				 <li>You must be 18 or older to use this site.</li>
+				 <li>No explicit material is allowed in any <i>General</i> threads except for <a href="/chat/r">/r</a>.</li>
+				 <li>Any attempt to spam, flood or advertise on the site can result in a ban.</li>
+				 <li>Thank you for reading the rules.  If the site is down, updates will be relayed through <a href="https://twitter.com/livechan_net">twitter</a>.</li>
+	             </ul>
+	            
 	            
 	        </output>
 	    </article>
@@ -144,8 +143,8 @@
 	        </section>
 	        <a target="_blank" class="chat_img_cont"></a>
 	        <output class="chat_body" style="text-align: center;display: block">
-	            Feature suggestions? <a href="https://code.stypi.com/emgram/livechan">https://code.stypi.com/emgram/livechan</a>
-	            <br>
+	        	    		Livechan is entirely open source, here is the
+	             <a href="https://github.com/emgram769/live4chan">code</a>
 	            <br>Donations toward server hosting? (anything is appreciated!) 
 	            <br>Bitcoin:<a href="bitcoin:1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr">1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr</a> 
 	            <br>Dogecoin: <a>DCSmbH2turiUVHP5AJcmKZzRTyfe8kib7j</a>
@@ -196,6 +195,7 @@
 		<script src="/js/socket.io-stream.min.js"></script>
         <script src="/js/jquery.min.js"></script>
         <script src="/js/chat.js"></script>
+        <script src="/js/stream/sha256.js"></script>
         <script src="/js/main.js"></script>
 </body>
 </html>

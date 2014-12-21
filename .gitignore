@@ -28,3 +28,4 @@ ssl.key
 ssl.csr
 sub.class1.server.ca.pem
 npm-debug.log
+super_hidden.txt

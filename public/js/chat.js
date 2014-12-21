@@ -27,14 +27,14 @@ var highlighted_convos = ["General"];
 var start_press; // for long press detection
 var longpress = 400;
 
-var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY"]; // first trip here is used for server status posts
+var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY", "!!/3R6pgOFdo"]; // first trip here is used for server status posts
 var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
-var default_contribs = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!iRTB7gU5ps", "!!Tia6BuxIxc"];
+var default_contribs = ["!!Tia6BuxIxc"];
 var bots = ["!!.w5vzYxkv6","!!RG5a8fLuMM"];
 var irc = ["!!SxKC741YKw"];
-var hidden = ["!RQ1r/nUdfw"];
-var special_trips = bots.concat(irc).concat(hidden);
+var hidden_trips = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!xeE5csyhAE", "!RQ1r/nUdfw", "!We.UHNdLy."];
+var special_trips = bots.concat(irc).concat(hidden_trips);
 var my_ids = [];
 var contribs = default_contribs;
 
@@ -43,6 +43,7 @@ var window_alert;
 var blink;
 var unread_chats = 0;
 var title = "";
+var max_chats = 100;
 
 var chat_id = "";
 var linked_post = "";
@@ -416,7 +417,7 @@ function draw_convos(){
         convo_html.prepend(convo_title_html);
         convo_html.mouseover(function(e){
             convo_hover = true;
-            image_mouseover(this, e, $(this).attr("data-op"));
+            //image_mouseover(this, e, $(this).attr("data-op"));
             //$(this).find('div').animate({maxHeight:1000}, 200);
             if (display)
                 display.css(displayAlign, $('.sidebar').width() + 5 + 'px');
@@ -732,14 +733,25 @@ function update_chat(new_data, first_load) {
 	        country_name = "IRC";
 	        post.find(".flag").attr("data-country", country_name);
 	        post.find(".flag").prepend(country);
-	    } else if (data.trip == "!RQ1r/nUdfw") {
-    		var country = $("<img src='/icons/countries/GAY.png'/>");
-	        country_name = "Hidden With Pride";
-	        post.find(".flag").attr("data-country", country_name);
-	        post.find(".flag").prepend(country);
-    	} else if (bots.indexOf(data.trip)>-1 ) {
-    		var country = $("<img src='/icons/bot.png' style='height:10px;margin-bottom:1px;'/>");
-	        country_name = "Bot";
+	    } else if (hidden_trips.indexOf(data.trip) > -1) {
+	    	switch (data.trip) {
+	    	case "!xeE5csyhAE":
+	    		var country = $("<img src='/icons/countries/FASC.png'/>");
+		        country_name = "Fascist";
+		        post.find(".flag").attr("data-country", country_name);
+		        post.find(".flag").prepend(country);
+		        break;
+		    default:
+		    	var country = $("<img src='/icons/countries/GAY.png'/>");
+		        country_name = "Hidden With Pride";
+		        post.find(".flag").attr("data-country", country_name);
+		        post.find(".flag").prepend(country);
+		        break;
+	    	}
+    		
+    	} else if (bots.indexOf(data.trip) > -1) {
+    		var country = $("<img src='/icons/bot.png' style='height:20px;margin-bottom:-3px;'/>");
+	        country_name = "anna";
 	        post.find(".flag").attr("data-country", country_name);
 	        post.find(".flag").prepend(country);
     	} else {
@@ -772,14 +784,14 @@ function update_chat(new_data, first_load) {
     }
     if (changed.trip) {
         var special = ($.inArray(data.trip, special_trips)>-1);
-        post.find(".trip_code")
-			.text(data.trip)
-            .toggleClass("hidden", special);
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
         var dev = ($.inArray(data.trip, devs) > -1);
-        var addend = dev ? " Developer" : "";
-        addend = admin ? " Admin" : addend;
+        post.find(".trip_code")
+						.text(data.trip)
+            .toggleClass("hidden", special || admin || dev || contrib);
+        var addend = dev ? " ## Developer" : "";
+        addend = admin ? " ## Mod" : addend;
         post.find(".chat_name")
             .toggleClass("contrib", contrib)
             .toggleClass("admin", admin)
@@ -1090,7 +1102,7 @@ function update_chat(new_data, first_load) {
 	        		count_convo++;
 	        }
 	        if ($("#autoscroll").prop('checked')) {
-		        while (count_convo > 100) {
+		        while (count_convo > max_chats) {
 				    var i = 0;
 				    while (data.convo !== chat[keys[i]].convo || chat[keys[i]].convo_id === chat[keys[i]].count) {
 				    	i++;
@@ -1487,7 +1499,6 @@ function setup_convos(string){
         add_to_convo(convo_array.slice(1)[i]);
     }
     //highlighted_convos = convo_array;
-    console.log(convo_array);
     entry_hash = null;
     draw_convos();
     
