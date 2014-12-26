@@ -106,8 +106,8 @@ $(document).ready(function () {
 
 	// ensure files are no greater than 5mb
     $("#image").bind('change', function() {
-		if (this.files[0].size > 5000000){
-			div_alert("File too large. 5MB is the maximum file size.");
+		if (this.files[0].size > 8000000){
+			div_alert("File too large. 8MB is the maximum file size.");
 			clear_file_field();
 		}
 	});
@@ -303,6 +303,13 @@ function set_up_html(){
             my_ids = JSON.parse(my_ids);
         } else {
             my_ids = [];
+        }
+        
+        ignored_ids = localStorage.ignored_ids;
+        if (ignored_ids) {
+	        ignored_ids = JSON.parse(ignored_ids);
+        } else {
+	        ignored_ids = [];
         }
 
         contribs = localStorage.contribs;
@@ -792,13 +799,18 @@ function submit_chat() {
                     div_alert("failure");
             });
             break;
-        case "hide":
-        	if (param[0] == "trips") {
-	        	
-        	} else if (parseInt(param[0]) !== NaN) {
-	        	
+        case "ignore":
+        	var chat_count = parseInt(param);
+        	if (chat_count !== NaN) {
+        		console.log(chat_count, chat[chat_count]);
+	        	ignored_ids.push(chat[chat_count].identifier);
+	        	localStorage.ignored_ids = JSON.stringify(ignored_ids);
         	}
-			break;
+					break;
+				case "unignore":
+	        localStorage.ignored_ids = JSON.stringify([]);
+	        ignored_ids = [];
+					break;
         case "refresh":
             prompt_password(function(password) {
                 if (password) {

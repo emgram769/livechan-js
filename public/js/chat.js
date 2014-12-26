@@ -27,7 +27,7 @@ var highlighted_convos = ["General"];
 var start_press; // for long press detection
 var longpress = 400;
 
-var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY", "!!/3R6pgOFdo"]; // first trip here is used for server status posts
+var admins = ["Status","!!rr1C6aJjtk", "!!hSdTJ81KjY", "!!/3R6pgOFdo", "!!Q9nUUthOWU"]; // first trip here is used for server status posts
 var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 /* if you look at source you are essentially helping out, so have some blue colored trips! --> bluerules, testing */
 var default_contribs = ["!!Tia6BuxIxc"];
@@ -37,6 +37,7 @@ var hidden_trips = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!xeE5csyhAE", "!RQ1r/nUdfw", 
 var special_trips = bots.concat(irc).concat(hidden_trips);
 var my_ids = [];
 var contribs = default_contribs;
+var ignored_ids;
 
 var window_focus = true;
 var window_alert;
@@ -692,6 +693,10 @@ function update_chat(new_data, first_load) {
     if (id === undefined) return;
     var new_post = (chat[id] === undefined || id == 0);
 
+		console.log($.inArray(new_data.identifier, ignored_ids) > -1);
+		if (ignored_ids && new_data && new_data.identifier && $.inArray(new_data.identifier, ignored_ids) > -1) {
+			return;
+		}
     // Find post element or create blank one
     var post = new_post ? generate_post(id) : $("#chat_" + id);
 
@@ -741,12 +746,15 @@ function update_chat(new_data, first_load) {
 		        post.find(".flag").attr("data-country", country_name);
 		        post.find(".flag").prepend(country);
 		        break;
-		    default:
+		    case "!RQ1r/nUdfw":
 		    	var country = $("<img src='/icons/countries/GAY.png'/>");
 		        country_name = "Hidden With Pride";
 		        post.find(".flag").attr("data-country", country_name);
 		        post.find(".flag").prepend(country);
 		        break;
+		    default:
+		    		//post.find(".name_part").style("font-weight", "300");
+		    		break;
 	    	}
     		
     	} else if (bots.indexOf(data.trip) > -1) {
