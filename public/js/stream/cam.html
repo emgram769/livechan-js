@@ -1,0 +1,84 @@
+<!--
+> Muaz Khan     - github.com/muaz-khan 
+> MIT License   - www.webrtc-experiment.com/licence
+> Documentation - www.RTCMultiConnection.org
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            body,html{
+                padding:0;
+                margin:0;
+                font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+                font-weight: 300;
+                overflow:hidden;
+            }
+            audio, video, #videos-container {
+                -moz-transition: all 1s ease;
+                -ms-transition: all 1s ease;
+                
+                -o-transition: all 1s ease;
+                -webkit-transition: all 1s ease;
+                transition: all 1s ease;
+                vertical-align: top;
+                width: 100%;
+            }
+
+            input {
+                border: 1px solid #d9d9d9;
+                border-radius: 1px;
+                font-size: 2em;
+                margin: .2em;
+                width: 30%;
+            }
+
+            .setup {
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+                font-size: 102%;
+                height: 47px;
+                margin-left: -9px;
+                margin-top: 8px;
+                position: absolute;
+            }
+
+            p { padding: 1em; }
+
+            li {
+                border-bottom: 1px solid rgb(189, 189, 189);
+                border-left: 1px solid rgb(189, 189, 189);
+                padding: .5em;
+            }
+            #videos-container {
+                height:100%;
+                padding:0;
+            }
+            video {
+                width:100%;
+                height:100%;
+                max-height:100%;
+                max-width:100%;
+            }
+            .no-stream {
+                width:100%;
+                text-align:center;
+                padding:30% 0;
+                font-size:16px;
+            }
+        </style>
+        
+        <!-- scripts used for broadcasting -->
+        <script src="./sha256.js"></script>
+        <script src="https://cdn.webrtc-experiment.com/firebase.js"> </script>
+        <script src="https://cdn.webrtc-experiment.com/RTCMultiConnection.js"> </script>
+    </head>
+
+    <body>
+                <!-- local/remote videos container -->
+                <div id="videos-container"><div class="no-stream">Loading...</div></div>
+        
+            <script src="./setup.js"></script>
+    </body>
+</html>
+
