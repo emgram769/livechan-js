@@ -75,18 +75,22 @@ If you do not want audio/video support, you should edit your [config.js](https:/
 9) Restore the changes to the captcha module which were overwritten by npm install:
 
     git checkout node_modules/captcha/captcha.js
+    
+10) Get ircd.js modified for livechan
 
-10) Make sure the public/tmp/uploads and public/tmp/thumb folders are writable
+    cd ..; git clone https://github.com/emgram769/ircd.js; cd live4chan
+
+11) Make sure the public/tmp/uploads and public/tmp/thumb folders are writable
 
     chmod 777 public/tmp/uploads public/tmp/thumb
 
-11) Set the admin password
+12) Set the admin password
 
     node lib/set-password.js
 
 This is used for the admin commands to delete/change posts and ban users.
 
-12) Run LiveChan
+13) Run LiveChan
 
     npm start
 
