@@ -78,7 +78,7 @@ If you do not want audio/video support, you should edit your [config.js](https:/
     
 10) Get ircd.js modified for livechan
 
-    cd ..; git clone https://github.com/emgram769/ircd.js; cd live4chan
+    cd ..; git clone https://github.com/emgram769/ircd.js; cd ircd.js; npm install; cd ../live4chan
 
 11) Make sure the public/tmp/uploads and public/tmp/thumb folders are writable
 
