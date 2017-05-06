@@ -31,11 +31,11 @@ module.exports = {
 
     /* Supported file types */
     image_formats: ['jpg', 'jpeg', 'png', 'gif'],
-    video_formats: ['ogv', 'webm'],
-    audio_formats: ['ogg'],
+    video_formats: ['ogv', 'webm', 'mp4'],
+    audio_formats: ['ogg', 'mp3', 'flac'],
 
     codec_names: {
-        video: ['theora', 'vp8', 'vp9'],
-        audio: ['vorbis', 'libopus']
+        video: ['theora', 'vp8', 'vp9', 'h264'],
+        audio: ['vorbis', 'libopus', 'mp3', "aac", "opus"]
     }
 };
