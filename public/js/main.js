@@ -641,6 +641,26 @@ function mod_ban_poster(id, board, password)
     });
 }
 
+function mod_unban_poster(id, password)
+{
+    if(!password || password.length <= 0)
+    {
+        console.log("mod_unban_poster: invalid param");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: '/unban',
+        data: {password: password}
+    }).done(function (data_ban) {
+        if(data_ban.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
 function submit_chat() {
     "use strict";
 
@@ -790,6 +810,11 @@ function submit_chat() {
         case "ban":
             prompt_password(function(password) {
                 mod_ban_poster(param[0], param[1], password);
+            });
+            break;
+        case "unban":
+            prompt_password(function(password) {
+                mod_unban_poster(param, password);
             });
             break;
         case "set":
