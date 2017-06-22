@@ -27,6 +27,8 @@ var hidden = {tripcodes:false,users:[]};
 
 var socket = null;
 
+var sel = '';
+
 var html5 = false;
 try {
     html5 = (window.localStorage !== undefined && window.localStorage !== null);
@@ -93,6 +95,11 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('mouseup', function(e){
+        if(e.target.className == 'chat_number') return false;
+        sel = window.getSelection().toString();
+    });
+
     /* hacky processing request responses */
     $('iframe#miframe').load(function () {
         var resp;
@@ -138,6 +145,14 @@ $(document).ready(function () {
     $('#spoilers').change(function () {
         if (html5) localStorage.spoilers = $(this).prop("checked");
         $('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
+    });
+
+    $('#sounds').change(function () {
+        if (html5) localStorage.sounds = $(this).prop("checked");
+    });
+
+    $('#selquote').change(function () {
+        if (html5) localStorage.selquote = $(this).prop("checked");
     });
 
     $('#volume').change(function () {
@@ -326,6 +341,10 @@ function set_up_html(){
 
         if (localStorage.name !== undefined) $("#name").val(localStorage.name);
         if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
+        if (localStorage.sounds !== undefined) $("#sounds").prop("checked", localStorage.sounds === "true");
+        else $("#sounds").prop("checked", false);
+        if (localStorage.selquote !== undefined) $("#selquote").prop("checked", localStorage.selquote === "true");
+        else $("#selquote").prop("checked", false);
         if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
@@ -635,6 +654,26 @@ function mod_ban_poster(id, board, password)
     });
 }
 
+function mod_unban_poster(id, password)
+{
+    if(!password || password.length <= 0)
+    {
+        console.log("mod_unban_poster: invalid param");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: '/unban',
+        data: {password: password}
+    }).done(function (data_ban) {
+        if(data_ban.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
 function submit_chat() {
     "use strict";
 
@@ -784,6 +823,11 @@ function submit_chat() {
         case "ban":
             prompt_password(function(password) {
                 mod_ban_poster(param[0], param[1], password);
+            });
+            break;
+        case "unban":
+            prompt_password(function(password) {
+                mod_unban_poster(param, password);
             });
             break;
         case "set":
