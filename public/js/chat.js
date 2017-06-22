@@ -564,6 +564,11 @@ function generate_post(id) {
                 set_channel(chat[id].chat, chat[id].count);
             }
             quote(id);
+            if(sel && $("#selquote").prop('checked')) {
+                document.getElementById('body').value += '> '+sel+'\n';
+                sel = '';
+            }
+            setTimeout(function(){ $('#body').focus(); }, 0);
         });
 
 
@@ -629,7 +634,7 @@ function get_youtube_data(y_id, element){
             url: location.protocol+'//'+location.host+'/youtube_data/'+y_id,
             dataType: "json",
             success: function (xml) {
-                element.text(xml.data.title);
+                element.text(xml.items[0].snippet.title);
             }
         });
 }

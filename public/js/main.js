@@ -27,6 +27,8 @@ var hidden = {tripcodes:false,users:[]};
 
 var socket = null;
 
+var sel = '';
+
 var html5 = false;
 try {
     html5 = (window.localStorage !== undefined && window.localStorage !== null);
@@ -93,6 +95,11 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('mouseup', function(e){
+        if(e.target.className == 'chat_number') return false;
+        sel = window.getSelection().toString();
+    });
+
     /* hacky processing request responses */
     $('iframe#miframe').load(function () {
         var resp;
@@ -142,6 +149,10 @@ $(document).ready(function () {
 
     $('#sounds').change(function () {
         if (html5) localStorage.sounds = $(this).prop("checked");
+    });
+
+    $('#selquote').change(function () {
+        if (html5) localStorage.selquote = $(this).prop("checked");
     });
 
     $('#volume').change(function () {
@@ -332,6 +343,8 @@ function set_up_html(){
         if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
         if (localStorage.sounds !== undefined) $("#sounds").prop("checked", localStorage.sounds === "true");
         else $("#sounds").prop("checked", false);
+        if (localStorage.selquote !== undefined) $("#selquote").prop("checked", localStorage.selquote === "true");
+        else $("#selquote").prop("checked", false);
         if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
