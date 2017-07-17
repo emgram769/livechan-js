@@ -1,4 +1,4 @@
-[livechan](http://livechan.net)
+livechan
 ====
 
 
@@ -124,12 +124,5 @@ server {
     }
 }
 ```
-
-Relevant links
-====
-Known live instances:
-https://livebunker.rocks
-http://whitechan.com
-https://kotchan.org
 
 If you'd like to contribute code simply send a pull request.
