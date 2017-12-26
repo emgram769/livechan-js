@@ -52,9 +52,6 @@ var linked_post = "";
 var special_countries;
 var on_chat = function(d) {};
 
-var message_sound = new Audio('/js/message.mp3');
-message_sound.load();
-
 function ajaxTranslate(textToTranslate, fromLanguage, toLanguage, callback) {
 	var p = {};
 	var apikeys =['98BAFD350ACBE1FE601ABF6274820CC03BAAC1D4', '8E54095330F0B7E7CB73527A50437E6110A64730']; //['9BEE70120363E77B0528A0E24953BFD00F59D58E',
@@ -204,7 +201,7 @@ function image_mouseover(obj, event, id) {
     var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
 
     var extension = base_name.match(/\w*$/)[0];
-    if ($.inArray(extension, ["ogv", "webm", "mp4"]) > -1) {
+    if ($.inArray(extension, ["ogv", "webm"]) > -1) {
         if (display === undefined) {
             display = $("<video/>");
         }
@@ -700,9 +697,6 @@ function update_chat(new_data, first_load) {
 		if (ignored_ids && new_data && new_data.identifier && $.inArray(new_data.identifier, ignored_ids) > -1) {
 			return;
 		}
-            if($("#sounds").prop('checked')){
-		message_sound.play();
-	    }
     // Find post element or create blank one
     var post = new_post ? generate_post(id) : $("#chat_" + id);
 
@@ -851,7 +845,7 @@ function update_chat(new_data, first_load) {
                 .attr("href", url_file)
                 .text(base_name);
 
-            if (extension === "ogg" || extension === "mp3" || extension === 'flac') {
+            if (extension === "ogg") {
                 audio_container.append($("<audio/>").attr({src: url_file, controls: "controls"}));
             }
 
@@ -990,60 +984,6 @@ function update_chat(new_data, first_load) {
             [/\[spoiler\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/spoiler\]/g);
                 o.push($("<span class='spoiler'/>").append(body));
-            }],
-            [/(?:https?:\/\/)?(?:www\.)?(?:twitter\.com)\/(.*)/g, function(m, o) {
-                var main = $("<span/>");
-                var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
-                var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
-                var embed = $("<span>(embed)</span>").css({cursor:"pointer", fontSize:'10px'});
-                main.append(elem, " ", embed);
-                o.push(main);
-                var embedded = false;
-                embed.click(function(e) {
-                    e.stopPropagation();
-                    if (embedded) {
-                        main.find("div.twit").remove();
-                    } else {
-                        $.ajax({
-                            url:'https://publish.twitter.com/oembed?url='+url,
-                            dataType:'jsonp',
-                            success:function(data){ 
-                                main.append('<div class="twit">'+data.html+'</div>');
-                            }
-                        });
-                    }
-                    embedded = !embedded;
-                    embed.text(embedded ? "(unembed)" : "(embed)");
-                    var post = main.parents(".chat");
-                    post.toggleClass('chat_embed', embedded);// post.find("div.twit").length > 0);
-                });
-            }],
-            [/(?:https?:\/\/)?(?:www\.)?(?:instagram\.com)\/(.*)/g, function(m, o) {
-                var main = $("<span/>");
-                var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
-                var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
-                var embed = $("<span>(embed)</span>").css({cursor:"pointer", fontSize:'10px'});
-                main.append(elem, " ", embed);
-                o.push(main);
-                var embedded = false;
-                embed.click(function(e) {
-                    e.stopPropagation();
-                    if (embedded) {
-                        main.find("div.twit").remove();
-                    } else {
-                        $.ajax({
-                            url:'https://api.instagram.com/oembed?url='+url,
-                            dataType:'jsonp',
-                            success:function(data){ 
-                                main.append('<div class="twit">'+data.html+'</div>');
-                            }
-                        });
-                    }
-                    embedded = !embedded;
-                    embed.text(embedded ? "(unembed)" : "(embed)");
-                    var post = main.parents(".chat");
-                    post.toggleClass('chat_embed', embedded);// post.find("div.twit").length > 0);
-                });
             }],
             [/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(\S+)/g, function(m, o) {
                 var main = $("<span/>");

@@ -140,10 +140,6 @@ $(document).ready(function () {
         $('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
     });
 
-    $('#sounds').change(function () {
-        if (html5) localStorage.sounds = $(this).prop("checked");
-    });
-
     $('#volume').change(function () {
         if (html5) localStorage.volume = $(this).val();
     });
@@ -330,8 +326,6 @@ function set_up_html(){
 
         if (localStorage.name !== undefined) $("#name").val(localStorage.name);
         if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
-        if (localStorage.sounds !== undefined) $("#sounds").prop("checked", localStorage.sounds === "true");
-        else $("#sounds").prop("checked", false);
         if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
