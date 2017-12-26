@@ -33,7 +33,42 @@ var devs = ["!/b/suPrEmE", "!!3xVuTKubFw", "!!8Trs3SaoJ2"];
 var default_contribs = ["!!Tia6BuxIxc"];
 var bots = ["!!.w5vzYxkv6","!!RG5a8fLuMM"];
 var irc = ["!!SxKC741YKw"];
-var hidden_trips = ["!7cNl93Dbb6", "!9jPA5pCF9c", "!xeE5csyhAE", "!RQ1r/nUdfw", "!We.UHNdLy."];
+
+var flags_image_table  = {};
+var flags_hover_strings = {};
+
+//  Table of tripflags
+
+// noflag
+flags_image_table["!RQ1r/nUdfw"]    = "GAY.png";
+flags_hover_strings["!RQ1r/nUdfw"]  ="Hidden With Pride"
+
+// deusvult
+flags_image_table["!depDNizZTI"]    = "stgeorge.png";
+flags_hover_strings["!depDNizZTI"]  = "DEUS VULT";
+
+// linux
+flags_image_table["!UyDUsdVyxo"]    = "linux.png";
+flags_hover_strings["!UyDUsdVyxo"]  = "Free as in freedom";
+
+// fbikun
+flags_image_table["!V8rJANBJ4M"] = "fbikun.png";
+flags_hover_strings["!V8rJANBJ4M"] = "I am not a federal employee";
+
+var hidden_trips = Object.keys(flags_image_table);
+
+var color_trips = {'!2kGkudiwr6': 'blue',
+    '!4JkKbRZR5E': 'purple',
+    '!JwgQMiO9V2': 'maroon',
+    '!1sC7CjNPu2': 'black',
+    '!QEUQfdPtTM': 'red',
+    '!Vsb1IJhbMs': 'navy',
+    '!kpr/ZwDRc2': 'olive',
+    '!mi5kS2YmM6': 'teal',
+    '!u18KxpvIdg': 'brown',
+    '!zbc0mftbJU': 'gray',
+    '!k11/f4Kc0Y': 'white'};
+
 var special_trips = bots.concat(irc).concat(hidden_trips);
 var my_ids = [];
 var contribs = default_contribs;
@@ -51,6 +86,9 @@ var linked_post = "";
 
 var special_countries;
 var on_chat = function(d) {};
+
+var message_sound = new Audio('/js/message.mp3');
+message_sound.load();
 
 function ajaxTranslate(textToTranslate, fromLanguage, toLanguage, callback) {
 	var p = {};
@@ -201,7 +239,7 @@ function image_mouseover(obj, event, id) {
     var base_name = chat[id].image.match(/[\w\-\.]*$/)[0];
 
     var extension = base_name.match(/\w*$/)[0];
-    if ($.inArray(extension, ["ogv", "webm"]) > -1) {
+    if ($.inArray(extension, ["ogv", "webm", "mp4"]) > -1) {
         if (display === undefined) {
             display = $("<video/>");
         }
@@ -269,6 +307,7 @@ function quote_link(dest) {
     link.attr("href", "#" + dest);
     link.data("dest", dest);
     link.text(function () {
+        //message_sound.play();
         return ">>" + dest + (($.inArray(dest, my_ids) > -1) ? " (You)" : "");
     });
     link.click(quote_click);
@@ -497,7 +536,8 @@ function generate_post(id) {
                 	"[<output class='delete_part'>delete</output> - "+
                 	"<output class='warn_part'>warn</output> - "+
                 	"<output class='move_part'>move</output> - "+
-                	"<output class='ban_part'>ban</output>]"+
+                	"<output class='ban_part'>ban</output> - "+
+                	"<output class='country_part'>country</output>]"+
                 "</output>" +
             "</header>" +
             "<section class='chat_file' style='display: none;'>" +
@@ -538,7 +578,18 @@ function generate_post(id) {
                 return;
             mod_ban_poster(id, chat_id, admin_pass);
         });
+
+    post.find(".country_part")
+        .click(function() {
+            alert(chat[id].country+' '+chat[id].country_name);
+        });
         
+    /*post.find(".mute_part")
+        .click(function() {
+            $('#body')[0].value='/ignore '+id;
+            setTimeout(function(){ $('#body').focus(); }, 0);
+        });*/
+
     post.find(".chat_label")
         .click(function() {
             set_channel(chat[id].chat, chat[id].count);
@@ -554,6 +605,13 @@ function generate_post(id) {
             apply_filter();
         });
 
+   /* post.find(".chat_ignore")
+        .click(function (e) {
+            e.stopPropagation();
+            $("#convo").val(chat[id].convo);
+            apply_filter();
+        });*/
+
     post.find(".chat_number")
         .text(id)
            .click(function () {
@@ -561,6 +619,16 @@ function generate_post(id) {
                 set_channel(chat[id].chat, chat[id].count);
             }
             quote(id);
+            if(sel && $("#selquote").prop('checked')) {
+                document.getElementById('body').value += '> '+sel+'\n';
+                sel = '';
+            }
+            setTimeout(function(){ $('#body').focus(); }, 0);
+        });
+    post.find(".name_part").dblclick(function () {
+            document.getElementById('body').value = '/priv '+id+' ';
+            setTimeout(function(){ $('#body').focus(); }, 0);
+
         });
 
 
@@ -626,7 +694,7 @@ function get_youtube_data(y_id, element){
             url: location.protocol+'//'+location.host+'/youtube_data/'+y_id,
             dataType: "json",
             success: function (xml) {
-                element.text(xml.data.title);
+                element.text(xml.items[0].snippet.title);
             }
         });
 }
@@ -697,6 +765,9 @@ function update_chat(new_data, first_load) {
 		if (ignored_ids && new_data && new_data.identifier && $.inArray(new_data.identifier, ignored_ids) > -1) {
 			return;
 		}
+            if($("#sounds").prop('checked')){
+		message_sound.play();
+	    }
     // Find post element or create blank one
     var post = new_post ? generate_post(id) : $("#chat_" + id);
 
@@ -738,46 +809,33 @@ function update_chat(new_data, first_load) {
 	        country_name = "IRC";
 	        post.find(".flag").attr("data-country", country_name);
 	        post.find(".flag").prepend(country);
-	    } else if (hidden_trips.indexOf(data.trip) > -1) {
-	    	switch (data.trip) {
-	    	case "!xeE5csyhAE":
-	    		var country = $("<img src='/icons/countries/FASC.png'/>");
-		        country_name = "Fascist";
-		        post.find(".flag").attr("data-country", country_name);
-		        post.find(".flag").prepend(country);
-		        break;
-		    case "!RQ1r/nUdfw":
-		    	var country = $("<img src='/icons/countries/GAY.png'/>");
-		        country_name = "Hidden With Pride";
-		        post.find(".flag").attr("data-country", country_name);
-		        post.find(".flag").prepend(country);
-		        break;
-		    default:
-		    		//post.find(".name_part").style("font-weight", "300");
-		    		break;
-	    	}
-    		
+	} else if (hidden_trips.indexOf(data.trip) > -1) {
+            if ((data.trip in flags_image_table) && (data.trip in flags_hover_strings)) {
+                var country = $("<img src='/icons/tripflags/" + flags_image_table[data.trip] + "'/>");
+                post.find(".flag").attr("data-country", flags_hover_strings[data.trip]);
+                post.find(".flag").prepend(country);
+    	    }
     	} else if (bots.indexOf(data.trip) > -1) {
-    		var country = $("<img src='/icons/bot.png' style='height:20px;margin-bottom:-3px;'/>");
-	        country_name = "anna";
-	        post.find(".flag").attr("data-country", country_name);
-	        post.find(".flag").prepend(country);
+    	    var country = $("<img src='/icons/bot.png' style='height:20px;margin-bottom:-3px;'/>");
+	    country_name = "anna";
+	    post.find(".flag").attr("data-country", country_name);
+	    post.find(".flag").prepend(country);
     	} else {
-	        var country_name = "";
-	        //if (special_countries.indexOf(data.country)>-1) {
-	        if (data.country[2] == "-") {
-	            var state = $("<img src='/icons/countries/"+data.country+".png'/>");
-	            post.find(".flag").prepend(state);
-				if (special_countries && data.country in special_countries) {
-					country_name += special_countries[data.country]+", ";
-				} else {
-	            	country_name += data.country.slice(3)+", ";
-	            }
+	    var country_name = "";
+	    //if (special_countries.indexOf(data.country)>-1) {
+	    if (data.country[2] == "-") {
+	        var state = $("<img src='/icons/countries2/"+data.country+".png'/>");
+	        post.find(".flag").prepend(state);
+		if (special_countries && data.country in special_countries) {
+		    country_name += special_countries[data.country]+", ";
+		} else {
+	            country_name += data.country.slice(3)+", ";
 	        }
-	        var country = $("<img src='/icons/countries/"+data.country.slice(0,2)+".png'/>");
-	        country_name += data.country_name ? data.country_name : data.country;
-	        post.find(".flag").attr("data-country", country_name);
-	        post.find(".flag").prepend(country);
+	    }
+	    var country = $("<img src='/icons/countries2/"+data.country.slice(0,2)+".png'/>");
+	    country_name += data.country_name ? data.country_name : data.country;
+	    post.find(".flag").attr("data-country", country_name);
+	    post.find(".flag").prepend(country);
         }
         post.find(".flag").click(function(){
         	var language;
@@ -795,9 +853,10 @@ function update_chat(new_data, first_load) {
         var contrib = ($.inArray(data.trip, contribs) > -1);
         var admin = ($.inArray(data.trip, admins) > -1);
         var dev = ($.inArray(data.trip, devs) > -1);
+        var colortrip = ($.inArray(data.trip, Object.keys(color_trips)) > -1);
         post.find(".trip_code")
 						.text(data.trip)
-            .toggleClass("hidden", special || admin || dev || contrib);
+            .toggleClass("hidden", special || admin || dev || contrib || colortrip);
         var addend = dev ? " ## Developer" : "";
         addend = admin ? " ## Mod" : addend;
         post.find(".chat_name")
@@ -805,6 +864,9 @@ function update_chat(new_data, first_load) {
             .toggleClass("admin", admin)
             .toggleClass("dev", dev)
             .append(addend);
+        if(colortrip) {
+            post.find(".chat_name").css({'color': color_trips[data.trip]});
+        }
     }
     if (changed.convo || changed.convo_id) {
         var is_op = (data.convo_id === data.count);
@@ -845,7 +907,7 @@ function update_chat(new_data, first_load) {
                 .attr("href", url_file)
                 .text(base_name);
 
-            if (extension === "ogg") {
+            if (extension === "ogg" || extension === "mp3" || extension === 'flac') {
                 audio_container.append($("<audio/>").attr({src: url_file, controls: "controls"}));
             }
 
@@ -861,7 +923,8 @@ function update_chat(new_data, first_load) {
             }
 
             img_container.attr("href", url_file);
-            img_container.css("height", (url_static !== null || url_anim !== null) ? 104 : 0);
+            //img_container.css("height", (url_static !== null || url_anim !== null) ? 104 : 0);
+            img_container.css("height", (url_static !== null || url_anim !== null) ? 'auto' : 0);
             if (url_static !== null) {
                 img_container.append($("<img class='chat_img thumb_static'>").attr("src", url_static));
             }
@@ -944,46 +1007,63 @@ function update_chat(new_data, first_load) {
                     o.push($("<pre class='code'/>").text(body));
                 }
             }],
-            [/\[plugin\](?:\r?\n)?/g, function(m, o) {
-                var body = this.no_parse(/\[\/plugin\]/g);
-                var title = body.match(/\[title\]([^]+)\[\/title\]/);
-                title = title && title.length >= 2 ? title[1] : 'plugin';
-                var script_text = body.match(/\[script\]([^]+)\[\/script\]/);
-                script_text = script_text && script_text.length >= 2 ? script_text[1] : '';
-                var elem_html = body.match(/\[html\]([^]+)\[\/html\]/);
-                elem_html = elem_html && elem_html.length >= 2 ? elem_html[1] : '<div></div>';
-				
-				
-				var plugin_link = $("<a class='chat_plugin_link'/>")
-                	.text(title)
-                	.data('script_text', script_text)
-                	.data('elem_html', elem_html)
-                	.click(function(){spawn_plugin(script_text, elem_html)});
-				
-				var reveal_code = $('<span>')
-					.text('[show code]')
-					.css({cursor:"pointer", fontSize:'12px'})
-					.addClass('link')
-					.click(function(event){
-						plugin_code.toggleClass('hidden');
-						var inner_text = $(this).text() == '[show code]' ? '[hide code]' : '[show code]';
-						$(this).text(inner_text);
-					});
-				
-				var plugin_code = $('<div>')
-					.text('<script>'+script_text+'</script>\r\n<div>'+elem_html+'</div>');
-				plugin_code.toggleClass('hidden', true);
-                
-                var plugin_object = $('<span>')
-                	.append(plugin_link)
-                    .append(reveal_code)
-                    .append(plugin_code);
-
-                o.push(plugin_object);
-            }],
             [/\[spoiler\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/spoiler\]/g);
                 o.push($("<span class='spoiler'/>").append(body));
+            }],
+            [/(?:https?:\/\/)?(?:www\.)?(?:twitter\.com)\/(.*)/g, function(m, o) {
+                var main = $("<span/>");
+                var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
+                var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
+                var embed = $("<span>(embed)</span>").css({cursor:"pointer", fontSize:'10px'});
+                main.append(elem, " ", embed);
+                o.push(main);
+                var embedded = false;
+                embed.click(function(e) {
+                    e.stopPropagation();
+                    if (embedded) {
+                        main.find("div.twit").remove();
+                    } else {
+                        $.ajax({
+                            url:'https://publish.twitter.com/oembed?url='+url,
+                            dataType:'jsonp',
+                            success:function(data){ 
+                                main.append('<div class="twit">'+data.html+'</div>');
+                            }
+                        });
+                    }
+                    embedded = !embedded;
+                    embed.text(embedded ? "(unembed)" : "(embed)");
+                    var post = main.parents(".chat");
+                    post.toggleClass('chat_embed', embedded);// post.find("div.twit").length > 0);
+                });
+            }],
+            [/(?:https?:\/\/)?(?:www\.)?(?:instagram\.com)\/(.*)/g, function(m, o) {
+                var main = $("<span/>");
+                var url = m[0][0] == 'y' ? "https://"+m[0] : m[0];
+                var elem = $("<a target='_blank'/>").attr("href", url).text(m[0]);
+                var embed = $("<span>(embed)</span>").css({cursor:"pointer", fontSize:'10px'});
+                main.append(elem, " ", embed);
+                o.push(main);
+                var embedded = false;
+                embed.click(function(e) {
+                    e.stopPropagation();
+                    if (embedded) {
+                        main.find("div.twit").remove();
+                    } else {
+                        $.ajax({
+                            url:'https://api.instagram.com/oembed?url='+url,
+                            dataType:'jsonp',
+                            success:function(data){ 
+                                main.append('<div class="twit">'+data.html+'</div>');
+                            }
+                        });
+                    }
+                    embedded = !embedded;
+                    embed.text(embedded ? "(unembed)" : "(embed)");
+                    var post = main.parents(".chat");
+                    post.toggleClass('chat_embed', embedded);// post.find("div.twit").length > 0);
+                });
             }],
             [/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(\S+)/g, function(m, o) {
                 var main = $("<span/>");
@@ -1028,6 +1108,10 @@ function update_chat(new_data, first_load) {
                 var body = this.parse(rules, /\[\/s\]/g);
                 o.push($("<span style='text-decoration: line-through;'/>").append(body));
             }],
+            [/\[ree\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/ree\]/g);
+                o.push($("<article class='shake'/>").append(body));
+            }],
             [/\[color=([#\w]+)\]/g, function(m, o) {
                 var body = this.parse(rules, /\[\/color\]/g);
                 if ($('#spoilers').prop("checked")) {
@@ -1044,11 +1128,234 @@ function update_chat(new_data, first_load) {
                 	o.push($("<span>").text(body[0].data.toUpperCase()));
                 }
             }],
+            [/\[st\]/g, function(m, o) {
+                var body = this.parse(rules, /\[\/st\]/g);
+                o.push($("<img/>").attr("src", encodeURI("/images/stickers/"+body[0].data.replace('/','')+".png")).css({'min-height':"64px"}).css({'max-height':'100px'}).click(sticker_click));
+            }],
             [/\[noparse\]/g, function(m, o) {
                 var body = this.no_parse(/\[\/noparse\]/g);
                 o.push(document.createTextNode(body));
             }]
         ];
+        var smiles = [
+            [/\:\-\)|\:\)|\=\)/g, function(m, o) {
+                var body = this.parse(rules, /\:\-\)|\:\)|\=\)/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ab.gif"));
+            }],
+            [/\:\-\(|\:\(|\;\(/g, function(m, o) {
+                var body = this.parse(rules, /\:\-\(|\:\(|\;\(/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ac.gif"));
+            }],
+            [/\:\-P/g, function(m, o) {
+                var body = this.parse(rules, /\:\-P/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ae.gif"));
+            }],
+            [/8\-\)/g, function(m, o) {
+                var body = this.parse(rules, /8\-\)/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/af.gif"));
+            }],
+            [/\:\-D/g, function(m, o) {
+                var body = this.parse(rules, /\:\-D/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ag.gif"));
+            }],
+            [/\:\-\[/g, function(m, o) {
+                var body = this.parse(rules, /\:\-\[/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ah.gif"));
+            }],
+            [/\=\-O/g, function(m, o) {
+                var body = this.parse(rules, /\=\-O/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ai.gif"));
+            }],
+            [/\:\'\(/g, function(m, o) {
+                var body = this.parse(rules, /\:\'\(/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ak.gif"));
+            }],
+            [/\:\-X|\:\-x/g, function(m, o) {
+                var body = this.parse(rules, /\:\-X|\:\-x/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/al.gif"));
+            }],
+            [/\>\:o/g, function(m, o) {
+                var body = this.parse(rules, /\>\:o/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/am.gif"));
+            }],
+            [/\:\-\|/g, function(m, o) {
+                var body = this.parse(rules, /\:\-\|/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/an.gif"));
+            }],
+            [/\:\-\\|\:\-\//g, function(m, o) {
+                var body = this.parse(rules, /\:\-\\|\:\-\//g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ao.gif"));
+            }],
+            [/\*JOKINGLY\*/g, function(m, o) {
+                var body = this.parse(rules, /\*JOKINGLY\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ap.gif"));
+            }],
+            [/\]\:\-\>/g, function(m, o) {
+                var body = this.parse(rules, /\]\:\-\>/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/aq.gif"));
+            }],
+            [/\[\:\-\}/g, function(m, o) {
+                var body = this.parse(rules, /\[\:\-\}/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ar.gif"));
+            }],
+            [/\:\-\!/g, function(m, o) {
+                var body = this.parse(rules, /\:\-\!/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/at.gif"));
+            }],
+            [/\*TIRED\*/g, function(m, o) {
+                var body = this.parse(rules, /\*TIRED\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/au.gif"));
+            }],
+            [/\*STOP\*/g, function(m, o) {
+                var body = this.parse(rules, /\*STOP\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/av.gif"));
+            }],
+            [/\*THUMBS|UP\*/g, function(m, o) {
+                var body = this.parse(rules, /\*THUMBS|UP\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/ay.gif"));
+            }],
+            [/\*DRINK\*/g, function(m, o) {
+                var body = this.parse(rules, /\*DRINK\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/az.gif"));
+            }],
+            [/\*HELP\*/g, function(m, o) {
+                var body = this.parse(rules, /\*HELP\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bc.gif"));
+            }],
+            [/\\m\//g, function(m, o) {
+                var body = this.parse(rules, /\\m\//g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bd.gif"));
+            }],
+            [/\%\)/g, function(m, o) {
+                var body = this.parse(rules, /\%\)/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/be.gif"));
+            }],
+            [/\*OK\*/g, function(m, o) {
+                var body = this.parse(rules, /\*OK\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bf.gif"));
+            }],
+            [/\*SORRY\*/g, function(m, o) {
+                var body = this.parse(rules, /\*SORRY\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bh.gif"));
+            }],
+            [/\*ROFL\*|\*LOL\*/g, function(m, o) {
+                var body = this.parse(rules, /\*ROFL\*|\*LOL\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bj.gif"));
+            }],
+            [/\*NO\*/g, function(m, o) {
+                var body = this.parse(rules, /\*NO\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bl.gif"));
+            }],
+            [/\*CRAZY\*/g, function(m, o) {
+                var body = this.parse(rules, /\*CRAZY\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bm.gif"));
+            }],
+            [/\*DUNNO\*/g, function(m, o) {
+                var body = this.parse(rules, /\*DUNNO\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bn.gif"));
+            }],
+            [/\*DANCE\*/g, function(m, o) {
+                var body = this.parse(rules, /\*DANCE\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bo.gif"));
+            }],
+            [/\*YAHOO\*/g, function(m, o) {
+                var body = this.parse(rules, /\*YAHOO\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bp.gif"));
+            }],
+            [/\*HI\*/g, function(m, o) {
+                var body = this.parse(rules, /\*HI\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bq.gif"));
+            }],
+            [/\*BYE\*/g, function(m, o) {
+                var body = this.parse(rules, /\*BYE\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/br.gif"));
+            }],
+            [/\*YES\*/g, function(m, o) {
+                var body = this.parse(rules, /\*YES\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bs.gif"));
+            }],
+            [/\;D/g, function(m, o) {
+                var body = this.parse(rules, /\;D/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bt.gif"));
+            }],
+            [/\*WALL\*/g, function(m, o) {
+                var body = this.parse(rules, /\*WALL\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bu.gif"));
+            }],
+            [/\*SCRATCH\*/g, function(m, o) {
+                var body = this.parse(rules, /\*SCRATCH\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/bw.gif"));
+            }],
+            [/\*BANANA\*/g, function(m, o) {
+                var body = this.parse(rules, /\*BANANA\*/g);
+                o.push($("<img/>").attr("src", "/icons/smiles/banana.gif"));
+            }],
+            [/\*SUP\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*SUP\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/bg.gif"));
+            }],
+            [/\*YEEES\!\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*YEEES\!\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/bx.gif"));
+            }],
+            [/\*SMOKE\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*SMOKE\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/by.gif"));
+            }],
+            [/\*GAMER\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*GAMER\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/cc.gif"));
+            }],
+            [/\*BLACKEYE\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*BLACKEYE\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/cg.gif"));
+            }],
+            [/\*SEARCH\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*SEARCH\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/ci.gif"));
+            }],
+            [/\*FOCUS\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*FOCUS\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/ck.gif"));
+            }],
+            [/\*HUNTER\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*HUNTER\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/cl.gif"));
+            }],
+            [/X\)/g, function(m, o) {
+                    var body = this.parse(rules, /X\)/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/dc.gif"));
+            }],
+            [/\*JOB\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*JOB\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/de.gif"));
+            }],
+            [/\*THANK\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*THANK\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/dh.gif"));
+            }],
+            [/\*LAZY\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*LAZY\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/dj.gif"));
+            }],
+            [/\*WIZARD\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*WIZARD\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/dm.gif"));
+            }],
+            [/\*TEASE\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*TEASE\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/dp.gif"));
+            }],
+            [/\*TRAINING\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*TRAINING\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/du.gif"));
+            }],
+            [/\*POPCORN\*/g, function(m, o) {
+                    var body = this.parse(rules, /\*POPCORN\*/g);
+                        o.push($("<img/>").attr("src", "/icons/smiles/dw.gif"));
+            }],
+        ];
+        rules = rules.concat(smiles);
         var body = new Parser(data.body).parse(rules);
         post.find(".chat_body").empty().append(body);
         
@@ -1585,5 +1892,12 @@ $(document).ready(function () {
     });
     
     entry_hash = window.location.hash;
+
+    /*setInterval(function() {
+        $('.shake').toggleClass('shake-vertical');
+        setTimeout(function() {
+            $('.shake').toggleClass('shake-vertical');
+        }, 500);
+    }, 5000);*/
 
 });

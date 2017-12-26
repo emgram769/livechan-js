@@ -5,6 +5,8 @@
         <title>livechan - chatroom</title>
         <meta name="description" content="livechan is a live anonymous chatroom with an imageboard twist. Join us and post images and comments to other people on one of our many discussion boards.">
         <meta name="viewport" content="width=device-width,user-scalable=no">
+        <link type="text/css" rel="stylesheet" href="/css/shake.css">
+        <link type="text/css" rel="stylesheet" href="/css/stickers.css">
         <link type="text/css" rel="stylesheet" href="/css/style.css">
 
         <!--<link media="all" href="/css/livechan.css" type="text/css" rel="stylesheet" id="css_new">-->
@@ -42,9 +44,12 @@
 	<nav class="settings_nav hidden">
 		<ul class="settings_list">
 		<li><input type="checkbox" id="autoscroll" class="input_checkbox" checked value="checked"/> <label for="autoscroll" style="font-size:14px" >Auto scroll</label></li>
+		<li><input type="checkbox" id="sounds" class="input_checkbox" checked value="checked"/> <label for="sounds" style="font-size:14px" >Sounds</label></li>
+		<li><input type="checkbox" id="selquote" class="input_checkbox" checked value="checked"/> <label for="selquote" style="font-size:14px" >Select to quote</label></li>
+		<li><input type="checkbox" id="bbcode" class="input_checkbox" checked value="checked"/> <label for="bbcode" style="font-size:14px" >bbcode buttons</label></li>
 		<li><input type="checkbox" id="clearconvo" class="input_checkbox" checked value="checked"/> <label for="clearconvo" style="font-size:14px" >Clear convo on submit</label></li>
 		<li><input type="checkbox" id="autosubmit" class="input_checkbox" checked value="checked"/> <label for="autosubmit" style="font-size:14px" >Submit on enter</label></li>
-		<li><input type="checkbox" id="spoilers" class="input_checkbox" checked value="checked"/> <label for="spoilers" style="font-size:14px" >BBCode</label></li>
+		<li><input type="checkbox" id="spoilers" class="input_checkbox" checked value="checked"/> <label for="spoilers" style="font-size:14px" >Spoilers</label></li>
 		<li><input type="range" id="volume" class="input_range" min="0" max="1" step="0.01" value="1"/> <label for="volume" style="font-size:14px" >Volume</label></li>
         <li><select id="thumbnail_mode" class="input_select">
                     <option value="links-only">Image links only</option>
@@ -148,9 +153,6 @@
 	        <output class="chat_body" style="text-align: center;display: block">
 	        	    		Livechan is entirely open source, here is the
 	             <a href="https://github.com/emgram769/live4chan">code</a>
-	            <br>Donations toward server hosting? (anything is appreciated!) 
-	            <br>Bitcoin:<a href="bitcoin:1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr">1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr</a> 
-	            <br>Dogecoin: <a>DCSmbH2turiUVHP5AJcmKZzRTyfe8kib7j</a>
 	        </output>
 	    </article>
 	    
@@ -168,9 +170,17 @@
 			<input id="convo" name="convo" placeholder="General" class="convo" type="text" maxlength="39"/>
 			<textarea id="body" name="body" placeholder="Comment" class="comment" autocomplete="off" maxlength="1999"></textarea>
 			<input id="image" class="input_button" name="image" type="file"/>
-			<img id="record_button" class="input_button" src="/icons/record.png" alt="clear" title="record audio" style="display: none;"/>
+            <span id="bbcode_buttons" style="display:none;">
+			<img class="input_button" src="/icons/btn_b.png" alt="B" title="B" onclick="return wrapText('b')"/>
+			<img class="input_button" src="/icons/btn_i.png" alt="I" title="I" onclick="return wrapText('i')"/>
+			<img class="input_button" src="/icons/btn_u.png" alt="U" title="U" onclick="return wrapText('u')"/>
+			<img class="input_button" src="/icons/btn_spoiler.png" alt="spoiler" title="spoiler" onclick="return wrapText('spoiler')"/>
+			<img class="input_button" src="/icons/btn_s.png" alt="S" title="S" onclick="return wrapText('s')"/>&nbsp;
+            </span>
+			<img id="sticker_button" class="input_button" src="/icons/btn_sticker.png" alt="sicker" title="sticker"/>
+			<img id="record_button" class="input_button" src="/icons/record.png" alt="record" title="record audio" style="display: none;"/>
 			<img id="stop_button" class="input_button" src="/icons/stop.png" alt="clear" title="stop recording" style="display: none;"/>
-			<img id="camera_button" class="input_button" src="/icons/camera.png" alt="clear" title="webcam" style="background:white;"/>
+			<!--img id="camera_button" class="input_button" src="/icons/camera.png" alt="clear" title="webcam" style="background:white;"/-->
 			<img id="clear_button" class="input_button" src="/icons/cancel.png" alt="clear" title="clear file field"/>
 			<input id="submit_button" class="input_button" type="button" value="Submit"/>
 			<output id="cool_down"></output>
@@ -193,12 +203,21 @@
 	<iframe style="visibility:hidden;" id="miframe" name="miframe"></iframe>
 	    <link rel="stylesheet" href="/plugins/code_highlight/css/default.css">
 		<script src="/plugins/code_highlight/highlight.min.js"></script>
-		<script src="/plugins/webcamjs/webcam.min.js"></script>
+		<!--script src="/plugins/webcamjs/webcam.min.js"></script-->
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/socket.io-stream.min.js"></script>
         <script src="/js/jquery.min.js"></script>
         <script src="/js/chat.js"></script>
         <script src="/js/stream/sha256.js"></script>
         <script src="/js/main.js"></script>
+        <script src="/js/stickers.js"></script>
+        <script src="/js/paste.js"></script>
+    <div id="stickers">
+        <select id="sticker_folders"></select>
+        <div id="last_stickers"></div>
+        <div id="stickers_list"></div>
+    </div>
+    <div id="lurkers">
+    </div>
 </body>
 </html>

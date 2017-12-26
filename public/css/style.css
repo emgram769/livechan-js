@@ -408,6 +408,14 @@ ul {
     color:rgb(221, 0, 0);
     cursor:pointer;
 }
+.country_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
+.mute_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
 
 a{
     color:rgb(221, 0, 0);
@@ -588,3 +596,7 @@ pre {
 }
 
 
+.chat_highlight{
+	border-left: 4px solid rgb(221, 0, 0);
+        background-color: rgb(179, 185, 218);
+}

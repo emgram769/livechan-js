@@ -27,6 +27,8 @@ var hidden = {tripcodes:false,users:[]};
 
 var socket = null;
 
+var sel = '';
+
 var html5 = false;
 try {
     html5 = (window.localStorage !== undefined && window.localStorage !== null);
@@ -62,7 +64,7 @@ $(document).ready(function () {
     socket.on('reconnect', function(){var old_id = chat_id; chat_id = "home"; set_channel(old_id); setTimeout(function(){create_server_post('Reconnected!')}, 2*1000);});
     socket.on('user_count', function(data){
         var s = data == 1 ? "" : "s";
-        $("#user_count").text(data+" user"+s+" online");
+        $("#user_count").text(data+" user"+s);
      });
     /* key bindings for actions */
     $("#name").keydown(function (event) {
@@ -93,6 +95,11 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('mouseup', function(e){
+        if(e.target.className == 'chat_number') return false;
+        sel = window.getSelection().toString();
+    });
+
     /* hacky processing request responses */
     $('iframe#miframe').load(function () {
         var resp;
@@ -106,8 +113,8 @@ $(document).ready(function () {
 
 	// ensure files are no greater than 5mb
     $("#image").bind('change', function() {
-		if (this.files[0].size > 8000000){
-			div_alert("File too large. 8MB is the maximum file size.");
+		if (this.files[0].size > 40000000){
+			div_alert("File too large. 40MB is the maximum file size.");
 			clear_file_field();
 		}
 	});
@@ -138,6 +145,20 @@ $(document).ready(function () {
     $('#spoilers').change(function () {
         if (html5) localStorage.spoilers = $(this).prop("checked");
         $('.spoiler').toggleClass('spoiled', !$(this).prop("checked"));
+    });
+
+    $('#sounds').change(function () {
+        if (html5) localStorage.sounds = $(this).prop("checked");
+    });
+
+    $('#selquote').change(function () {
+        if (html5) localStorage.selquote = $(this).prop("checked");
+    });
+    
+    $('#bbcode').change(function () {
+        if (html5) localStorage.bbcode = $(this).prop("checked");
+        if($(this).prop("checked")) $('#bbcode_buttons').show();
+        else $('#bbcode_buttons').hide();
     });
 
     $('#volume').change(function () {
@@ -241,6 +262,8 @@ $(document).ready(function () {
 
     $('#stop_button').click(function() {
         if (audio_recorder) audio_recorder.stop();
+        $("#submit_button").prop("disabled", false);
+        if(!$("#body").val()) $("#body").val(" ");
     });
 
     $('#clear_button').click(clear_file_field);
@@ -326,6 +349,14 @@ function set_up_html(){
 
         if (localStorage.name !== undefined) $("#name").val(localStorage.name);
         if (localStorage.spoilers !== undefined) $("#spoilers").prop("checked", localStorage.spoilers === "true");
+        if (localStorage.sounds !== undefined) $("#sounds").prop("checked", localStorage.sounds === "true");
+        else $("#sounds").prop("checked", false);
+        if (localStorage.selquote !== undefined) $("#selquote").prop("checked", localStorage.selquote === "true");
+        else $("#selquote").prop("checked", false);
+        if (localStorage.bbcode !== undefined) $("#bbcode").prop("checked", localStorage.bbcode === "true");
+        else $("#bbcode").prop("checked", false);
+        if($('#bbcode').prop("checked")) $('#bbcode_buttons').show();
+        else $('#bbcode_buttons').hide();
         if (localStorage.theme !== undefined) $("#theme_select").val(localStorage.theme);
         if (localStorage.clearConvo !== undefined) $("#clearconvo").prop("checked", localStorage.clearConvo === "true");
         if (localStorage.volume !== undefined) $("#volume").val(localStorage.volume);
@@ -500,7 +531,7 @@ function cool_down() {
 /* start a cool down, resets the interval, so no worries about calling ti twice */
 function init_cool_down(){
     $("#submit_button").prop("disabled", true);
-    clearInterval(cool_down_timer);
+    clearInterval(cool_down_interval);
     cool_down();
     cool_down_interval = setInterval(cool_down, 1000);
 }
@@ -635,6 +666,26 @@ function mod_ban_poster(id, board, password)
     });
 }
 
+function mod_unban_poster(id, password)
+{
+    if(!password || password.length <= 0)
+    {
+        console.log("mod_unban_poster: invalid param");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: '/unban',
+        data: {password: password}
+    }).done(function (data_ban) {
+        if(data_ban.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
 function submit_chat() {
     "use strict";
 
@@ -679,37 +730,6 @@ function submit_chat() {
                 prompt_password(enable_admin_mode);
             }
             break; 
-        case "addtryp":
-            if (param) {
-                contribs.push(param);
-                if (html5) {
-                    localStorage.contribs = JSON.stringify(contribs);
-                }
-            } else {
-                div_alert("usage: /addtryp !tripcode");
-            }
-            break;
-        case "remtryp":
-            if (param) {
-                var idx = $.inArray(param, contribs);
-                if (idx > -1) {
-                    contribs.splice(idx, 1);
-                    if (html5) {
-                        localStorage.contribs = JSON.stringify(contribs);
-                    }
-                }
-            } else {
-                div_alert("usage: /remtryp !tripcode");
-            }
-            break;
-        case "j":
-        case "join":
-            if (param) {
-                window.open('http://' + document.location.host + '/chat/' + param.replace('/', ''));
-            } else {
-                div_alert("usage: /join /channel");
-            }
-            break;
         case "stream":
         		var tempName = Math.random().toString(36).substring(2);
         		var options = "";
@@ -725,25 +745,6 @@ function submit_chat() {
         		var tempHash = Sha256.hash(tempName);
 		    		el.value += 'stream: '+'https://' + document.location.host + '/js/stream/cam.html?hash=' + tempHash;
         		break;
-        case "s":
-        case "switch":
-            if (param) {
-                set_channel(param.replace('/', ''));
-            } else {
-                div_alert("usage: /switch /channel");
-            }
-            break;
-        case "h":
-        case "highlight":
-            if (param) {
-                highlight_regex = new RegExp(param);
-                if (localStorage) {
-	                localStorage.highlight_regex = highlight_regex;
-                }
-            } else {
-                div_alert("usage: /highlight [javascript regex]");
-            }
-            break;
         case "c":
         case "cache":
             if (param) {
@@ -756,21 +757,13 @@ function submit_chat() {
                 div_alert("usage: /highlight [javascript regex]");
             }
             break;
-        case "t":
-        case "tab":
-            if (param) {
-                set_channel(param.replace('/', ''),null,null,true);
-            } else {
-                div_alert("usage: /switch /channel");
-            }
-            break;
-        case "plugin":
+        /*case "plugin":
             var el = $("#body")[0];
 		    var text = "[plugin]\n[title]My Plugin[/title]\n"+
 		    "[script]\n\n[/script]\n"+
 		    "[html]\n\n[/html]\n[/plugin]";
 		    el.value = text;
-            break;
+            break;*/
         case "delete":
             prompt_password(function(password) {
                 mod_delete_post(param, password);
@@ -786,7 +779,12 @@ function submit_chat() {
                 mod_ban_poster(param[0], param[1], password);
             });
             break;
-        case "set":
+        case "unban":
+            prompt_password(function(password) {
+                mod_unban_poster(param, password);
+            });
+            break;
+        /*case "set":
             param = param.split(' ');
             $.ajax({
                 type: "POST",
@@ -798,6 +796,23 @@ function submit_chat() {
                 else
                     div_alert("failure");
             });
+            break;*/
+        case "p":
+        case "priv":
+            param = param.split(' ');
+            $.ajax({
+                type: "POST",
+                url: '/priv',
+                data: {id: param[0], text: param.splice(1).join(' ')}
+            }).done(function (data_delete) {
+                if(data_delete.success)
+                    div_alert("success");
+                else
+                    div_alert("failure");
+            });
+            break;
+            
+            alert(param);
             break;
         case "ignore":
         	var chat_count = parseInt(param);
@@ -830,20 +845,18 @@ function submit_chat() {
         case "help":
         default:
             div_alert(
-                "/addtryp !tripcode: add emphasis to tripcode\n" +
-                "/remtryp !tripcode: remove emphasis from tripcode\n" +
-                "/join /channel: join channel\n" +
-                "/switch /channel: switch to channel in same window\n" +
-                "/help: display this text\n\n" +
-                "CONVERSATIONS\n" +
-                "==============\n" +
+                "/cache [number] - set number of posts shown\n"+
+                "/priv [post_number] [text] - send private message to user\n"+
+                "/ignore [post_number] - ignore user\n"+
+                "/stream - stream from webcam\n"+
+                "/help - display this text\n\n"+
+                "Put #color after nickname to set nick color. Available colors:\n"+
+                "red blue gray purple black brown teal navy maroon olive white\n\n"+
+                "Clicking on a flag translates post to your language\n"+
+                "Double-clicking on a name creates private message\n\n"+
                 "On this site threads are known as \"conversations\"\n" +
-                "You can change your active conversation from the default \"General\" in the second text box\n" +
-                "Setting a conversation allows you filter posts to it by using the dropdown box in the lower right\n\n" +
-                "SESSIONS\n" +
-                "==============\n" +
-                "After logging in by entering a CAPTCHA your session will last for at least 15 minutes\n" +
-                "Once your session expires you will be prompted with a new CAPTCHA"
+                "You can change your active conversation from the default \"General\" in the second text box\n\n"+
+                "For list of bot commands type .help"
             );
         }
         return;
@@ -881,16 +894,18 @@ function submit_chat() {
 }
 
 function handle_post_response(resp) {
+        if(typeof(resp)=="string") resp = JSON.parse(resp);
     if (resp.failure && resp.failure === "session_expiry") {
         $("#body").val(last_post);
         submit_captcha();
     } else if (resp.failure && resp.failure === "ban_violation") {
-        div_alert("You've been banned.<br><br>  To appeal the ban send an email to <a href='mailto:mod.livechan@gmail.com'>a moderator</a>.  Please include your IP.");
+        div_alert("You've been banned.");
         init_cool_down();
     } else if (resp.failure) {
         div_alert(resp.failure);
         init_cool_down();
     } else if (resp.id && $.inArray(resp.id, my_ids) < 0) {
+
         clear_fields();
         init_cool_down();
         my_ids.push(resp.id);
@@ -937,3 +952,29 @@ function quote(id) {
         apply_filter();
     }
 }
+
+function wrapText(openTag) {
+    var textArea = document.getElementById('body');
+    var closeTag = '[/'+openTag+']';
+    var openTag = '['+openTag+']';
+
+    if (typeof(textArea.selectionStart) != "undefined") {
+        var begin = textArea.value.substr(0, textArea.selectionStart);
+        var selection = textArea.value.substr(textArea.selectionStart, textArea.selectionEnd - textArea.selectionStart);
+        var end = textArea.value.substr(textArea.selectionEnd);
+        var position = begin.length + openTag.length;
+        if (position < 0){ position = position * -1;}
+        if (selection === "") {
+        	textArea.value = begin + openTag + selection + closeTag + end;
+          textArea.focus();
+          textArea.setSelectionRange(position, position);
+        } else {
+        	textArea.value = begin + openTag + selection + closeTag + end;
+          textArea.focus();
+          var position = begin.length + openTag.length + selection.length;
+          textArea.setSelectionRange(position, position);
+        }
+    }
+    return false;
+}
+
