@@ -31,11 +31,36 @@ module.exports = {
 
     /* Supported file types */
     image_formats: ['jpg', 'jpeg', 'png', 'gif'],
-    video_formats: ['ogv', 'webm'],
-    audio_formats: ['ogg'],
+    video_formats: ['ogv', 'webm', 'mp4'],
+    audio_formats: ['ogg', 'mp3', 'flac'],
 
     codec_names: {
-        video: ['theora', 'vp8', 'vp9'],
-        audio: ['vorbis', 'libopus']
+        video: ['theora', 'vp8', 'vp9', 'h264', 'vp6f'],
+        audio: ['vorbis', 'libopus', 'mp3', "aac", "opus"]
+    },
+
+
+    youtube_key: 'put_your_key',
+
+    banned_ranges: [],//['99.230.', '70.27.', '70.25.'],
+
+    ip_exceptions: {
+        //"176.14": ["RU-54", "Russian Federation"],
+        //"176.14": "US-NY",
+        "46.150.": "RU-47",
+        "83.220.": "RU-47",
+        "94.21.": "HU-05",
+        "31.221.": "ES-51",
+        "31.185.": "GB-V2",
+        "213.65.": "SE-28",
+        "90.219.": "GB-I2",
+        "85.140.": "RU-08",
+        "95.215.": "SE-26",
+        "109.122.": "UA-12",
+        "88.128.": "DE-04",
+        "78.51.": "DE-04",
+        "89.70.": "PL-78",
+        "212.62.": "RS-05",
     }
+
 };
