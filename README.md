@@ -55,9 +55,9 @@ Alternately you can download a static build from [http://ffmpeg.gusari.org/stati
 
     sudo cp ffmpeg ffprobe /usr/local/bin
 
-Note that many distributions come with Libav in place of FFmpeg. FFmpeg is recommended. Using Libav instead should be possible, but will require appropriate changes to [format-image.js](https://github.com/emgram769/livechan-js/blob/master/lib/utils/format-image.js) and [generate-thumbnail.js](https://github.com/emgram769/livechan-js/blob/master/lib/utils/generate-thumbnail.js) in lib/utils.
+Note that many distributions come with Libav in place of FFmpeg. FFmpeg is recommended. Using Libav instead should be possible, but will require appropriate changes to [format-image.js](https://github.com/emgram769/live4chan/blob/master/lib/utils/format-image.js) and [generate-thumbnail.js](https://github.com/emgram769/live4chan/blob/master/lib/utils/generate-thumbnail.js) in lib/utils.
 
-If you do not want audio/video support, you should edit your [config.js](https://github.com/emgram769/livechan-js/blob/master/config.js) so that video_formats and audio_formats are both empty arrays.
+If you do not want audio/video support, you should edit your [config.js](https://github.com/emgram769/live4chan/blob/master/config.js) so that video_formats and audio_formats are both empty arrays.
 
 7) Clone the git repo
 
@@ -65,7 +65,7 @@ If you do not want audio/video support, you should edit your [config.js](https:/
 
 8.a) Install the dependencies with npm install
 
-    cd livechan-js; npm install
+    cd live4chan; npm install
 
 8.b) Download a country lookup database
 
@@ -77,7 +77,7 @@ If you do not want audio/video support, you should edit your [config.js](https:/
     
 10) Get ircd.js modified for livechan
 
-    cd ..; git clone https://github.com/emgram769/ircd.js; cd ircd.js; npm install; cd ../livechan-js
+    cd ..; git clone https://github.com/emgram769/ircd.js; cd ircd.js; npm install; cd ../live4chan
 
 11) Make sure the public/tmp/uploads and public/tmp/thumb folders are writable
 
