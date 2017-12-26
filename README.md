@@ -1,11 +1,11 @@
-livechan (OdiliFork)
+[livechan](http://livechan.net)
 ====
 
 
-livechan is a live IRC like image board written in node.js. The OdiliFork brings this sourcecode base up to date and added security fixes and features.
+livechan is a live IRC like image board written in node.js.
 
-support Odilitime's work
-http://patreon.com/odilitime/
+Please donate bitcoin for server costs!
+1Eeq6AzfxtpV4KJnTGKDCcPCJy7oDRCdQr
 
 Installation
 ====
@@ -56,13 +56,13 @@ Alternately you can download a static build from [http://ffmpeg.gusari.org/stati
 
     sudo cp ffmpeg ffprobe /usr/local/bin
 
-Note that many distributions come with Libav in place of FFmpeg. FFmpeg is recommended. Using Libav instead should be possible, but will require appropriate changes to [format-image.js](https://github.com/odilitime/livechan-js/blob/master/lib/utils/format-image.js) and [generate-thumbnail.js](https://github.com/odilitime/livechan-js/blob/master/lib/utils/generate-thumbnail.js) in lib/utils.
+Note that many distributions come with Libav in place of FFmpeg. FFmpeg is recommended. Using Libav instead should be possible, but will require appropriate changes to [format-image.js](https://github.com/emgram769/live4chan/blob/master/lib/utils/format-image.js) and [generate-thumbnail.js](https://github.com/emgram769/live4chan/blob/master/lib/utils/generate-thumbnail.js) in lib/utils.
 
-If you do not want audio/video support, you should edit your [config.js](https://github.com/odilitime/livechan-js/blob/master/config.js) so that video_formats and audio_formats are both empty arrays.
+If you do not want audio/video support, you should edit your [config.js](https://github.com/emgram769/live4chan/blob/master/config.js) so that video_formats and audio_formats are both empty arrays.
 
 7) Clone the git repo
 
-    git clone https://github.com/odilitime/livechan.git
+    git clone https://github.com/emgram769/live4chan.git
 
 8.a) Install the dependencies with npm install
 
@@ -76,9 +76,9 @@ If you do not want audio/video support, you should edit your [config.js](https:/
 
     git checkout node_modules/captcha/captcha.js
     
-10) If you want IRC support then Get ircd.js modified for livechan. This has no captcha so can make flooding your board easy.
+10) Get ircd.js modified for livechan
 
-    cd ..; git clone https://github.com/emgram769/ircd.js; cd ircd.js; npm install; cd ../live4chan
+    cd ..; git clone https://github.com/emgram769/ircd.js; cd live4chan
 
 11) Make sure the public/tmp/uploads and public/tmp/thumb folders are writable
 
@@ -128,5 +128,8 @@ server {
 
 Relevant links
 ====
+Live instance: http://livechan.net
+
+Contribute suggestions: https://code.stypi.com/emgram/LiveChan
 
 If you'd like to contribute code simply send a pull request.
