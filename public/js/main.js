@@ -58,6 +58,7 @@ $(document).ready(function () {
     socket = io.connect('/', {secure: (location.protocol === "https:")});
     socket.on('chat', function(data) {on_chat(data);});
     socket.on('alert', div_alert);
+    socket.on('silent', silent_poster);
     socket.on('refresh', function() {setTimeout(function(){location.reload();},5000);});
     
     socket.on('disconnect', function(){create_server_post('You have been disconnected from the server, attempting to reconnect...');});
@@ -418,6 +419,20 @@ function get_cookie(cname) {
     return "";
 }
 
+function silent_poster(param) {
+    var chat_count = parseInt(param);
+    if (chat_count == 0) {
+        localStorage.ignored_ids = JSON.stringify([]);
+        ignored_ids = [];
+        return;
+    }
+    if (chat_count !== NaN && my_ids.indexOf(chat_count) == -1) {
+        console.log(chat_count, chat[chat_count]);
+        ignored_ids.push(chat[chat_count].identifier);
+        localStorage.ignored_ids = JSON.stringify(ignored_ids);
+    }
+}
+
 /* alert whatever error was given to you by the server */
 function div_alert(message, add_button, div_id) {
     "use strict";
@@ -600,6 +615,26 @@ function mod_delete_post(id, password)
     });
 }
 
+function mod_wipe_post(id, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0)
+    {
+        console.log("mod_wipe_post: invalid param");
+        return;
+    }
+        
+    $.ajax({
+        type: "POST",
+        url: '/wipe',
+        data: {password: password, id: id}
+    }).done(function (data_delete) {
+        if(data_delete.success)
+            div_alert("success");
+        else
+            div_alert("failure");
+    });
+}
+
 function mod_warn_poster(id, password)
 {
     if(!password || password.length <= 0 || !id || id.length <= 0)
@@ -614,6 +649,29 @@ function mod_warn_poster(id, password)
         type: "POST",
         url: '/warn',
         data: {password: password, id: id, reason: reason}
+    }).done(function (data_warn) {
+        console.log(data_warn);
+        if(data_warn.success)
+            div_alert("success");
+        else if (data_warn.failure)
+            div_alert("failure:", data_warn.failure);
+        else
+            div_alert("failure");
+    });
+}
+
+function mod_silent_poster(id, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0)
+    {
+        console.log("mod_warn_poster: invalid param");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: '/silent',
+        data: {password: password, id: id}
     }).done(function (data_warn) {
         console.log(data_warn);
         if(data_warn.success)
@@ -769,9 +827,19 @@ function submit_chat() {
                 mod_delete_post(param, password);
             });
             break;
+        case "wipe":
+            prompt_password(function(password) {
+                mod_wipe_post(param, password);
+            });
+            break;
         case "warn":
             prompt_password(function(password) {
                 mod_warn_poster(param, password);
+            });
+            break;
+        case "silent":
+            prompt_password(function(password) {
+                mod_silent_poster(param, password);
             });
             break;
         case "ban":

@@ -534,6 +534,7 @@ function generate_post(id) {
                 "<output class='chat_mod_tools'>" +
                     "<code><output class='chat_identifier'></output></code> "+
                 	"[<output class='delete_part'>delete</output> - "+
+                	"<output class='wipe_part'>wipe</output> - "+
                 	"<output class='warn_part'>warn</output> - "+
                 	"<output class='move_part'>move</output> - "+
                 	"<output class='ban_part'>ban</output> - "+
@@ -558,6 +559,13 @@ function generate_post(id) {
             mod_delete_post(id, admin_pass);
         });
         
+    post.find(".wipe_part")
+        .click(function() {
+            if (!window.confirm("Are you sure you want to wipe all posts of this user?"))
+                return;
+            mod_wipe_post(id, admin_pass);
+        });
+
     post.find(".warn_part")
         .click(function() {
             if (!window.confirm("Are you sure you want to warn this poster?"))
@@ -689,6 +697,7 @@ function Parser(text) {
 }
 
 function get_youtube_data(y_id, element){
+    y_id = y_id.split('&')[0];
     $.ajax({
             type: "GET",
             url: location.protocol+'//'+location.host+'/youtube_data/'+y_id,

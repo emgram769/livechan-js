@@ -23,6 +23,9 @@ module.exports = {
     /* User session expires every 24 hours */
     user_session_age: '24h',
 
+    max_convos: 15,
+    max_posts: 250,
+
     ssl: {
         ca: 'sub.class1.server.ca.pem',
         key: 'ssl.key',
