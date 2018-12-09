@@ -664,13 +664,36 @@ function mod_silent_poster(id, password)
 {
     if(!password || password.length <= 0 || !id || id.length <= 0)
     {
-        console.log("mod_warn_poster: invalid param");
+        console.log("mod_silent_poster: invalid param");
         return;
     }
     
     $.ajax({
         type: "POST",
         url: '/silent',
+        data: {password: password, id: id}
+    }).done(function (data_warn) {
+        console.log(data_warn);
+        if(data_warn.success)
+            div_alert("success");
+        else if (data_warn.failure)
+            div_alert("failure:", data_warn.failure);
+        else
+            div_alert("failure");
+    });
+}
+
+function mod_pin_post(id, password)
+{
+    if(!password || password.length <= 0 || !id || id.length <= 0)
+    {
+        console.log("mod_pin_post: invalid param");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: '/pin',
         data: {password: password, id: id}
     }).done(function (data_warn) {
         console.log(data_warn);
@@ -840,6 +863,11 @@ function submit_chat() {
         case "silent":
             prompt_password(function(password) {
                 mod_silent_poster(param, password);
+            });
+            break;
+        case "pin":
+            prompt_password(function(password) {
+                mod_pin_post(param, password);
             });
             break;
         case "ban":
