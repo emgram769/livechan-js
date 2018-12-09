@@ -396,6 +396,10 @@ ul {
     color:rgb(221, 0, 0);
     cursor:pointer;
 }
+.wipe_part:hover {
+    color:rgb(221, 0, 0);
+    cursor:pointer;
+}
 .warn_part:hover {
     color:rgb(221, 0, 0);
     cursor:pointer;
