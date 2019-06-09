@@ -1022,25 +1022,13 @@ function handle_post_response(resp) {
     }
 }
 
-/* inserts quoted id at the cursor */
+/* inserts quoted id at the end of entered text */
 function quote(id) {
     "use strict";
 
     var el = $("#body")[0];
     var text = ">>" + id + "\n";
-    var val = el.value,
-        endIndex, range;
-    if (el.selectionStart !== undefined && el.selectionEnd !== undefined) {
-        endIndex = el.selectionEnd;
-        el.value = val.slice(0, el.selectionStart) + text + val.slice(endIndex);
-        el.selectionStart = el.selectionEnd = endIndex + text.length;
-    } else if (document.selection !== undefined && document.selection.createRange !== undefined) {
-        el.focus();
-        range = document.selection.createRange();
-        range.collapse(false);
-        range.text = text;
-        range.select();
-    }
+    el.value += text;
 
     // set conversation
     if ($.inArray(get_convo(), convos) > -1) {
