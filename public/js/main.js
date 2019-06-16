@@ -997,6 +997,9 @@ function handle_post_response(resp) {
     } else if (resp.failure && resp.failure === "ban_violation") {
         div_alert("You've been banned.");
         init_cool_down();
+    } else if (resp.faliure === "countdown_violation") {
+	    div_alert("You're posting too fast!")
+	    init_cool_down();
     } else if (resp.failure) {
         div_alert(resp.failure);
         init_cool_down();
