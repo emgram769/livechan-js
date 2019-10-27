@@ -128,4 +128,5 @@ server {
 Relevant links
 ====
 Live instance: https://livebunker.rocks
-
+Library for writing bots(python2) https://github.com/pawnhearts/livechanapi
+Library for writing bots(python3+asyncio) https://github.com/pawnhearts/aiolivechan
