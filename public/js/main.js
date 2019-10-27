@@ -832,7 +832,7 @@ function submit_chat() {
                 max_chats = parseInt(param);
                 if (!(max_chats > 0)) { max_chats = 100; }
                 if (localStorage) {
-	                localStorage.max_chats = max_chats;
+                    localStorage.max_chats = max_chats;
                 }
             } else {
                 div_alert("usage: /highlight [javascript regex]");
